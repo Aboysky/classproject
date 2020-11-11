@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sicnu.sc.softwareproduction.dao.TaskMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.sicnu.sc.softwareproduction.model.Task">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="taid" jdbcType="BIGINT" property="taid" />
+    <result column="parent" jdbcType="INTEGER" property="parent" />
+    <result column="fromwoid" jdbcType="BIGINT" property="fromwoid" />
+    <result column="module" jdbcType="VARCHAR" property="module" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="pri" jdbcType="TINYINT" property="pri" />
+    <result column="openedBy" jdbcType="VARCHAR" property="openedby" />
+    <result column="openedDate" jdbcType="TIMESTAMP" property="openeddate" />
+    <result column="estimate" jdbcType="REAL" property="estimate" />
+    <result column="consumed" jdbcType="REAL" property="consumed" />
+    <result column="left" jdbcType="REAL" property="left" />
+    <result column="deadline" jdbcType="DATE" property="deadline" />
+    <result column="assignedTo" jdbcType="VARCHAR" property="assignedto" />
+    <result column="assignedDate" jdbcType="TIMESTAMP" property="assigneddate" />
+    <result column="estStarted" jdbcType="DATE" property="eststarted" />
+    <result column="realStarted" jdbcType="DATE" property="realstarted" />
+    <result column="finishedDate" jdbcType="TIMESTAMP" property="finisheddate" />
+    <result column="closedBy" jdbcType="VARCHAR" property="closedby" />
+    <result column="closedDate" jdbcType="TIMESTAMP" property="closeddate" />
+    <result column="closedReason" jdbcType="VARCHAR" property="closedreason" />
+    <result column="lastEditedBy" jdbcType="VARCHAR" property="lasteditedby" />
+    <result column="lastEditedDate" jdbcType="TIMESTAMP" property="lastediteddate" />
+    <result column="status" jdbcType="CHAR" property="status" />
+    <result column="deleted" jdbcType="CHAR" property="deleted" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.edu.sicnu.sc.softwareproduction.model.TaskWithBLOBs">
+    <result column="desc" jdbcType="LONGVARCHAR" property="desc" />
+    <result column="mailto" jdbcType="LONGVARCHAR" property="mailto" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, taid, parent, fromwoid, module, name, type, pri, openedBy, openedDate, estimate, 
+    consumed, left, deadline, assignedTo, assignedDate, estStarted, realStarted, finishedDate, 
+    closedBy, closedDate, closedReason, lastEditedBy, lastEditedDate, status, deleted
+  </sql>
+  <sql id="Blob_Column_List">
+    desc, mailto
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="cn.edu.sicnu.sc.softwareproduction.model.TaskExample" resultMap="ResultMapWithBLOBs">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByExample" parameterType="cn.edu.sicnu.sc.softwareproduction.model.TaskExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from task
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from task
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.edu.sicnu.sc.softwareproduction.model.TaskExample">
+    delete from task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.edu.sicnu.sc.softwareproduction.model.TaskWithBLOBs">
+    insert into task (id, taid, parent, 
+      fromwoid, module, name, 
+      type, pri, openedBy, 
+      openedDate, estimate, consumed, 
+      left, deadline, assignedTo, 
+      assignedDate, estStarted, realStarted, 
+      finishedDate, closedBy, closedDate, 
+      closedReason, lastEditedBy, lastEditedDate, 
+      status, deleted, desc, 
+      mailto)
+    values (#{id,jdbcType=INTEGER}, #{taid,jdbcType=BIGINT}, #{parent,jdbcType=INTEGER}, 
+      #{fromwoid,jdbcType=BIGINT}, #{module,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{type,jdbcType=VARCHAR}, #{pri,jdbcType=TINYINT}, #{openedby,jdbcType=VARCHAR}, 
+      #{openeddate,jdbcType=TIMESTAMP}, #{estimate,jdbcType=REAL}, #{consumed,jdbcType=REAL}, 
+      #{left,jdbcType=REAL}, #{deadline,jdbcType=DATE}, #{assignedto,jdbcType=VARCHAR}, 
+      #{assigneddate,jdbcType=TIMESTAMP}, #{eststarted,jdbcType=DATE}, #{realstarted,jdbcType=DATE}, 
+      #{finisheddate,jdbcType=TIMESTAMP}, #{closedby,jdbcType=VARCHAR}, #{closeddate,jdbcType=TIMESTAMP}, 
+      #{closedreason,jdbcType=VARCHAR}, #{lasteditedby,jdbcType=VARCHAR}, #{lastediteddate,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=CHAR}, #{deleted,jdbcType=CHAR}, #{desc,jdbcType=LONGVARCHAR}, 
+      #{mailto,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.sicnu.sc.softwareproduction.model.TaskWithBLOBs">
+    insert into task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="taid != null">
+        taid,
+      </if>
+      <if test="parent != null">
+        parent,
+      </if>
+      <if test="fromwoid != null">
+        fromwoid,
+      </if>
+      <if test="module != null">
+        module,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="pri != null">
+        pri,
+      </if>
+      <if test="openedby != null">
+        openedBy,
+      </if>
+      <if test="openeddate != null">
+        openedDate,
+      </if>
+      <if test="estimate != null">
+        estimate,
+      </if>
+      <if test="consumed != null">
+        consumed,
+      </if>
+      <if test="left != null">
+        left,
+      </if>
+      <if test="deadline != null">
+        deadline,
+      </if>
+      <if test="assignedto != null">
+        assignedTo,
+      </if>
+      <if test="assigneddate != null">
+        assignedDate,
+      </if>
+      <if test="eststarted != null">
+        estStarted,
+      </if>
+      <if test="realstarted != null">
+        realStarted,
+      </if>
+      <if test="finisheddate != null">
+        finishedDate,
+      </if>
+      <if test="closedby != null">
+        closedBy,
+      </if>
+      <if test="closeddate != null">
+        closedDate,
+      </if>
+      <if test="closedreason != null">
+        closedReason,
+      </if>
+      <if test="lasteditedby != null">
+        lastEditedBy,
+      </if>
+      <if test="lastediteddate != null">
+        lastEditedDate,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="deleted != null">
+        deleted,
+      </if>
+      <if test="desc != null">
+        desc,
+      </if>
+      <if test="mailto != null">
+        mailto,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="taid != null">
+        #{taid,jdbcType=BIGINT},
+      </if>
+      <if test="parent != null">
+        #{parent,jdbcType=INTEGER},
+      </if>
+      <if test="fromwoid != null">
+        #{fromwoid,jdbcType=BIGINT},
+      </if>
+      <if test="module != null">
+        #{module,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="pri != null">
+        #{pri,jdbcType=TINYINT},
+      </if>
+      <if test="openedby != null">
+        #{openedby,jdbcType=VARCHAR},
+      </if>
+      <if test="openeddate != null">
+        #{openeddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="estimate != null">
+        #{estimate,jdbcType=REAL},
+      </if>
+      <if test="consumed != null">
+        #{consumed,jdbcType=REAL},
+      </if>
+      <if test="left != null">
+        #{left,jdbcType=REAL},
+      </if>
+      <if test="deadline != null">
+        #{deadline,jdbcType=DATE},
+      </if>
+      <if test="assignedto != null">
+        #{assignedto,jdbcType=VARCHAR},
+      </if>
+      <if test="assigneddate != null">
+        #{assigneddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eststarted != null">
+        #{eststarted,jdbcType=DATE},
+      </if>
+      <if test="realstarted != null">
+        #{realstarted,jdbcType=DATE},
+      </if>
+      <if test="finisheddate != null">
+        #{finisheddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closedby != null">
+        #{closedby,jdbcType=VARCHAR},
+      </if>
+      <if test="closeddate != null">
+        #{closeddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closedreason != null">
+        #{closedreason,jdbcType=VARCHAR},
+      </if>
+      <if test="lasteditedby != null">
+        #{lasteditedby,jdbcType=VARCHAR},
+      </if>
+      <if test="lastediteddate != null">
+        #{lastediteddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=CHAR},
+      </if>
+      <if test="deleted != null">
+        #{deleted,jdbcType=CHAR},
+      </if>
+      <if test="desc != null">
+        #{desc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="mailto != null">
+        #{mailto,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.edu.sicnu.sc.softwareproduction.model.TaskExample" resultType="java.lang.Long">
+    select count(*) from task
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update task
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.taid != null">
+        taid = #{record.taid,jdbcType=BIGINT},
+      </if>
+      <if test="record.parent != null">
+        parent = #{record.parent,jdbcType=INTEGER},
+      </if>
+      <if test="record.fromwoid != null">
+        fromwoid = #{record.fromwoid,jdbcType=BIGINT},
+      </if>
+      <if test="record.module != null">
+        module = #{record.module,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null">
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pri != null">
+        pri = #{record.pri,jdbcType=TINYINT},
+      </if>
+      <if test="record.openedby != null">
+        openedBy = #{record.openedby,jdbcType=VARCHAR},
+      </if>
+      <if test="record.openeddate != null">
+        openedDate = #{record.openeddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.estimate != null">
+        estimate = #{record.estimate,jdbcType=REAL},
+      </if>
+      <if test="record.consumed != null">
+        consumed = #{record.consumed,jdbcType=REAL},
+      </if>
+      <if test="record.left != null">
+        left = #{record.left,jdbcType=REAL},
+      </if>
+      <if test="record.deadline != null">
+        deadline = #{record.deadline,jdbcType=DATE},
+      </if>
+      <if test="record.assignedto != null">
+        assignedTo = #{record.assignedto,jdbcType=VARCHAR},
+      </if>
+      <if test="record.assigneddate != null">
+        assignedDate = #{record.assigneddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.eststarted != null">
+        estStarted = #{record.eststarted,jdbcType=DATE},
+      </if>
+      <if test="record.realstarted != null">
+        realStarted = #{record.realstarted,jdbcType=DATE},
+      </if>
+      <if test="record.finisheddate != null">
+        finishedDate = #{record.finisheddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.closedby != null">
+        closedBy = #{record.closedby,jdbcType=VARCHAR},
+      </if>
+      <if test="record.closeddate != null">
+        closedDate = #{record.closeddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.closedreason != null">
+        closedReason = #{record.closedreason,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lasteditedby != null">
+        lastEditedBy = #{record.lasteditedby,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lastediteddate != null">
+        lastEditedDate = #{record.lastediteddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=CHAR},
+      </if>
+      <if test="record.deleted != null">
+        deleted = #{record.deleted,jdbcType=CHAR},
+      </if>
+      <if test="record.desc != null">
+        desc = #{record.desc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="record.mailto != null">
+        mailto = #{record.mailto,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    update task
+    set id = #{record.id,jdbcType=INTEGER},
+      taid = #{record.taid,jdbcType=BIGINT},
+      parent = #{record.parent,jdbcType=INTEGER},
+      fromwoid = #{record.fromwoid,jdbcType=BIGINT},
+      module = #{record.module,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=VARCHAR},
+      pri = #{record.pri,jdbcType=TINYINT},
+      openedBy = #{record.openedby,jdbcType=VARCHAR},
+      openedDate = #{record.openeddate,jdbcType=TIMESTAMP},
+      estimate = #{record.estimate,jdbcType=REAL},
+      consumed = #{record.consumed,jdbcType=REAL},
+      left = #{record.left,jdbcType=REAL},
+      deadline = #{record.deadline,jdbcType=DATE},
+      assignedTo = #{record.assignedto,jdbcType=VARCHAR},
+      assignedDate = #{record.assigneddate,jdbcType=TIMESTAMP},
+      estStarted = #{record.eststarted,jdbcType=DATE},
+      realStarted = #{record.realstarted,jdbcType=DATE},
+      finishedDate = #{record.finisheddate,jdbcType=TIMESTAMP},
+      closedBy = #{record.closedby,jdbcType=VARCHAR},
+      closedDate = #{record.closeddate,jdbcType=TIMESTAMP},
+      closedReason = #{record.closedreason,jdbcType=VARCHAR},
+      lastEditedBy = #{record.lasteditedby,jdbcType=VARCHAR},
+      lastEditedDate = #{record.lastediteddate,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=CHAR},
+      deleted = #{record.deleted,jdbcType=CHAR},
+      desc = #{record.desc,jdbcType=LONGVARCHAR},
+      mailto = #{record.mailto,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update task
+    set id = #{record.id,jdbcType=INTEGER},
+      taid = #{record.taid,jdbcType=BIGINT},
+      parent = #{record.parent,jdbcType=INTEGER},
+      fromwoid = #{record.fromwoid,jdbcType=BIGINT},
+      module = #{record.module,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=VARCHAR},
+      pri = #{record.pri,jdbcType=TINYINT},
+      openedBy = #{record.openedby,jdbcType=VARCHAR},
+      openedDate = #{record.openeddate,jdbcType=TIMESTAMP},
+      estimate = #{record.estimate,jdbcType=REAL},
+      consumed = #{record.consumed,jdbcType=REAL},
+      left = #{record.left,jdbcType=REAL},
+      deadline = #{record.deadline,jdbcType=DATE},
+      assignedTo = #{record.assignedto,jdbcType=VARCHAR},
+      assignedDate = #{record.assigneddate,jdbcType=TIMESTAMP},
+      estStarted = #{record.eststarted,jdbcType=DATE},
+      realStarted = #{record.realstarted,jdbcType=DATE},
+      finishedDate = #{record.finisheddate,jdbcType=TIMESTAMP},
+      closedBy = #{record.closedby,jdbcType=VARCHAR},
+      closedDate = #{record.closeddate,jdbcType=TIMESTAMP},
+      closedReason = #{record.closedreason,jdbcType=VARCHAR},
+      lastEditedBy = #{record.lasteditedby,jdbcType=VARCHAR},
+      lastEditedDate = #{record.lastediteddate,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=CHAR},
+      deleted = #{record.deleted,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.sicnu.sc.softwareproduction.model.TaskWithBLOBs">
+    update task
+    <set>
+      <if test="taid != null">
+        taid = #{taid,jdbcType=BIGINT},
+      </if>
+      <if test="parent != null">
+        parent = #{parent,jdbcType=INTEGER},
+      </if>
+      <if test="fromwoid != null">
+        fromwoid = #{fromwoid,jdbcType=BIGINT},
+      </if>
+      <if test="module != null">
+        module = #{module,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="pri != null">
+        pri = #{pri,jdbcType=TINYINT},
+      </if>
+      <if test="openedby != null">
+        openedBy = #{openedby,jdbcType=VARCHAR},
+      </if>
+      <if test="openeddate != null">
+        openedDate = #{openeddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="estimate != null">
+        estimate = #{estimate,jdbcType=REAL},
+      </if>
+      <if test="consumed != null">
+        consumed = #{consumed,jdbcType=REAL},
+      </if>
+      <if test="left != null">
+        left = #{left,jdbcType=REAL},
+      </if>
+      <if test="deadline != null">
+        deadline = #{deadline,jdbcType=DATE},
+      </if>
+      <if test="assignedto != null">
+        assignedTo = #{assignedto,jdbcType=VARCHAR},
+      </if>
+      <if test="assigneddate != null">
+        assignedDate = #{assigneddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="eststarted != null">
+        estStarted = #{eststarted,jdbcType=DATE},
+      </if>
+      <if test="realstarted != null">
+        realStarted = #{realstarted,jdbcType=DATE},
+      </if>
+      <if test="finisheddate != null">
+        finishedDate = #{finisheddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closedby != null">
+        closedBy = #{closedby,jdbcType=VARCHAR},
+      </if>
+      <if test="closeddate != null">
+        closedDate = #{closeddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="closedreason != null">
+        closedReason = #{closedreason,jdbcType=VARCHAR},
+      </if>
+      <if test="lasteditedby != null">
+        lastEditedBy = #{lasteditedby,jdbcType=VARCHAR},
+      </if>
+      <if test="lastediteddate != null">
+        lastEditedDate = #{lastediteddate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=CHAR},
+      </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=CHAR},
+      </if>
+      <if test="desc != null">
+        desc = #{desc,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="mailto != null">
+        mailto = #{mailto,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.edu.sicnu.sc.softwareproduction.model.TaskWithBLOBs">
+    update task
+    set taid = #{taid,jdbcType=BIGINT},
+      parent = #{parent,jdbcType=INTEGER},
+      fromwoid = #{fromwoid,jdbcType=BIGINT},
+      module = #{module,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      pri = #{pri,jdbcType=TINYINT},
+      openedBy = #{openedby,jdbcType=VARCHAR},
+      openedDate = #{openeddate,jdbcType=TIMESTAMP},
+      estimate = #{estimate,jdbcType=REAL},
+      consumed = #{consumed,jdbcType=REAL},
+      left = #{left,jdbcType=REAL},
+      deadline = #{deadline,jdbcType=DATE},
+      assignedTo = #{assignedto,jdbcType=VARCHAR},
+      assignedDate = #{assigneddate,jdbcType=TIMESTAMP},
+      estStarted = #{eststarted,jdbcType=DATE},
+      realStarted = #{realstarted,jdbcType=DATE},
+      finishedDate = #{finisheddate,jdbcType=TIMESTAMP},
+      closedBy = #{closedby,jdbcType=VARCHAR},
+      closedDate = #{closeddate,jdbcType=TIMESTAMP},
+      closedReason = #{closedreason,jdbcType=VARCHAR},
+      lastEditedBy = #{lasteditedby,jdbcType=VARCHAR},
+      lastEditedDate = #{lastediteddate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=CHAR},
+      deleted = #{deleted,jdbcType=CHAR},
+      desc = #{desc,jdbcType=LONGVARCHAR},
+      mailto = #{mailto,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.sicnu.sc.softwareproduction.model.Task">
+    update task
+    set taid = #{taid,jdbcType=BIGINT},
+      parent = #{parent,jdbcType=INTEGER},
+      fromwoid = #{fromwoid,jdbcType=BIGINT},
+      module = #{module,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      pri = #{pri,jdbcType=TINYINT},
+      openedBy = #{openedby,jdbcType=VARCHAR},
+      openedDate = #{openeddate,jdbcType=TIMESTAMP},
+      estimate = #{estimate,jdbcType=REAL},
+      consumed = #{consumed,jdbcType=REAL},
+      left = #{left,jdbcType=REAL},
+      deadline = #{deadline,jdbcType=DATE},
+      assignedTo = #{assignedto,jdbcType=VARCHAR},
+      assignedDate = #{assigneddate,jdbcType=TIMESTAMP},
+      estStarted = #{eststarted,jdbcType=DATE},
+      realStarted = #{realstarted,jdbcType=DATE},
+      finishedDate = #{finisheddate,jdbcType=TIMESTAMP},
+      closedBy = #{closedby,jdbcType=VARCHAR},
+      closedDate = #{closeddate,jdbcType=TIMESTAMP},
+      closedReason = #{closedreason,jdbcType=VARCHAR},
+      lastEditedBy = #{lasteditedby,jdbcType=VARCHAR},
+      lastEditedDate = #{lastediteddate,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=CHAR},
+      deleted = #{deleted,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

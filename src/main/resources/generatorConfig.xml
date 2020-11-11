@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!-- 设置为MyBatis3Simple会少一些example文件 -->
+    <context id="DB2Tables" targetRuntime="MyBatis3">
+
+
+        <!-- 默认为false，当为true时会删除注释，方便阅读代码 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+
+        <!-- jdbc连接 -->
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/software?useSSL=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=Asia/Shanghai"
+                        userId="root"
+                        password="Liuhuan.660413">
+        </jdbcConnection>
+
+
+        <!-- 类型转换 -->
+        <javaTypeResolver >
+            <!-- 是否使用bigDecimal， false可自动转化以下类型（Long, Integer, Short, etc.） -->
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+
+        <!-- 生成实体类的包名和位置 注意targetProject的值为实体类放在工程中具体位置的相对路径，-->
+        <javaModelGenerator targetPackage="cn.edu.sicnu.sc.softwareproduction.model" targetProject="C:\Users\Huan\IdeaProjects\softwareproduction\src\main\java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="true" />
+            <!-- 是否针对string类型的字段在set的时候进行trim调用 -->
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+
+        <!-- 生成的SQLMapper映射文件包名和位置 -->
+        <sqlMapGenerator targetPackage="mappers"  targetProject="C:\Users\Huan\IdeaProjects\softwareproduction\src\main\resources">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+
+        <!-- 生成DAO的包名和位置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="cn.edu.sicnu.sc.softwareproduction.dao"  targetProject="C:\Users\Huan\IdeaProjects\softwareproduction\src\main\java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!-- 配置表信息 -->
+        <!-- schema即为数据库名 tableName为对应的数据库表 domainObjectName是要生成的实体类名
+
+
+
+
+
+
+    	所以你想要自动生成哪个数据库哪个表的对应文件，就直接在这里添加就好了-->
+        <table schema="software" tableName="action" domainObjectName="Action" />
+        <table schema="software" tableName="block" domainObjectName="Block" />
+        <table schema="software" tableName="company" domainObjectName="Company" />
+        <table schema="software" tableName="faq" domainObjectName="Faq" />
+        <table schema="software" tableName="group" domainObjectName="Group" />
+        <table schema="software" tableName="grouppriv" domainObjectName="Grouppriv" />
+        <table schema="software" tableName="module" domainObjectName="Module" />
+        <table schema="software" tableName="promble" domainObjectName="Promble" />
+        <table schema="software" tableName="software" domainObjectName="Software" />
+        <table schema="software" tableName="softwarefile" domainObjectName="Softwarefile" />
+        <table schema="software" tableName="softwarehistory" domainObjectName="Softwarehistory" />
+        <table schema="software" tableName="sysdept" domainObjectName="Sysdept" />
+        <table schema="software" tableName="sysuser" domainObjectName="Sysuser" />
+        <table schema="software" tableName="sysusergroup" domainObjectName="Sysusergroup" />
+        <table schema="software" tableName="sysuserquery" domainObjectName="Sysuserquery" />
+        <table schema="software" tableName="task" domainObjectName="Task" />
+        <table schema="software" tableName="taskestimate" domainObjectName="Taskestimate" />
+        <table schema="software" tableName="team" domainObjectName="Team" />
+        <table schema="software" tableName="todo" domainObjectName="Todo" />
+        <table schema="software" tableName="user" domainObjectName="User" />
+        <table schema="software" tableName="usercontact" domainObjectName="Usercontact" />
+        <table schema="software" tableName="userorders" domainObjectName="Userorders" />
+        <table schema="software" tableName="usertpl" domainObjectName="Usertpl" />
+        <table schema="software" tableName="userview" domainObjectName="Userview" />
+        <table schema="software" tableName="workorders" domainObjectName="Workorders" />
+
+    </context>
+</generatorConfiguration>
