@@ -10,6 +10,7 @@ import cn.edu.sicnu.cs.pojo.NavigationBarChilren;
 import cn.edu.sicnu.cs.service.MetaOperationService;
 import cn.edu.sicnu.cs.service.RolePrivService;
 import cn.edu.sicnu.cs.service.RoleService;
+import cn.edu.sicnu.cs.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,13 +103,15 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
-    public int insert(int rid, int pid) {
-
+    public int insert(int rid, int pid) throws Exception{
+        RedisUtils.delete("configAttributes:permissions");
         return  roleprivMapper.insertSelective(new Rolepriv(rid,pid));
     }
 
     @Override
     public int deleteByRidAndPid(int rid, int pid) {
+
+        RedisUtils.delete("configAttributes:permissions");
         RoleprivExample roleprivExample = new RoleprivExample();
         roleprivExample.createCriteria().andRoleidEqualTo(rid).andPrivilegeidEqualTo(pid);
         List<Rolepriv> roleprivs = roleprivMapper.selectByExample(roleprivExample);
@@ -117,6 +120,7 @@ public class RolePrivServiceImpl implements RolePrivService {
 
     @Override
     public int deleteByPid(int pid) {
+        RedisUtils.delete("configAttributes:permissions");
         RoleprivExample roleprivExample = new RoleprivExample();
         RoleprivExample.Criteria criteria = roleprivExample.createCriteria();
         criteria.andPrivilegeidEqualTo(pid);
@@ -125,6 +129,7 @@ public class RolePrivServiceImpl implements RolePrivService {
 
     @Override
     public int deleteByRid(int rid) {
+        RedisUtils.delete("configAttributes:permissions");
         RoleprivExample roleprivExample = new RoleprivExample();
         RoleprivExample.Criteria criteria = roleprivExample.createCriteria();
         criteria.andRoleidEqualTo(rid);

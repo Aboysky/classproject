@@ -8,6 +8,7 @@ import cn.edu.sicnu.cs.pojo.NavigationBar;
 import cn.edu.sicnu.cs.pojo.RoleInfo;
 import cn.edu.sicnu.cs.service.RolePrivService;
 import cn.edu.sicnu.cs.service.RoleService;
+import cn.edu.sicnu.cs.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public int deleteByPrimaryKey(Integer id) {
+        RedisUtils.delete("configAttributes:permissions");
         if (id==null){
             logger.error("删除角色时id不能为空");
             return 0;
@@ -59,6 +61,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public int insert(Role record) {
+        RedisUtils.delete("configAttributes:permissions");
         if (record==null){
             logger.error("增加角色时角色不能为空");
             return 0;
@@ -91,6 +94,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public int updateRoleByPrimaryKey(int rid, Role record) {
+        RedisUtils.delete("configAttributes:permissions");
         if (record==null){
             logger.error("更新角色时角色角色id");
             return 0;

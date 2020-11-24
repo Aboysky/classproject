@@ -5,6 +5,7 @@ import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.MetaoperationExample;
 import cn.edu.sicnu.cs.pojo.NavigationBarChilren;
 import cn.edu.sicnu.cs.service.MetaOperationService;
+import cn.edu.sicnu.cs.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,11 +39,13 @@ public class MetaOperationServiceImpl implements MetaOperationService {
 
     @Override
     public int deleteByPrimaryKey(Integer id) {
+        RedisUtils.delete("configAttributes:permissions");
         return metaoperationMapper.deleteByPrimaryKey(id);
     }
 
     @Override
     public int deleteByOperationName(String operationName) {
+        RedisUtils.delete("configAttributes:permissions");
         MetaoperationExample operationExample = new MetaoperationExample();
         MetaoperationExample.Criteria criteria = operationExample.createCriteria();
         criteria.andMonameEqualTo(operationName);
@@ -51,6 +54,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
 
     @Override
     public int insert(Metaoperation record) {
+        RedisUtils.delete("configAttributes:permissions");
         return metaoperationMapper.insertSelective(record);
     }
 
@@ -88,6 +92,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
 
     @Override
     public int updateByPrimaryKey(Metaoperation record) {
+        RedisUtils.delete("configAttributes:permissions");
         if (record.getMoid()==null){
             logger.error("待更新的对象record中的id属性不能为空");
             return 0;
@@ -98,6 +103,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     @Override
     public int updateByOperationName(String operationName, Metaoperation record)
     {
+        RedisUtils.delete("configAttributes:permissions");
         MetaoperationExample operationExample = new MetaoperationExample();
         MetaoperationExample.Criteria criteria = operationExample.createCriteria();
         criteria.andMonameEqualTo(operationName);

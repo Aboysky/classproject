@@ -57,7 +57,7 @@ public interface RolePrivService {
      * @return 是否添加成功
      */
     @Transactional
-    int insert(int rid,int pid);
+    int insert(int rid,int pid) throws Exception;
 
     /**
      * 为某角色删除某项权限

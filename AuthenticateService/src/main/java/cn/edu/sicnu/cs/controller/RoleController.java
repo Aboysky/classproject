@@ -229,7 +229,7 @@ public class RoleController {
 
     @PostMapping("${soft_version}/role/{roleid}/priv/{privid}")
     @ApiOperation(value = "add_Priv_To_role",tags = {"role","priv"},notes = "为此角色添加权限")
-    public String addPrivToRoleId(@PathVariable("roleid") Integer roleid,@PathVariable("privid") Integer privid){
+    public String addPrivToRoleId(@PathVariable("roleid") Integer roleid,@PathVariable("privid") Integer privid) {
         if (roleid !=null&&roleid!=0 && privid!=null&&privid!=0){
 
             // 判断角色是否存在
@@ -246,7 +246,13 @@ public class RoleController {
                 }
 
                 // 为角色添加权限
-                int insert = rolePrivService.insert(roleid, privid);
+                int insert = 0;
+                try {
+                    insert = rolePrivService.insert(roleid, privid);
+                } catch (Exception e) {
+
+
+                }
                 if (insert>=1){
                     return ResUtil.getJsonStr(ResultCode.OK,"为角色添加权限成功" );
                 }
@@ -279,5 +285,45 @@ public class RoleController {
         }
         return ResUtil.getJsonStr(ResultCode.NECESSARY_PARAMETER_NOT_NULL_OR_NOTIING,"必要参数不正确");
     }
+    @PostMapping("${soft_version}/role/{roleid}/batchupdate")
+    @ApiOperation(tags = "role",notes = "批量修改角色信息",value = "batch_update_role")
+    public String batchUpdateRole(HttpServletRequest request,
+                             @PathVariable("roleid") int roleid) throws IOException {
+        //从json中获取username和password
+        String body = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
+        String rids = null;
+        if(StringUtils.hasText(body)) {
+            JSONObject jsonObj = JSON.parseObject(body);
+            rids = jsonObj.getString("rids");
+        }
+//        logger.debug("RoleController:addrole   rname : "+rname+"   rdesc : "+rdesc);
+
+        System.out.println("\n\n\n\n\n---------------------->>"+rids);
+       if (rids==null||rids.isEmpty()){
+           return ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "修改权限id不能为空");
+       }
+        String[] split = rids.split(",");
+        for (String s : split) {
+            System.out.println("  "+s+"  ");
+        }
+        for (String s : split) {
+            if (Integer.parseInt(s)<10000){
+                rolePrivService.deleteByRid(roleid);
+                try{
+                    Metaoperation metaoperation = metaOperationService.selectByPrimaryKey(Integer.parseInt(s));
+                    if (metaoperation!=null){
+                        rolePrivService.insert(roleid,Integer.parseInt(s));
+                    }
+
+                }catch (Exception e){
+
+                }
+
+            }
+        }
+        return ResUtil.getJsonStr(ResultCode.OK,"权限修改成功");
+    };
+
+
 
 }
