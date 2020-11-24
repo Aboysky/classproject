@@ -24,8 +24,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * 权限资源管理器
  * 为权限决断器提供支持
- *
- * @author Exrickx
  */
 
 @Component

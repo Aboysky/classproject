@@ -143,6 +143,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             //获取当前用户角色
             String authority = claims.get(SecurityConstant.AUTHORITIES).toString();
 
+
             if (StringUtils.isNotBlank(authority)) {
                 JSONArray list = JSONArray.parseArray(authority);
                 JSONArray redisData = JSONArray.parseArray(roleInfosMapPermission);
@@ -151,7 +152,7 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
                     String userRoleId = list.getString(i);//jtw取出的角色id
                     for (int j = 0; j < redisData.size(); j++) {
                         JSONObject redisArray = redisData.getJSONObject(j);
-                        if (userRoleId.equals(redisArray.getString("id"))) {//对比
+                        if (userRoleId.equals(redisArray.getString("roleName"))) {//对比
                             JSONArray redisDataPer = redisArray.getJSONArray("permissions");//获取权限
                             for (int z = 0; z < redisDataPer.size(); z++) {
                                 JSONObject jsonObject = redisDataPer.getJSONObject(j);

@@ -48,7 +48,7 @@ public class MyAccessDecisionManager implements AccessDecisionManager {
                 }
             } else if (ga.getAuthority().equals("ROLE_ANONYMOUS")){
                 //未登录只允许访问 login 页面
-                matcher = new AntPathRequestMatcher("/v1/login");
+                matcher = new AntPathRequestMatcher("/v1.1/login");
                 if (matcher.matches(request)) {
                     return;
             }

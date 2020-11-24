@@ -105,7 +105,9 @@ public class RolePrivServiceImpl implements RolePrivService {
     @Override
     public int insert(int rid, int pid) throws Exception{
         RedisUtils.delete("configAttributes:permissions");
-        return  roleprivMapper.insertSelective(new Rolepriv(rid,pid));
+        int i = roleprivMapper.insertSelective(new Rolepriv(rid, pid));
+        RedisUtils.addConfigrationPermissions();
+        return i;
     }
 
     @Override
