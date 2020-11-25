@@ -54,7 +54,7 @@ public class RedisCache implements Cache {
         return 0;
     }
 
-    private  RedisTemplate getRedisTemplate(){
+    private RedisTemplate getRedisTemplate(){
         RedisTemplate redisTemplate;
         redisTemplate = (RedisTemplate) SpringUtil.getBean("redisTemplate");
         redisTemplate.setKeySerializer(new StringRedisSerializer());
