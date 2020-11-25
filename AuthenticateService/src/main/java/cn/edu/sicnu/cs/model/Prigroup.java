@@ -10,6 +10,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Prigroup  implements Serializable {
+    private static final long serialVersionUID = 8451458377523136870L;
     private Integer pgid;
 
     private String prigroupname;

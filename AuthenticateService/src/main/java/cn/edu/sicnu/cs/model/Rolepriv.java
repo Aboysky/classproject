@@ -10,6 +10,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Rolepriv  implements Serializable {
+    private static final long serialVersionUID = -1496181896655047428L;
     private Integer rpid;
 
     private Integer roleid;

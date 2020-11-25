@@ -20,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserPojo implements Serializable {
+    private static final long serialVersionUID = -6405984731673512249L;
     private Integer id;
 
     private String username;

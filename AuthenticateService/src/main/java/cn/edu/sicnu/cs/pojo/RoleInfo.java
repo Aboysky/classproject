@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoleInfo  implements Serializable {
+    private static final long serialVersionUID = -2557790578970486891L;
     // 角色id
     private int id;
     private String roleName;

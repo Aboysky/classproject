@@ -11,6 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Role  implements Serializable {
+    private static final long serialVersionUID = 6814809896618995502L;
     private Integer rid;
 
     private String rname;
