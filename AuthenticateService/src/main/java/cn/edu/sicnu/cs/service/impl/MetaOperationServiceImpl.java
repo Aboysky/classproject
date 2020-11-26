@@ -8,6 +8,8 @@ import cn.edu.sicnu.cs.service.MetaOperationService;
 import cn.edu.sicnu.cs.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,6 +32,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     MetaoperationMapper metaoperationMapper;
 
     @Override
+    @Cacheable(value = "opetations",key = "#result")
     public List<Metaoperation> selectAll() {
         MetaoperationExample operationExample = new MetaoperationExample();
         MetaoperationExample.Criteria criteria = operationExample.createCriteria();
@@ -38,12 +41,14 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
+    @CacheEvict(value = "operations",key = "#id")
     public int deleteByPrimaryKey(Integer id) {
         RedisUtils.delete("configAttributes:permissions");
         return metaoperationMapper.deleteByPrimaryKey(id);
     }
 
     @Override
+    @CacheEvict(value = "operations",key = "#id")
     public int deleteByOperationName(String operationName) {
         RedisUtils.delete("configAttributes:permissions");
         MetaoperationExample operationExample = new MetaoperationExample();

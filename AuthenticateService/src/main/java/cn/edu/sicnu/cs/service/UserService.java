@@ -107,8 +107,6 @@ public interface UserService{
     @Transactional
     int updatePasswordByUserName(String userName,String oldPassword,String newpassword) throws SQLIntegrityConstraintViolationException;
 
-    @Transactional
-    int updateMobileByUserName(int uid,String password,String mobile) throws SQLIntegrityConstraintViolationException;
 
     @Transactional
     int updateDeletedByUid(int uid) throws SQLIntegrityConstraintViolationException;

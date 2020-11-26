@@ -57,8 +57,6 @@ public class UserServiceImpl implements UserService {
     MetaOperationService metaOperationService;
 
     @Override
-    @Caching(evict = {@CacheEvict(cacheNames = "userList",allEntries = true)},
-            put = {@CachePut(cacheNames = "user",key = "#user.uid")})
     public int insertUser(User user) throws SQLIntegrityConstraintViolationException{
 
         if (StringUtils.isEmpty(user.getUsername())||StringUtils.isBlank(user.getUsername())){
@@ -81,20 +79,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Caching(evict = {@CacheEvict(cacheNames = "userList",allEntries = true),
-            @CacheEvict(cacheNames = "user",key = "#uid")})
+    @CacheEvict(value = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},key = "#uid")
     public int deleteUserByUid(int uid) throws SQLIntegrityConstraintViolationException {
         return  this.updateDeletedByUid(uid);
     }
 
     @Override
-    @Caching(evict = {@CacheEvict(cacheNames = "userList",allEntries = true),
-            @CacheEvict(cacheNames = "user",key = "#")})
+    @CacheEvict(value = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},key = "#userServiceImpl.selectUseridByUserName(#userName)")
     public int deleteUserByUserName(String userName) throws SQLIntegrityConstraintViolationException {
         return  this.updateDeletedByUserName(userName);
     }
 
     @Override
+    @CacheEvict(value = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},allEntries = true)
     public int deleteUsersByCompanyId(int companyId) throws SQLIntegrityConstraintViolationException {
         UserExample userExample = new UserExample();
         UserExample.Criteria criteria = userExample.createCriteria();
@@ -111,6 +108,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},allEntries = true)
     public int deleteUsersByRoleId(int roleId) {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUroleIdEqualTo(roleId).andUdeletedEqualTo("0");
@@ -120,6 +118,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(value = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},allEntries = true)
     public int deleteUserSByRoleName(String rolename) {
         Role role = roleService.selectRoleByRoleName(rolename);
         if (role!=null){
@@ -140,13 +139,13 @@ public class UserServiceImpl implements UserService {
 //    }
 
     @Override
-    @Cacheable(value = "user")
+    @Cacheable(value = "sUserUser",key = "#uid")
     public User selectUserByUid(int uid) {
         return userMapper.selectByPrimaryKey(uid);
     }
 
     @Override
-    @Cacheable(value = "user")
+    @Cacheable(value = "sUserUserpojo",key = "#uid")
     public UserPojo selectUserPojoByUid(int uid) {
         User user = userMapper.selectByPrimaryKey(uid);
 
@@ -157,7 +156,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "userpojo")
+    @Cacheable(value = "sUserUserpojo",key = "#userServiceImpl.selectUseridByUserName(#username)")
     public UserPojo selectUserPojoByUsername(String username) {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUsernameEqualTo(username).andUdeletedEqualTo("0");
@@ -173,7 +172,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "user")
+    @Cacheable(value = "sUserUser",key = "#userServiceImpl.selectUseridByUserName(#username)")
     public User selectUserByUsername(String username) {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUsernameEqualTo(username).andUdeletedEqualTo("0");
@@ -185,7 +184,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "user")
+    @Cacheable(value = "sUserUser",key = "#userServiceImpl.selectUserByMobile(#mobile).uid")
     public User selectUserByMobile(String mobile) {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUmobileEqualTo(mobile).andUdeletedEqualTo("0");
@@ -197,7 +196,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "username")
+    @Cacheable(value = "sUserUsername",key = "#uid")
     public String selectUserNameByUid(int uid) {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUidEqualTo(uid).andUdeletedEqualTo("0");
@@ -209,7 +208,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "userid")
+    @Cacheable(value = "sUserUserId",key = "#userServiceImpl.selectUseridByUserName(#username)")
     public int selectUseridByUserName(String username) {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUsernameEqualTo(username).andUdeletedEqualTo("0");
@@ -221,7 +220,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "userList")
+    @Cacheable(value = "sUserUser",key = "#root.methodName")
     public List<User> selectAll() {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUsernameIsNotNull().andUdeletedEqualTo("0");
@@ -229,211 +228,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Caching(evict = {@CacheEvict(cacheNames = "accountList",allEntries = true)},
-            put = {@CachePut(cacheNames = "account",key = "#accountInfo.id")})
+    @CacheEvict(cacheNames = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},key = "#uid")
     public int updateUserByUid(int uid, User user) throws SQLIntegrityConstraintViolationException{
         if(user!=null){
             user.setUid(uid);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             return userMapper.updateByPrimaryKeySelective(user);
         }
         return 0;
     }
 
     @Override
+    @CacheEvict(cacheNames = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},key = "#userServiceImpl.selectUseridByUserName(#username)")
     public int updateUserByUserName(String username, User user)throws SQLIntegrityConstraintViolationException {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUsernameEqualTo(username).andUdeletedEqualTo("0");
@@ -441,6 +246,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},key = "#uid")
     public int updateUserNameByUid(int uid, String username) throws SQLIntegrityConstraintViolationException{
         User user = new User();
         user.setUsername(username);
@@ -449,6 +255,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},key = "#uid")
     public int updatePasswordByUid(int uid, String oldPassword, String newpassword)throws SQLIntegrityConstraintViolationException {
         User user = new User();
         user.setPassword(newpassword);
@@ -458,15 +265,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateMobileByUid(int uid, String password, String mobile) throws SQLIntegrityConstraintViolationException{
-        User user = new User();
-        user.setUmobile(mobile);
-        UserExample userExample = new UserExample();
-        userExample.createCriteria().andPasswordEqualTo(password).andUidEqualTo(uid).andUdeletedEqualTo("0");
-        return userMapper.updateByExampleSelective(user,userExample);
-    }
-
-    @Override
+    @CacheEvict(cacheNames ={"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},key = "#userServiceImpl.selectUseridByUserName(#userName)")
     public int updatePasswordByUserName(String userName, String oldPassword, String newpassword) throws SQLIntegrityConstraintViolationException{
         User user = new User();
         user.setPassword(newpassword);
@@ -476,7 +275,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int updateMobileByUserName(int uid, String password, String mobile) throws SQLIntegrityConstraintViolationException{
+    @CacheEvict(cacheNames = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},key = "#uid")
+    public int updateMobileByUid(int uid, String password, String mobile) throws SQLIntegrityConstraintViolationException{
         User user = new User();
         user.setUmobile(mobile);
         UserExample userExample = new UserExample();
@@ -485,6 +285,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},key = "#uid")
     public int updateDeletedByUid(int uid) throws SQLIntegrityConstraintViolationException{
         User user = new User();
         user.setUid(uid);
@@ -493,6 +294,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {"sUserUser","sUserUserpojo","sUserUsername","sUserUserId"},key = "#userServiceImpl.selectUseridByUserName(#username)")
     public int updateDeletedByUserName(String username)throws SQLIntegrityConstraintViolationException {
         User user = new User();
         user.setUdeleted("1");
@@ -503,6 +305,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "navigationbar",key = "#userServiceImpl.selectUseridByUserName(#username)")
     public List<NavigationBar> selectNavigationBarByUsername(String username) {
         User user = this.selectUserByUsername(username);
         if (user!=null){
@@ -512,12 +315,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "navigationBarChilren",key = "#roleid+'--'+#privid")
     public List<NavigationBarChilren> selectNavigationBarChildrenByUsername(Integer roleid,Integer privid) {
         Metaoperation metaoperation = metaOperationService.selectByPrimaryKey(privid);
         return rolePrivService.selectNavBarChildrenByRole(roleid, metaoperation.getModesc());
     }
 
     @Override
+    @Cacheable(value = "sUserUserPage",key = "#root.methodName")
     public List<User> selectAllSysUser() {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUroleIdNotEqualTo(1).andUdeletedEqualTo("0");
@@ -525,6 +330,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "sUserUserPage",key = "#pageRequest.pageNum+'-'+#pageRequest.pageSize")
     public PageResult findPage(PageRequest pageRequest) {
         return PageUtils.getPageResult(pageRequest, getPageInfo(pageRequest));
     }
