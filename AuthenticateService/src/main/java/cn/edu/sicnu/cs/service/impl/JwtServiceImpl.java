@@ -1,5 +1,6 @@
-package cn.edu.sicnu.cs.service;
+package cn.edu.sicnu.cs.service.impl;
 
+import cn.edu.sicnu.cs.service.AuthService;
 import cn.edu.sicnu.cs.utils.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +25,8 @@ import javax.annotation.Resource;
  * @Created by Huan
  */
 @Service
-public class JwtService {
-    private final Logger logger = LoggerFactory.getLogger(JwtService.class);
+public class JwtServiceImpl implements AuthService {
+    private final Logger logger = LoggerFactory.getLogger(JwtServiceImpl.class);
 
     @Resource
     AuthenticationManager authenticationManager;
@@ -36,6 +37,7 @@ public class JwtService {
     @Autowired
     JwtTokenUtil jwtTokenUtil;
 
+    @Override
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     public String login(String username,String password){
         try {
