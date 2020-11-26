@@ -235,6 +235,12 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <select id="selectUidByUsername" resultType="java.lang.Integer">
+    select uid from user where urealname = #{username}
+  </select>
+  <select id="selectUidByRolename" resultType="cn.edu.sicnu.cs.pojo.engineer">
+    select uid,urealname,rname from user,role where role.rname = #{rolename} and role.rid = `user`.uid
+  </select>
   <update id="updateByExampleSelective" parameterType="map">
     update user
     <set>
@@ -374,5 +380,8 @@
       ulocked = #{ulocked,jdbcType=CHAR},
       udeleted = #{udeleted,jdbcType=CHAR}
     where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateRoleByUsername">
+      update user set urole_id = (select rid from role where rname = #{rolename}) where username = #{username}
   </update>
 </mapper>

@@ -293,6 +293,12 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+    <select id="selectByStatus" resultType="cn.edu.sicnu.cs.model.Workorders">
+      select * from workorders where wstatus = #{status}
+    </select>
+  <select id="findAllWorkorders" resultType="cn.edu.sicnu.cs.model.Workorders">
+      select * from workorders
+  </select>
   <update id="updateByExampleSelective" parameterType="map">
     update workorders
     <set>
@@ -509,5 +515,14 @@
       wprincipal_id = #{wprincipalId,jdbcType=INTEGER},
       wddl = #{wddl,jdbcType=TIMESTAMP}
     where wzid = #{wzid,jdbcType=BIGINT}
+  </update>
+  <update id="checkUpdateStatusByWid">
+      update workorders set wstatus = #{check} where wid = #{wid}
+  </update>
+  <update id="allocateUpdateStatusByWid">
+      update workorders set wprincipal_id = (select uid from user where username = #{name}) where wid = #{wid}
+  </update>
+  <update id="finishUpdateStatusByWid">
+      update workorders set wstatus = '3' where wid = #{wid}
   </update>
 </mapper>

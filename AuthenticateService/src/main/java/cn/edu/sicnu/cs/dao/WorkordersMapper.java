@@ -8,6 +8,16 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 public interface WorkordersMapper {
+    List<Workorders> selectByStatus(String status);
+
+    List<Workorders> findAllWorkorders();
+
+    void checkUpdateStatusByWid(Long wid,String check);
+
+    void allocateUpdateStatusByWid(Long wid,String name);
+
+    void finishUpdateStatusByWid(Long wid);
+
     long countByExample(WorkordersExample example);
 
     int deleteByExample(WorkordersExample example);

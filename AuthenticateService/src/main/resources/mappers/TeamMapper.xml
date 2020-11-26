@@ -9,6 +9,9 @@
     <result column="tehours" jdbcType="REAL" property="tehours" />
     <result column="teestimate" jdbcType="INTEGER" property="teestimate" />
   </resultMap>
+  <select id="selectTeidByFzname" resultType="java.lang.Integer">
+    select teid from team where te_fzid = (select uid from user where urealname = #{fzname})
+  </select>
   <sql id="Example_Where_Clause">
     <where>
       <foreach collection="oredCriteria" item="criteria" separator="or">
