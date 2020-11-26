@@ -1,6 +1,6 @@
 package cn.edu.sicnu.cs.controller;
 
-import cn.edu.sicnu.cs.service.FeedBackItfc;
+import cn.edu.sicnu.cs.service.FeedBackService;
 
 import cn.edu.sicnu.cs.model.Userform;
 
@@ -21,7 +21,7 @@ import java.util.Set;
 public class FeedBackController {
 
     @Autowired
-    private FeedBackItfc feedBackService;
+    private FeedBackService feedBackService;
 
     @GetMapping("browse/hot/userform/list/{page}")
     @ApiOperation(value = "FindHotUserFormList",notes = "查看热门问题列表,page是第几页")
