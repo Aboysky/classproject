@@ -1,6 +1,6 @@
 package cn.edu.sicnu.cs.controller;
 
-import cn.edu.sicnu.cs.Itfc.FeedBackItfc;
+import cn.edu.sicnu.cs.service.FeedBackItfc;
 
 import cn.edu.sicnu.cs.model.Userform;
 

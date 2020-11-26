@@ -28,7 +28,7 @@ public class JwtController {
     private final Logger logger = LoggerFactory.getLogger(JwtController.class);
 
     @Autowired
-    JwtServiceImpl jwtServiceImpl;
+    JwtServiceImpl jwtService;
 
     @ApiOperation(value = "authenticate api",notes = "jwt认证接口",httpMethod = "POST")
     @PostMapping("authenticate")
@@ -38,7 +38,7 @@ public class JwtController {
         logger.info("==============>>>username = "+user.getPassword());
 
         if (StringUtils.isNotEmpty(user.getUsername()) && StringUtils.isNotEmpty(user.getPassword())){
-            return jwtServiceImpl.login(user.getUsername(), user.getPassword());
+            return jwtService.login(user.getUsername(), user.getPassword());
         }
         return "密码错误";
     }

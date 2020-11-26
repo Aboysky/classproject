@@ -10,9 +10,9 @@ import org.apache.ibatis.annotations.Param;
 
 public interface UserformMapper {
 
-    List<Userform> todayUserFormCnt(String cid,String type,String today);
+    List<Userform> todayUserFormCnt(long cid,String type,String today);
 
-    List<Map<String,Object>> findUserFormList(String cid, long page, long pagenum, String status);
+    List<Map<String,Object>> findUserFormList(long cid, long page, long pagenum, String status);
 
     long countByExample(UserformExample example);
 
@@ -45,4 +45,6 @@ public interface UserformMapper {
     List<Map<String,Object>> findHotUserFormList(String page);
 
     List<Userform> findSelfUserFormList(String uid);
+
+    long findUserFormCnt(long cid, String status);
 }

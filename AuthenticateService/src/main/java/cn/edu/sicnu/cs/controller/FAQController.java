@@ -1,8 +1,7 @@
 package cn.edu.sicnu.cs.controller;
 
-import cn.edu.sicnu.cs.dao.FaqMapper;
 import cn.edu.sicnu.cs.model.Faq;
-import cn.edu.sicnu.cs.service.FaqService;
+import cn.edu.sicnu.cs.service.impl.FaqServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import java.util.List;
 public class FAQController {
 
     @Autowired
-    private FaqService faqService;
+    private FaqServiceImpl faqService;
 
     @GetMapping("browse/{type}")
     @ResponseBody

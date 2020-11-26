@@ -2,7 +2,7 @@ package cn.edu.sicnu.cs.controller;
 
 
 import cn.edu.sicnu.cs.model.Task;
-import cn.edu.sicnu.cs.service.EngineerService;
+import cn.edu.sicnu.cs.service.impl.EngineerServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,28 +20,20 @@ public class EngineerCotroller {
 
 
     @Autowired
-    EngineerService engineerService;
+    EngineerServiceImpl engineerService;
 
     @GetMapping("index/task/cnt")
     @ApiOperation(value = "FindSelfTaskCntByType",notes = "查询自己的任务数量")
     public Map<String,Object> FindSelfTaskCntByType(String uid){
 
         Map<String,Object> map = new HashMap<>();
-        map.put("cnt1",engineerService.FindSelfTaskCntByType(uid,"0"));
-        map.put("cnt2",engineerService.FindSelfTaskCntByType(uid,"1"));
-        map.put("cnt3",engineerService.FindSelfTaskCntByType(uid,"2"));
-        map.put("cnt4",engineerService.FindSelfWorkOrderCntByType(uid,""));
+        map.put("untrated",engineerService.FindSelfTaskCntByType(uid,"0"));
+        map.put("processing",engineerService.FindSelfTaskCntByType(uid,"1"));
+        map.put("finished",engineerService.FindSelfTaskCntByType(uid,"2"));
+        map.put("",engineerService.FindSelfWorkOrderCntByType(uid,"2"));
 
         return map;
 
-    }
-
-    @ApiOperation(value = "FindSelfTaskCntByType",notes = "根据工单状态查询自己的关联的工单数量")
-    @GetMapping("index/workorders/cnt/{uid}/{type}")
-    public int FindSelfWorkOrderCntByType(@PathVariable String uid,@PathVariable String type){
-
-        int Cnt =  engineerService.FindSelfWorkOrderCntByType(uid,type);
-        return Cnt;
     }
 
     @ApiOperation(value = "FindSelfTaskList",notes = "查询自己正在参与的未完成的任务列表")
