@@ -91,6 +91,7 @@
     fcontent
   </sql>
 
+
   <select id="findHotUserFormList" resultType="java.util.HashMap">
     select username,ftitle,ftype,fviews from user,userform where user.uid = userform.fuser_id order by userform.fviews;
   </select>
@@ -110,6 +111,9 @@
     order by userform.fcreatetime
     limit #{page},#{pagenum}
    </select>
+  <select id="findUserFormCnt" resultType="java.lang.Long">
+    SELECT count(userform.fid)as total from userform where userform.fassignedTo_id = #{cid} and fstatus = #{status};
+  </select>
 
 
   <select id="selectByExampleWithBLOBs" parameterType="cn.edu.sicnu.cs.model.UserformExample" resultMap="ResultMapWithBLOBs">

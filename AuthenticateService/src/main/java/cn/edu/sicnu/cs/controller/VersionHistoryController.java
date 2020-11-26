@@ -1,9 +1,8 @@
 package cn.edu.sicnu.cs.controller;
 
 
-import cn.edu.sicnu.cs.model.Userform;
 import cn.edu.sicnu.cs.model.Versionhistory;
-import cn.edu.sicnu.cs.service.VersionHistoryService;
+import cn.edu.sicnu.cs.service.impl.VersionHistoryServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ import java.util.List;
 public class VersionHistoryController {
 
     @Autowired
-    VersionHistoryService versionHistoryService;
+    VersionHistoryServiceImpl versionHistoryService;
 
     @GetMapping("history/vbig")
     @ApiOperation(value = "FindVersionHistoryVBIG",notes = "大版本列表")

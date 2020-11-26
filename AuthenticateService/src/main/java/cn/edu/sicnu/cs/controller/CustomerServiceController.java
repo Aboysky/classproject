@@ -4,10 +4,10 @@ package cn.edu.sicnu.cs.controller;
 import cn.edu.sicnu.cs.model.User;
 import cn.edu.sicnu.cs.model.Userform;
 import cn.edu.sicnu.cs.model.Workorders;
-import cn.edu.sicnu.cs.service.CustomersServiceService;
+import cn.edu.sicnu.cs.service.impl.CustomersServiceServiceImpl;
 
 import cn.edu.sicnu.cs.service.UserService;
-import cn.edu.sicnu.cs.service.WorkOrdersService;
+import cn.edu.sicnu.cs.service.impl.WorkOrdersServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import java.util.Set;
 public class CustomerServiceController {
 
     @Autowired
-    private CustomersServiceService customersServiceService;
+    private CustomersServiceServiceImpl customersServiceService;
 
     @Autowired
     UserService userService;
@@ -35,11 +35,11 @@ public class CustomerServiceController {
     @GetMapping("index/userform/cnt")
     @ResponseBody
     @ApiOperation(value = "TodayUserFormCnt",notes = "查询对应状态的任务数量")
-    public Map<String,Object> TodayUserFormCnt(String cid){
+    public Map<String,Object> TodayUserFormCnt(long cid){
 
         Map<String,Object> map = new HashMap<>();
 
-        User user = userService.selectUserByUid(Integer.parseInt(cid));
+        User user = userService.selectUserByUid((int)cid);
         map.put("username",user.getUsername());
         map.put("untreated",customersServiceService.TodayUserFormCnt(cid,"0"));
         map.put("processing",customersServiceService.TodayUserFormCnt(cid,"1"));
@@ -52,9 +52,13 @@ public class CustomerServiceController {
 
     @GetMapping("index/today/untreated/userform/list")
     @ResponseBody
-    @ApiOperation(value = "FindTodayUntreatedUserFormListByCid",notes = "查询对应状态的工单列表")
-    public List<Map<String,Object>> FindUserFormList(String cid,long page,long pagenum,String status){
-        return customersServiceService.FindUserFormList(cid,page,pagenum,status);
+    @ApiOperation(value = "FindTodayUntreatedUserFormListByCid",notes = "查询对应状态的表单列表")
+    public Map<String,Object> FindUserFormList(long cid,long page,long pagenum,String status) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", customersServiceService.FindUserFormCnt(cid, status));
+        map.put("list", customersServiceService.FindUserFormList(cid, page, pagenum, status));
+
+        return map;
     }
 
 
@@ -71,7 +75,7 @@ public class CustomerServiceController {
 
 
     @Autowired
-    private WorkOrdersService workOrdersService;
+    private WorkOrdersServiceImpl workOrdersService;
 
     @PostMapping("form/submit/workorder")
     @ApiOperation(value = "WorkOrderSubmit",notes = "提交工单")

@@ -3,7 +3,7 @@ package cn.edu.sicnu.cs.controller;
 
 
 import cn.edu.sicnu.cs.model.User;
-import cn.edu.sicnu.cs.service.JwtService;
+import cn.edu.sicnu.cs.service.impl.JwtServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +28,7 @@ public class JwtController {
     private final Logger logger = LoggerFactory.getLogger(JwtController.class);
 
     @Autowired
-    JwtService jwtService;
+    JwtServiceImpl jwtService;
 
     @ApiOperation(value = "authenticate api",notes = "jwt认证接口",httpMethod = "POST")
     @PostMapping("authenticate")
