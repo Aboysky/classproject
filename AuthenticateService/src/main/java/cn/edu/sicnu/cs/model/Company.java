@@ -1,6 +1,9 @@
 package cn.edu.sicnu.cs.model;
 
-public class Company {
+import java.io.Serializable;
+
+public class Company implements Serializable {
+    private static final long serialVersionUID = -4402535744016846329L;
     private Integer cid;
 
     private String cname;
