@@ -21,15 +21,18 @@ public class WorkOrdersServiceImpl implements WorkOrdersService {
     }
 
     @Override
-    public List<Map<String,Object>> FindSelfWorkOrderSubmit(String cid) {
+    public List<Map<String,Object>> FindSelfWorkOrderSubmit(long cid,long page, long pagenum, String status) {
 
-        List<Map<String,Object>> list = workordersMapper.findSelfWorkOrderSubmit(cid);
+        page = ((page-1)*pagenum) + 1;
+        pagenum = page + pagenum - 1;
+
+        List<Map<String,Object>> list = workordersMapper.findSelfWorkOrderSubmit(cid,page,pagenum,status);
         return list;
     }
 
     @Override
-    public Workorders FindSelfWorkOrder(String wid) {
-        Workorders workorders = workordersMapper.findSelfWorkOrder(wid);
+    public Workorders FindWorkOrder(long wid) {
+        Workorders workorders = workordersMapper.findWorkOrder(wid);
         return workorders;
     }
 }

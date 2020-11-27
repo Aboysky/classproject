@@ -38,13 +38,11 @@ public interface TaskMapper {
 
     int findSelfTaskCntByStatus(long uid, String status);
 
-    int FindSelfWorkOrderCntByStatus(long uid, String status);
+
 
     List<Map<String,Object>> findSelfTaskListByStatus(long uid, long page, long pagenum, String status);
 
-    List<Map<String,Object>> findSelfWorkOrderListByStatus(long uid, long page, long pagenum, String status);
 
     List<Task> findWorkOrderListByStatus(String status);
 
-    List<Task> findWorkOrderByWid(long wid);
 }

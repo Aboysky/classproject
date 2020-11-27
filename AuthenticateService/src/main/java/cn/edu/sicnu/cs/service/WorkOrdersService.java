@@ -8,7 +8,7 @@ import java.util.Map;
 public interface WorkOrdersService {
     void InsertWorkOrder(Workorders workOrders);
 
-    List<Map<String,Object>> FindSelfWorkOrderSubmit(String fid);
+    List<Map<String,Object>> FindSelfWorkOrderSubmit(long cid, long page, long pagenum, String status);
 
-    Workorders FindSelfWorkOrder(String wid);
+    Workorders FindWorkOrder(long wid);
 }

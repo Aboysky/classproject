@@ -59,12 +59,12 @@ public class EngineerCotroller {
 //
 //    }
 
-    @ApiOperation(value = "FindDoingWorkOrderList",notes = "根据状态查询工单列表")
-    @GetMapping("order/list")
-    public List<Task> FindDoingWorkOrderList(String status){
-        List<Task> list =  engineerService.FindWorkOrderListByStatus(status);
-        return list ;
-    }
+//    @ApiOperation(value = "FindDoingWorkOrderList",notes = "根据状态查询工单列表")
+//    @GetMapping("order/list")
+//    public List<Task> FindDoingWorkOrderList(String status){
+//        List<Task> list =  engineerService.FindWorkOrderListByStatus(status);
+//        return list ;
+//    }
 
 
     @ApiOperation(value = "FindSelfWorkOrderList",notes = "根据状态查询自己关联的工单列表")
