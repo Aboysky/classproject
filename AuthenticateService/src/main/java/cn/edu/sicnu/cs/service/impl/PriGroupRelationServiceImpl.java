@@ -11,6 +11,7 @@ import cn.edu.sicnu.cs.service.PrigroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -38,6 +39,9 @@ public class PriGroupRelationServiceImpl implements PriGroupRelationService {
     PrigroupService prigroupService;
 
     @Override
+    @Caching(
+
+    )
     public int deleteByPrimaryKey(int pid, int gid) {
         return prigrouprelationMapper.deleteByPrimaryKey(new PrigrouprelationKey(gid,pid));
     }

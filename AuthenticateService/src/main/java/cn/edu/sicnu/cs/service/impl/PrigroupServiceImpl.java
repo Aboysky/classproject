@@ -14,6 +14,10 @@ import netscape.security.Privilege;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,6 +45,12 @@ public class PrigroupServiceImpl implements PrigroupService {
     RoleService roleService;
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "navigationbar",allEntries = true),
+                    @CacheEvict(value = "prigroup",key = "#id")
+            }
+    )
     public int deleteByPrimaryKey(Integer id) {
         int i = prigroupMapper.deleteByPrimaryKey(id);
         int i1 = priGroupRelationService.deleteAllRelationEqualtoGid(id);
@@ -48,16 +58,31 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
+    @Caching(
+            evict = {
+//                    @CacheEvict(value = "navigationbar",allEntries = true)
+//                    @CacheEvict(value = "prigroup",key = "#id")
+            }
+    )
     public int insert(Prigroup record) {
         return prigroupMapper.insertSelective(record);
     }
 
     @Override
+    @Cacheable(value = "prigroup",key = "#id")
     public Prigroup selectByPrimaryKey(Integer id) {
         return prigroupMapper.selectByPrimaryKey(id);
     }
 
     @Override
+    @Caching(
+            cacheable = {
+                    @Cacheable(value = "prigroupname",key = "#privgroupname")
+            },
+            put = {
+                    @CachePut(value = "prigroup",key = "#result.pgid")
+            }
+    )
     public Prigroup selectByPrivName(String privgroupname) {
         PrigroupExample prigroupExample = new PrigroupExample();
         prigroupExample.createCriteria().andPrigroupnameEqualTo(privgroupname);
@@ -69,11 +94,18 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
+    @Cacheable(value = "prigroupprivs",key = "#pgroupid+#methodName")
     public List<Metaoperation> selectPrivilegesByPrimaryKey(Integer pgroupid) {
         return priGroupRelationService.selectPrivilegesByPrigroupId(pgroupid);
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "prigroup",key = "#record.pgid"),
+                    @CacheEvict(value = "prigrouplist",allEntries = true)
+            }
+    )
     public int updateByPrimaryKey(Prigroup record) {
         if (record.getPgid()==null){
             logger.error("待更新的对象record中的id属性不能为空");
@@ -83,6 +115,7 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
+    @Cacheable(value = "prigroupprivs",key = "#groupid+'--'+#roleid")
     public List<Metaoperation> selectInAPrivGoupprivsByRole(Integer groupid, Integer roleid) {
         List<Metaoperation> metaoperations = this.selectPrivilegesByPrimaryKey(groupid);
         List<Metaoperation> metaoperations1 = roleService.selectPrivilegesByRid(roleid);
@@ -102,6 +135,7 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
+    @Cacheable(value = "prigrouplist",key = "#methodName")
     public List<Prigroup> selectAll() {
         PrigroupExample prigroupExample = new PrigroupExample();
         prigroupExample.createCriteria().andPgidIsNotNull();

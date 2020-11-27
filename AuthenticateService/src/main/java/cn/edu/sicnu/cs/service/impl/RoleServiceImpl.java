@@ -12,6 +12,7 @@ import cn.edu.sicnu.cs.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,6 +37,7 @@ public class RoleServiceImpl implements RoleService {
     RolePrivService rolePrivService;
 
     @Override
+    @Cacheable(cacheNames = "rolelist",key = "#root.methodName")
     public List<Role> selectAll() {
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria criteria = roleExample.createCriteria();
@@ -44,6 +46,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @CacheEvict(cacheNames = "role",key = "#id")
     public int deleteByPrimaryKey(Integer id) {
         RedisUtils.delete("configAttributes:permissions");
         if (id==null){
@@ -70,6 +73,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @CachePut(cacheNames = "role",key = "#result.rid")
     public Role selectRoleByRoleName(String roleName) {
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria criteria = roleExample.createCriteria();
@@ -82,17 +86,25 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Cacheable(cacheNames = "role",key = "#id")
     public Role selectByPrimaryKey(Integer id) {
         return roleMapper.selectByPrimaryKey(id);
     }
 
     @Override
+    @Cacheable(cacheNames = "roleprivs",key = "#rid+'selectPrivilegesByRid'")
     public List<Metaoperation> selectPrivilegesByRid(int rid) {
         return rolePrivService.selectRolePrivsByRid(rid);
     }
 
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "role",key = "#rid"),
+                    @CacheEvict(cacheNames = "rolelist",allEntries = true)
+            }
+    )
     public int updateRoleByPrimaryKey(int rid, Role record) {
         RedisUtils.delete("configAttributes:permissions");
         if (record==null){
@@ -104,6 +116,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Cacheable(value = "roleprivs",key = "#root.methodName")
     public List<RoleInfo> selectAllRoleAndMetaoperations() {
         List<Role> roles = this.selectAll();
         List<RoleInfo> roleInfos = new ArrayList<>();
@@ -116,6 +129,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Cacheable(value = "rolelist",key = "#root.methodName")
     public List<Role> selectAllRoles() {
         RoleExample roleExample = new RoleExample();
         roleExample.createCriteria().andRidIsNotNull();

@@ -68,8 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/webjars/**"
     };
 
-    @Autowired
-    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+//    @Autowired
+//    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
 
     @Bean("passwordEncoder")

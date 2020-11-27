@@ -9,7 +9,9 @@ import cn.edu.sicnu.cs.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -32,7 +34,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     MetaoperationMapper metaoperationMapper;
 
     @Override
-    @Cacheable(value = "opetations",key = "#result")
+    @Cacheable(value = "operations",key = "#root.methodName")
     public List<Metaoperation> selectAll() {
         MetaoperationExample operationExample = new MetaoperationExample();
         MetaoperationExample.Criteria criteria = operationExample.createCriteria();
@@ -42,13 +44,26 @@ public class MetaOperationServiceImpl implements MetaOperationService {
 
     @Override
     @CacheEvict(value = "operations",key = "#id")
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "operations",key = "#id"),
+                    @CacheEvict(value = "roleprivs",allEntries = true),
+                    @CacheEvict(value = "navigationbar",allEntries = true)
+            }
+    )
     public int deleteByPrimaryKey(Integer id) {
         RedisUtils.delete("configAttributes:permissions");
         return metaoperationMapper.deleteByPrimaryKey(id);
     }
 
     @Override
-    @CacheEvict(value = "operations",key = "#id")
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "operations",allEntries = true),
+                    @CacheEvict(value = "roleprivs",allEntries = true),
+                    @CacheEvict(value = "navigationbar",allEntries = true)
+            }
+    )
     public int deleteByOperationName(String operationName) {
         RedisUtils.delete("configAttributes:permissions");
         MetaoperationExample operationExample = new MetaoperationExample();
@@ -58,17 +73,25 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "roleprivs",allEntries = true),
+                    @CacheEvict(value = "navigationbar",allEntries = true)
+            }
+    )
     public int insert(Metaoperation record) {
         RedisUtils.delete("configAttributes:permissions");
         return metaoperationMapper.insertSelective(record);
     }
 
     @Override
+    @Cacheable(value = "operations",key = "#id")
     public Metaoperation selectByPrimaryKey(Integer id) {
         return metaoperationMapper.selectByPrimaryKey(id);
     }
 
     @Override
+    @CachePut(value = "operations",key = "#result.moid")
     public Metaoperation selectByOperationName(String operationName)
     {
         MetaoperationExample operationExample = new MetaoperationExample();
@@ -79,6 +102,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
+    @Cacheable(value = "navigationbar",key = "#root.methodName")
     public List<Metaoperation> selectAllHeadNavBar() {
         MetaoperationExample metaoperationExample = new MetaoperationExample();
         metaoperationExample.createCriteria().andModescLike("HEAD_%");
@@ -87,6 +111,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
+    @Cacheable(value = "navigationbar",key = "#root.methodName")
     public List<Metaoperation> selectAllChildNavBarByHead(String headname) {
         MetaoperationExample metaoperationExample = new MetaoperationExample();
         headname = headname.toLowerCase();
@@ -96,6 +121,13 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "operations",key = "#record.moid"),
+                    @CacheEvict(value = "roleprivs",allEntries = true),
+                    @CacheEvict(value = "navigationbar",allEntries = true)
+            }
+    )
     public int updateByPrimaryKey(Metaoperation record) {
         RedisUtils.delete("configAttributes:permissions");
         if (record.getMoid()==null){
@@ -106,6 +138,13 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "operations",key = "#record.moid"),
+                    @CacheEvict(value = "roleprivs",allEntries = true),
+                    @CacheEvict(value = "navigationbar",allEntries = true)
+            }
+    )
     public int updateByOperationName(String operationName, Metaoperation record)
     {
         RedisUtils.delete("configAttributes:permissions");
