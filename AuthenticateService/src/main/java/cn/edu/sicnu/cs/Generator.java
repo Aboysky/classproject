@@ -23,7 +23,7 @@
 //        //指向逆向工程的配置文件
 //        File newFile = new File("");
 //        System.out.println(newFile.getCanonicalPath()+"=="+newFile.getAbsolutePath());
-//        File configFile=new File("C:\\Users\\songyz\\Desktop\\classproject\\AuthenticateService\\src\\main\\resources\\generatorConfig.xml");
+//        File configFile=new File("C:\\Users\\Huan\\IdeaProjects\\AuthenticateService\\src\\main\\resources\\generatorConfig.xml");
 //        ConfigurationParser parser=new ConfigurationParser(warnings);
 //        Configuration config=parser.parseConfiguration(configFile);
 //        DefaultShellCallback callback=new DefaultShellCallback(overwrite);

@@ -46,7 +46,14 @@ public interface WorkordersMapper {
 
     int updateByPrimaryKey(Workorders record);
 
-    List<Map<String,Object>> findSelfWorkOrderSubmit(String cid);
+    int findSelfWorkOrderCntByStatus(long uid, String status);
 
-    Workorders findSelfWorkOrder(String wid);
+    List<Map<String,Object>> findSelfWorkOrderListByStatus(long uid, long page, long pagenum, String status);
+
+
+    List<Map<String,Object>> findSelfWorkOrderSubmit(long cid,long page, long pagenum, String status);
+
+    Workorders findWorkOrder(long wid);
+
+
 }

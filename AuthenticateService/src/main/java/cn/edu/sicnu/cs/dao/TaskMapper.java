@@ -3,6 +3,8 @@ package cn.edu.sicnu.cs.dao;
 import cn.edu.sicnu.cs.model.Task;
 import cn.edu.sicnu.cs.model.TaskExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface TaskMapper {
@@ -33,4 +35,14 @@ public interface TaskMapper {
     int updateByPrimaryKeyWithBLOBs(Task record);
 
     int updateByPrimaryKey(Task record);
+
+    int findSelfTaskCntByStatus(long uid, String status);
+
+
+
+    List<Map<String,Object>> findSelfTaskListByStatus(long uid, long page, long pagenum, String status);
+
+
+    List<Task> findWorkOrderListByStatus(String status);
+
 }
