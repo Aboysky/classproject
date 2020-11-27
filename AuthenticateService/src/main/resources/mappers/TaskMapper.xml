@@ -93,6 +93,16 @@
   <sql id="Blob_Column_List">
     tdesc
   </sql>
+
+  <select id="findSelfTaskListByStatus" resultType="java.util.HashMap">
+    select tid,tcreateDate,urealname,tfromid,tpririty,tname from task,user where tassignedTo_id = #{uid} and tstatus = #{status} and tuserBy_id = uid group by tfromid order by task.tpririty limit #{page},#{pagenum};
+  </select>
+
+  <select id="findSelfWorkOrderListByStatus" resultType="java.util.HashMap">
+    select wuserform_id,wname,wpriority,username from workorders,user where wuserform_id = #{wid} and username = workorders.wprincipal_id  and wstatus = #{status}
+order by wpriority
+limit #{page},#{pagenum}
+  </select>
   <select id="selectByExampleWithBLOBs" parameterType="cn.edu.sicnu.cs.model.TaskExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">

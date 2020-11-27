@@ -1,23 +1,22 @@
 package cn.edu.sicnu.cs.service;
 
 import cn.edu.sicnu.cs.model.Task;
+import cn.edu.sicnu.cs.model.Workorders;
 
 import java.util.List;
+import java.util.Map;
 
 public interface EngineerService {
-    int FindSelfTaskCntByType(String uid, String type);
 
-    int FindSelfWorkOrderCntByType(String uid, String type);
+    int FindSelfTaskCntByStatus(long uid, String s);
 
-    List<Task> FindSelfTaskList(String uid);
+    int FindSelfWorkOrderCntByStatus(long uid, String s);
 
-    List<Task> FindSelfWorkOrderListByType(String uid, String s);
+    List<Map<String,Object>> FindSelfTaskListByStatus(long uid, long page, long pagenum, String status);
 
-    List<Task> FindWorkOrderByWid(String wid);
+    List<Map<String,Object>> FindSelfWorkOrderListByStatus(long uid,long page,long pagenum,String status);
 
-    List<Task> FindTaskList(String uid);
+    List<Task> FindWorkOrderListByStatus(String status);
 
-    List<Task> FindTaskListByType(String uid, String type);
-
-    Task FindTaskByTid(String uid);
+    Workorders FindWorkOrderByWid(long wid);
 }
