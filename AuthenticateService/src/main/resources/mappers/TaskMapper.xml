@@ -93,6 +93,16 @@
   <sql id="Blob_Column_List">
     tdesc
   </sql>
+
+  <select id="findSelfTaskListByStatus" resultType="java.util.HashMap">
+    select tid,tcreateDate,urealname,tfromid,tpririty,tname from task,user where tassignedTo_id = #{uid} and tstatus = #{status} and tuserBy_id = uid group by tfromid order by task.tpririty limit #{page},#{pagenum};
+  </select>
+
+  <select id="findSelfTaskCntByStatus" resultType="java.lang.Long">
+    select count(tid) from task where tassignedTo_id = #{uid} and tstatus = #{status};
+  </select>
+
+
   <select id="selectByExampleWithBLOBs" parameterType="cn.edu.sicnu.cs.model.TaskExample" resultMap="ResultMapWithBLOBs">
     select
     <if test="distinct">

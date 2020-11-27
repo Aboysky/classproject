@@ -104,16 +104,18 @@ public class CustomerServiceController {
     @GetMapping("self/workorder/list")
     @ResponseBody
     @ApiOperation(value = "FindSelfWorkOrderSubmit",notes = "查看自己提交工单列表")
-    public List<Map<String,Object>> FindSelfWorkOrderSubmit(String cid) {
-        List<Map<String,Object>> list =  workOrdersService.FindSelfWorkOrderSubmit(cid);
+    public List<Map<String,Object>> FindSelfWorkOrderSubmit(long cid,long page,long pagenum,String status) {
+
+
+        List<Map<String,Object>> list =  workOrdersService.FindSelfWorkOrderSubmit(cid,page,pagenum,status);
         return list;
     }
 
     @GetMapping("self/workorder")
     @ResponseBody
     @ApiOperation(value = "FindSelfWorkOrder",notes = "查看工单详情")
-    public Workorders FindSelfWorkOrder(String wid) {
-        Workorders workorders =  workOrdersService.FindSelfWorkOrder(wid);
+    public Workorders FindSelfWorkOrder(long wid) {
+        Workorders workorders =  workOrdersService.FindWorkOrder(wid);
         return workorders;
     }
 

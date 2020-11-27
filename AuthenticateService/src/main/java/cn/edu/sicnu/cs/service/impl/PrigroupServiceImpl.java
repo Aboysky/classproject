@@ -10,7 +10,6 @@ import cn.edu.sicnu.cs.pojo.PrivGroup;
 import cn.edu.sicnu.cs.service.PriGroupRelationService;
 import cn.edu.sicnu.cs.service.PrigroupService;
 import cn.edu.sicnu.cs.service.RoleService;
-import netscape.security.Privilege;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

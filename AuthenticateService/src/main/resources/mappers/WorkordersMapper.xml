@@ -95,10 +95,23 @@
     from workorders a,user,company
     where user.uid in(select fuser_id from userform where userform.fid = a.wuserform_id)
     and user.ucompany_id = company.cid
-    and a.wuser_id = #{cid};
+    and a.wuser_id = #{cid}
+    and a.wstatus = #{status}
+    limit #{page},#{pagenum}
+    ;
   </select>
-
-  <select id="findSelfWorkOrder" resultType="cn.edu.sicnu.cs.model.Workorders">
+  
+  <select id="findSelfWorkOrderCntByStatus" resultType="java.lang.Long">
+    select count(wid) from workorders where workorders.wstatus = #{status}
+    and workorders.wid
+    in (select tfromid from task where task.tassignedTo_id = #{uid})
+  </select>
+  <select id="findSelfWorkOrderListByStatus" resultType="java.util.HashMap">
+    select wuserform_id,wname,wpriority,username from workorders,user where wuserform_id = #{wid} and username = workorders.wprincipal_id  and wstatus = #{status}
+order by wpriority
+limit #{page},#{pagenum}
+  </select>
+  <select id="findWorkOrder" resultType="cn.edu.sicnu.cs.model.Workorders">
     select * from workorders where wid = #{wid};
   </select>
 
@@ -292,6 +305,12 @@
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
+  </select>
+    <select id="selectByStatus" resultType="cn.edu.sicnu.cs.model.Workorders">
+      select * from workorders where wstatus = #{status}
+    </select>
+  <select id="findAllWorkorders" resultType="cn.edu.sicnu.cs.model.Workorders">
+      select * from workorders
   </select>
   <update id="updateByExampleSelective" parameterType="map">
     update workorders
@@ -509,5 +528,14 @@
       wprincipal_id = #{wprincipalId,jdbcType=INTEGER},
       wddl = #{wddl,jdbcType=TIMESTAMP}
     where wzid = #{wzid,jdbcType=BIGINT}
+  </update>
+  <update id="checkUpdateStatusByWid">
+      update workorders set wstatus = #{check} where wid = #{wid}
+  </update>
+  <update id="allocateUpdateStatusByWid">
+      update workorders set wprincipal_id = (select uid from user where username = #{name}) where wid = #{wid}
+  </update>
+  <update id="finishUpdateStatusByWid">
+      update workorders set wstatus = '3' where wid = #{wid}
   </update>
 </mapper>

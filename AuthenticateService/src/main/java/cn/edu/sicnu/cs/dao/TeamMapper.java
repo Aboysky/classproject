@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 public interface TeamMapper {
+    int selectTeidByFzname(String fzname);
+
     long countByExample(TeamExample example);
 
     int deleteByExample(TeamExample example);
