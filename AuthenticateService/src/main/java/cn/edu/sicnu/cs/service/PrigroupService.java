@@ -71,5 +71,14 @@ public interface PrigroupService {
      */
     List<Metaoperation> selectInAPrivGoupprivsByRole(Integer groupid,Integer roleid);
 
+    /**
+     * 查询角色id在权限组下面的子标题下拥有的权限
+     * @param groupid 权限组id
+     * @param roleid 角色id
+     * @param zibiaoti 二级菜单id
+     * @return
+     */
+    List<Metaoperation> selectInAPrivGoupprivsByRoleAndFourlever(Integer groupid,Integer roleid,Integer zibiaoti);
+
     List<Prigroup> selectAll();
 }

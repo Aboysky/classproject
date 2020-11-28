@@ -32,8 +32,13 @@ class PrivilegeServiceImplTest {
         metaoperations.forEach(System.out::println);
     }
 
-    @Test
+    @Test   ///v1.1/user/{uid}/_pagepermissions
     void deleteByPname() {
+//        System.out.println("\n\n\n\n\n\n\n");
+//        System.out.println(prigroupService.selectPrivilegesByPrimaryKey(10001));
+//        System.out.println("\n");
+        System.out.println(prigroupService.selectInAPrivGoupprivsByRoleAndFourlever(10001, 2, 11));
+//        System.out.println("\n\n\n\n\n\n\n");
     }
 
 

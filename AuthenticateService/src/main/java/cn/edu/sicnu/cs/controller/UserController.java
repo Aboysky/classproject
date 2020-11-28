@@ -6,6 +6,7 @@ import cn.edu.sicnu.cs.model.Prigroup;
 import cn.edu.sicnu.cs.model.Role;
 import cn.edu.sicnu.cs.model.User;
 import cn.edu.sicnu.cs.pojo.*;
+import cn.edu.sicnu.cs.service.MetaOperationService;
 import cn.edu.sicnu.cs.service.PrigroupService;
 import cn.edu.sicnu.cs.service.RoleService;
 import cn.edu.sicnu.cs.service.UserService;
@@ -50,6 +51,9 @@ public class UserController {
 
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    MetaOperationService metaOperationService;
 
 //
 //    @RequestMapping(method = PUT)
@@ -508,5 +512,44 @@ public class UserController {
 
         return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningPrivGroupWithPrivs);
     }
+
+    @GetMapping("/{soft_vesion}/_roles/_groupprivs")
+    public String get_all_Privs_Four_Lever_By_PrivGroup(){
+
+        List<Role> roles = roleService.selectAllRoles();
+        for (Role role : roles) {
+            String name= role.getRname();
+            role.setRname(role.getRdesc());
+            role.setRdesc(name);
+        }
+//        List<ReturningPrivGroupWithPrivsFourLever> returningPrivGroupWithPrivs = new ArrayList<>();
+        List<ReturningRoleWithprivgroupFourLever> returningRoleWithprivsgroups = new ArrayList<>();
+        List<ReturningPrivFourLevel> privFourLevels = new ArrayList<>();
+        List<ReturningPriv> returningPrivs = new ArrayList<>();
+        List<Prigroup> prigroups = prigroupService.selectAll();
+
+        for (Role role :roles) {
+            List<ReturningPrivGroupWithPrivsFourLever> returningPrivGroupWithPrivs = new ArrayList<>();
+            for (Prigroup prigroup : prigroups){
+                if (prigroup!=null&&role!=null){
+                    List<ReturningPrivFourLevel> returningPrivFourLevels = metaOperationService.selectPrivFourLeverByRoleAndPrivgroup(role,prigroup);
+                    returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPrivsFourLever(prigroup,returningPrivFourLevels));
+                }
+            }
+            if (role!=null){
+                System.out.println("----------->"+returningPrivGroupWithPrivs);
+                System.out.println(">>--------"+returningRoleWithprivsgroups);
+                returningRoleWithprivsgroups.add(new ReturningRoleWithprivgroupFourLever(role,returningPrivGroupWithPrivs));
+                System.out.println(">>--------"+returningRoleWithprivsgroups);
+            }
+//            returningPrivGroupWithPrivs.clear();
+        }
+        System.out.println("------------->"+returningRoleWithprivsgroups);
+//
+//       return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningRoleWithprivsgroups);
+        return ResUtil.getJsonStrJackon(ResultCode.OK, "请求成功",returningRoleWithprivsgroups);
+    }
+
+
 
 }

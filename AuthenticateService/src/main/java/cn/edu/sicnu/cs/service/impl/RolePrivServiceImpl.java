@@ -46,6 +46,9 @@ public class RolePrivServiceImpl implements RolePrivService {
         RoleprivExample.Criteria criteria = roleprivExample.createCriteria();
         criteria.andRoleidEqualTo(rid);
         List<Rolepriv> roleprivs = roleprivMapper.selectByExample(roleprivExample);
+
+        logger.debug("角色id"+rid+"  roleprivs: "+roleprivs);
+
         List<Metaoperation> privileges = new ArrayList<>();
         for (Rolepriv rolepriv : roleprivs) {
             Metaoperation privilege = metaOperationService.selectByPrimaryKey(rolepriv.getPrivilegeid());
@@ -54,6 +57,7 @@ public class RolePrivServiceImpl implements RolePrivService {
             }
 
         }
+        logger.debug("此角色拥有的权限集合为: privileges: "+privileges);
         return privileges;
     }
 
@@ -181,8 +185,8 @@ public class RolePrivServiceImpl implements RolePrivService {
 //            }
 //        }
 
-        logger.debug("-------->metaoperations"+metaoperations);
-        logger.debug("----------->metaoperations1"+metaoperations1);
+//        logger.debug("-------->metaoperations"+metaoperations);
+//        logger.debug("----------->metaoperations1"+metaoperations1);
         if (!metaoperations.isEmpty()){
             for (Metaoperation metaoperation : metaoperations) {
                 if (!metaoperations1.isEmpty()){
@@ -195,7 +199,7 @@ public class RolePrivServiceImpl implements RolePrivService {
                 }else{
                     return null;
                 }
-                logger.debug("navigationBarChilrens"+navigationBarChilrens);
+//                logger.debug("navigationBarChilrens"+navigationBarChilrens);
 
             }
             return navigationBarChilrens;

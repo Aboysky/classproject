@@ -7,9 +7,11 @@ import cn.edu.sicnu.cs.model.Prigroup;
 import cn.edu.sicnu.cs.model.PrigroupExample;
 import cn.edu.sicnu.cs.model.PrigrouprelationExample;
 import cn.edu.sicnu.cs.pojo.PrivGroup;
+import cn.edu.sicnu.cs.service.MetaOperationService;
 import cn.edu.sicnu.cs.service.PriGroupRelationService;
 import cn.edu.sicnu.cs.service.PrigroupService;
 import cn.edu.sicnu.cs.service.RoleService;
+import io.jsonwebtoken.lang.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Classname PrigroupServiceImpl
@@ -43,6 +46,9 @@ public class PrigroupServiceImpl implements PrigroupService {
     @Autowired
     RoleService roleService;
 
+    @Autowired
+    MetaOperationService metaOperationService;
+
     @Override
     @Caching(
             evict = {
@@ -59,8 +65,8 @@ public class PrigroupServiceImpl implements PrigroupService {
     @Override
     @Caching(
             evict = {
-//                    @CacheEvict(value = "navigationbar",allEntries = true)
-//                    @CacheEvict(value = "prigroup",key = "#id")
+                    @CacheEvict(value = "navigationbar",allEntries = true),
+                    @CacheEvict(value = "prigrouplist",allEntries = true),
             }
     )
     public int insert(Prigroup record) {
@@ -93,7 +99,7 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
-    @Cacheable(value = "prigroupprivs",key = "#pgroupid+#methodName")
+    @Cacheable(value = "prigroupprivs",key = "#pgroupid.toString()+'--'+#root.methodName")
     public List<Metaoperation> selectPrivilegesByPrimaryKey(Integer pgroupid) {
         return priGroupRelationService.selectPrivilegesByPrigroupId(pgroupid);
     }
@@ -134,7 +140,32 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
-    @Cacheable(value = "prigrouplist",key = "#methodName")
+    public List<Metaoperation> selectInAPrivGoupprivsByRoleAndFourlever(Integer groupid, Integer roleid, Integer zibiaoti) {
+        Metaoperation metaoperation2 = metaOperationService.selectByPrimaryKey(zibiaoti);
+
+
+        List<Metaoperation> metaoperations = this.selectPrivilegesByPrimaryKey(groupid);
+
+        List<Metaoperation> metaoperations1 = roleService.selectPrivilegesByRid(roleid);
+
+
+        List<Metaoperation> metaoperations2 = new ArrayList<>();
+        for (Metaoperation metaoperation : metaoperations) {
+            if (metaoperation!=null){
+                for (Metaoperation metaoperation1 : metaoperations1) {
+                    if (metaoperation1!=null){
+                        if (metaoperation.getMoid().equals(metaoperation1.getMoid())&& Strings.startsWithIgnoreCase(metaoperation.getModesc(),metaoperation2.getModesc()+"_")){
+                            metaoperations2.add(metaoperation);
+                        }
+                    }
+                }
+            }
+        }
+        return metaoperations2;
+    }
+
+    @Override
+    @Cacheable(value = "prigrouplist",key = "#root.methodName")
     public List<Prigroup> selectAll() {
         PrigroupExample prigroupExample = new PrigroupExample();
         prigroupExample.createCriteria().andPgidIsNotNull();
