@@ -207,7 +207,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
-    @Cacheable(value = "operations",key = "#privgoupdesc+'--'+")
+    @Cacheable(value = "operations",key = "#privgoupdesc+'--'+#root.methodName.toString()")
     public List<Metaoperation> selectPrivsByPrivGroupDesc(String privgoupdesc) {
         MetaoperationExample metaoperationExample = new MetaoperationExample();
         metaoperationExample.createCriteria().andModescLike(privgoupdesc+"%");
