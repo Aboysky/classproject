@@ -8412,3 +8412,4 @@ Caused by: java.lang.IllegalStateException: getWriter() has already been called 
 	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:943)
 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
 	... 35 common frames omitted
+2020-11-28 18:55:25,283 ERROR [http-nio-8989-exec-8] c.a.d.pool.DruidAbstractDataSource [DruidAbstractDataSource.java : 1488] discard long time none received connection. , jdbcUrl : jdbc:mysql://localhost:3306/autho1?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai, jdbcUrl : jdbc:mysql://localhost:3306/autho1?useSSL=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai, lastPacketReceivedIdleMillis : 201171
