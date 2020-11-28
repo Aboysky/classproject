@@ -8,6 +8,7 @@ import cn.edu.sicnu.cs.pojo.UserInTeam;
 import org.apache.ibatis.annotations.Param;
 
 public interface UserTeamMapper {
+
     List<UserInTeam> selectTeamByName(String fzname);
 
     String selectFznameByUid(int uid);
