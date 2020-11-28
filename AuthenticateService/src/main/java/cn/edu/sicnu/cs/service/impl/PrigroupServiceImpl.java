@@ -120,7 +120,7 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
-    @Cacheable(value = "prigroupprivs",key = "#groupid+'--'+#roleid")
+    @Cacheable(value = "prigroupprivs",key = "#groupid.toString()+'--'+#roleid.toString()")
     public List<Metaoperation> selectInAPrivGoupprivsByRole(Integer groupid, Integer roleid) {
         List<Metaoperation> metaoperations = this.selectPrivilegesByPrimaryKey(groupid);
         List<Metaoperation> metaoperations1 = roleService.selectPrivilegesByRid(roleid);
@@ -146,15 +146,16 @@ public class PrigroupServiceImpl implements PrigroupService {
 
         List<Metaoperation> metaoperations = this.selectPrivilegesByPrimaryKey(groupid);
 
-        List<Metaoperation> metaoperations1 = roleService.selectPrivilegesByRid(roleid);
+        logger.debug(" metaoperations: "+metaoperations);
 
+        List<Metaoperation> metaoperations1 = roleService.selectPrivilegesByRid(roleid);
 
         List<Metaoperation> metaoperations2 = new ArrayList<>();
         for (Metaoperation metaoperation : metaoperations) {
             if (metaoperation!=null){
                 for (Metaoperation metaoperation1 : metaoperations1) {
                     if (metaoperation1!=null){
-                        if (metaoperation.getMoid().equals(metaoperation1.getMoid())&& Strings.startsWithIgnoreCase(metaoperation.getModesc(),metaoperation2.getModesc()+"_")){
+                        if (metaoperation.getMoid().equals(metaoperation1.getMoid())&& Strings.startsWithIgnoreCase(metaoperation.getModesc(),"_"+metaoperation2.getModesc()+"_")){
                             metaoperations2.add(metaoperation);
                         }
                     }

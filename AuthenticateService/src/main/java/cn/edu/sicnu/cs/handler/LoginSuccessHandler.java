@@ -93,7 +93,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             map.put("path","/insider");
         }else map.put("path","/user");
         map.put("uid",userService.selectUserByUsername(Username).getUid().toString());
-//        map.put("menu",);
+        map.put("urealname",userService.selectUserByUsername(Username).getUrealname());
 
         ResponseUtil.out(response, ResUtil.getJsonStr(ResultCode.OK,"登录成功",map));
     }

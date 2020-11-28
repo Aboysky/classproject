@@ -7,6 +7,7 @@ import cn.edu.sicnu.cs.model.Rolepriv;
 import cn.edu.sicnu.cs.model.RoleprivExample;
 import cn.edu.sicnu.cs.pojo.NavigationBar;
 import cn.edu.sicnu.cs.pojo.NavigationBarChilren;
+import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
 import cn.edu.sicnu.cs.service.MetaOperationService;
 import cn.edu.sicnu.cs.service.RolePrivService;
 import cn.edu.sicnu.cs.service.RoleService;
@@ -47,7 +48,7 @@ public class RolePrivServiceImpl implements RolePrivService {
         criteria.andRoleidEqualTo(rid);
         List<Rolepriv> roleprivs = roleprivMapper.selectByExample(roleprivExample);
 
-        logger.debug("角色id"+rid+"  roleprivs: "+roleprivs);
+        logger.debug("角色id "+rid+"  roleprivs: "+roleprivs);
 
         List<Metaoperation> privileges = new ArrayList<>();
         for (Rolepriv rolepriv : roleprivs) {
@@ -57,7 +58,7 @@ public class RolePrivServiceImpl implements RolePrivService {
             }
 
         }
-        logger.debug("此角色拥有的权限集合为: privileges: "+privileges);
+        logger.debug("角色id为: "+rid+"的角色拥有的权限集合为: privileges: "+privileges);
         return privileges;
     }
 
@@ -206,6 +207,34 @@ public class RolePrivServiceImpl implements RolePrivService {
         }
 
         return null;
+    }
+
+    @Override
+    public List<ReturningPrivFourLevel> selectErJiBiaoTiChildrenByRole(Integer roleid, String privname) {
+        List<Metaoperation> metaoperations = this.selectRolePrivsByRid(roleid);
+        logger.debug("id为"+roleid+"角色拥有的所有权限为:"+metaoperations);
+        List<Metaoperation> metaoperations1 = metaOperationService.selectAllChildNavBarByHead(privname);
+        logger.debug("id为"+roleid+" 的角色在 "+privname+" 导航栏下拥有的权限为: "+ metaoperations1);
+        List<ReturningPrivFourLevel> returningPrivFourLevels = new ArrayList<>();
+
+        if (!metaoperations.isEmpty()){
+            for (Metaoperation metaoperation : metaoperations) {
+                if (!metaoperations1.isEmpty()){
+                    for (Metaoperation metaoperation1 : metaoperations1) {
+                        if (metaoperation1.getMoid().equals(metaoperation.getMoid())){
+                            returningPrivFourLevels.add(new ReturningPrivFourLevel(metaoperation.getMoid(),metaoperation.getMoname(),metaoperation.getMolurl(),null));
+                        }
+                    }
+                }else{
+                    return null;
+                }
+//                logger.debug("navigationBarChilrens"+navigationBarChilrens);
+
+            }
+            return returningPrivFourLevels;
+        }return null;
+
+
     }
 
 
