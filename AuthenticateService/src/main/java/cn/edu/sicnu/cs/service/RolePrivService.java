@@ -93,4 +93,7 @@ public interface RolePrivService {
 
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
     List<ReturningPrivFourLevel> selectErJiBiaoTiChildrenByRole(Integer roleid, String privname);
+
+    @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
+    List<ReturningPrivFourLevel> selectAllErJiBiaoTiChildrenByGroupdesc(String privname);
 }

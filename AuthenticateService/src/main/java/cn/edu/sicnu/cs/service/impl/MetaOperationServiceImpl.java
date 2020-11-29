@@ -51,6 +51,9 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     @Autowired
     RolePrivService rolePrivService;
 
+    @Autowired
+    RedisUtils redisUtils;
+
     @Override
     @Cacheable(value = "operations",key = "#root.methodName")
     public List<Metaoperation> selectAll() {
@@ -69,7 +72,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
             }
     )
     public int deleteByPrimaryKey(Integer id) {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         return metaoperationMapper.deleteByPrimaryKey(id);
     }
 
@@ -82,7 +85,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
             }
     )
     public int deleteByOperationName(String operationName) {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         MetaoperationExample operationExample = new MetaoperationExample();
         MetaoperationExample.Criteria criteria = operationExample.createCriteria();
         criteria.andMonameEqualTo(operationName);
@@ -97,7 +100,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
             }
     )
     public int insert(Metaoperation record) {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         return metaoperationMapper.insertSelective(record);
     }
 
@@ -148,7 +151,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
             }
     )
     public int updateByPrimaryKey(Metaoperation record) {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         if (record.getMoid()==null){
             logger.error("待更新的对象record中的id属性不能为空");
             return 0;
@@ -166,7 +169,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     )
     public int updateByOperationName(String operationName, Metaoperation record)
     {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         MetaoperationExample operationExample = new MetaoperationExample();
         MetaoperationExample.Criteria criteria = operationExample.createCriteria();
         criteria.andMonameEqualTo(operationName);

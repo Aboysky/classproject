@@ -28,7 +28,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Classname User
@@ -497,19 +499,29 @@ public class UserController {
         return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningRoleWithprivsgroups);
     }
 
+//    @GetMapping("/{soft_vesion}/_privgroups/_privs")
+//    public String get_All_Privgroup_Privs_By_PrivGroup(){
+//        List<ReturningPrivGroupWithPriv> returningPrivGroupWithPrivs = new ArrayList<>();
+//        List<Prigroup> prigroups = prigroupService.selectAll();
+//        for (Prigroup prigroup : prigroups) {
+//            if (prigroup!=null){
+//                List<Metaoperation> metaoperations = prigroupService.selectPrivilegesByPrimaryKey(prigroup.getPgid());
+//                returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPriv(prigroup,metaoperations));
+//            }
+//        }
+//
+//        return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningPrivGroupWithPrivs);
+//    }
     @GetMapping("/{soft_vesion}/_privgroups/_privs")
     public String get_All_Privgroup_Privs_By_PrivGroup(){
-
-        List<ReturningPrivGroupWithPriv> returningPrivGroupWithPrivs = new ArrayList<>();
+        List<ReturningPrivGroupWithPrivsFourLever> returningPrivGroupWithPrivs = new ArrayList<>();
         List<Prigroup> prigroups = prigroupService.selectAll();
-
         for (Prigroup prigroup : prigroups) {
             if (prigroup!=null){
-                List<Metaoperation> metaoperations = prigroupService.selectPrivilegesByPrimaryKey(prigroup.getPgid());
-                returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPriv(prigroup,metaoperations));
+                List<ReturningPrivFourLevel> returningPrivFourLevels = prigroupService.selectAllFourLever(prigroup);
+                returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPrivsFourLever(prigroup.getPgid(),prigroup.getPrigroupname(),prigroup.getPrigroupdesc(),returningPrivFourLevels));
             }
         }
-
         return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningPrivGroupWithPrivs);
     }
 
@@ -547,9 +559,24 @@ public class UserController {
         System.out.println("------------->"+returningRoleWithprivsgroups);
 //
 //       return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningRoleWithprivsgroups);
+        if (returningRoleWithprivsgroups!=null||!returningRoleWithprivsgroups.isEmpty()){
+            returningRoleWithprivsgroups.remove(0);
+        }
         return ResUtil.getJsonStrJackon(ResultCode.OK, "请求成功",returningRoleWithprivsgroups);
     }
 
+    @GetMapping("/{soft_vesion}/user/{userid}/{groupid}/{zibiaotiid}")
+    public String select_user_group_zibiaoti(@PathVariable("userid") Integer userid,
+                                             @PathVariable("groupid") Integer groupid,
+                                             @PathVariable("zibiaotiid") Integer zibiaotiid) {
 
+        User user = userService.selectUserByUid(userid);
 
+        List<Metaoperation> metaoperations = prigroupService.selectInAPrivGoupprivsByRoleAndFourlever(groupid,user.getUroleId(), zibiaotiid);
+        Map<String,Boolean> map = new HashMap<>();
+        for (Metaoperation metaoperation : metaoperations) {
+            map.put(metaoperation.getModesc(), true);
+        }
+        return ResUtil.getJsonStr(ResultCode.OK,"查询成功",map);
+    }
 }

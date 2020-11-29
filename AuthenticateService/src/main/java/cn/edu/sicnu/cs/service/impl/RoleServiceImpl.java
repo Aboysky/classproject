@@ -36,6 +36,9 @@ public class RoleServiceImpl implements RoleService {
     @Autowired
     RolePrivService rolePrivService;
 
+    @Autowired
+    RedisUtils redisUtils;
+
     @Override
     @Cacheable(cacheNames = "rolelist",key = "#root.methodName")
     public List<Role> selectAll() {
@@ -48,7 +51,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @CacheEvict(cacheNames = "role",key = "#id")
     public int deleteByPrimaryKey(Integer id) {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         if (id==null){
             logger.error("删除角色时id不能为空");
             return 0;
@@ -64,7 +67,7 @@ public class RoleServiceImpl implements RoleService {
      */
     @Override
     public int insert(Role record) {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         if (record==null){
             logger.error("增加角色时角色不能为空");
             return 0;
@@ -106,7 +109,7 @@ public class RoleServiceImpl implements RoleService {
             }
     )
     public int updateRoleByPrimaryKey(int rid, Role record) {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         if (record==null){
             logger.error("更新角色时角色角色id");
             return 0;

@@ -285,7 +285,7 @@ public class RoleController {
         }
         return ResUtil.getJsonStr(ResultCode.NECESSARY_PARAMETER_NOT_NULL_OR_NOTIING,"必要参数不正确");
     }
-    @PostMapping("${soft_version}/role/{roleid}/batchupdate")
+    @PostMapping("/${soft_version}/role/{roleid}/batchupdate")
     @ApiOperation(tags = "role",notes = "批量修改角色信息",value = "batch_update_role")
     public String batchUpdateRole(HttpServletRequest request,
                              @PathVariable("roleid") int roleid) throws IOException {
@@ -304,19 +304,22 @@ public class RoleController {
        }
         String[] split = rids.split(",");
         for (String s : split) {
-            System.out.println("  "+s+"  ");
+            System.out.println("  "+s+" "+Integer.parseInt(s));
         }
+        rolePrivService.deleteByRid(roleid);
         for (String s : split) {
             if (Integer.parseInt(s)<10000){
-                rolePrivService.deleteByRid(roleid);
+
                 try{
-                    Metaoperation metaoperation = metaOperationService.selectByPrimaryKey(Integer.parseInt(s));
-                    if (metaoperation!=null){
-                        rolePrivService.insert(roleid,Integer.parseInt(s));
+                    Metaoperation metaoperation1 = metaOperationService.selectByPrimaryKey(Integer.parseInt(s));
+                    System.out.println(metaoperation1);;
+                    if (metaoperation1!=null){
+                        int insert = rolePrivService.insert(roleid, Integer.parseInt(s));
+                        System.out.println(insert);
                     }
 
                 }catch (Exception e){
-
+                    return ResUtil.getJsonStr(ResultCode.BAD_REQUEST,"权限修改失败");
                 }
 
             }

@@ -3,6 +3,7 @@ package cn.edu.sicnu.cs.service;
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Prigroup;
 import cn.edu.sicnu.cs.pojo.PrivGroup;
+import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,5 +81,9 @@ public interface PrigroupService {
      */
     List<Metaoperation> selectInAPrivGoupprivsByRoleAndFourlever(Integer groupid,Integer roleid,Integer zibiaoti);
 
+    List<Metaoperation> selectALLAPrivGoupprivsBygroupidAndzibiaoti(Integer groupid,Integer zibiaoti);
+
     List<Prigroup> selectAll();
+
+    List<ReturningPrivFourLevel> selectAllFourLever(Prigroup prigroup);
 }

@@ -1,6 +1,8 @@
 package cn.edu.sicnu.cs.service.impl;
 
 import cn.edu.sicnu.cs.AuthenticationService;
+import cn.edu.sicnu.cs.dao.RoleMapper;
+import cn.edu.sicnu.cs.dao.RoleprivMapper;
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Rolepriv;
 import cn.edu.sicnu.cs.pojo.ReturningPriv;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +42,10 @@ class PrivilegeServiceImplTest {
 
     @Autowired
     RolePrivService rolePrivService;
+
+    @Resource
+    RoleprivMapper roleprivMapper;
+
     @Test
     void deleteByPrimaryKey() {
         List<Metaoperation> metaoperations = prigroupService.selectInAPrivGoupprivsByRole(2, 5);
@@ -80,10 +87,13 @@ class PrivilegeServiceImplTest {
 
     @Test
     void selectByPname() {
+        System.out.println(prigroupService.selectInAPrivGoupprivsByRoleAndFourlever(10001, 2, 11));
+
     }
 
     @Test
     void selectByPrimaryKey() {
+        System.out.println(roleprivMapper.insertSelective(new Rolepriv(11, 9)));
     }
 
     @Test

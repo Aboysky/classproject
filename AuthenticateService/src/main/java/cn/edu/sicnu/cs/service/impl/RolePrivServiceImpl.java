@@ -15,6 +15,9 @@ import cn.edu.sicnu.cs.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,7 +44,11 @@ public class RolePrivServiceImpl implements RolePrivService {
     @Autowired
     RoleService roleService;
 
+    @Autowired
+    RedisUtils redisUtils;
+
     @Override
+    @Cacheable(value = "roleprivsevict",key = "#root.methodName.toString()+'--'+#rid")
     public List<Metaoperation> selectRolePrivsByRid(int rid) {
         RoleprivExample roleprivExample = new RoleprivExample();
         RoleprivExample.Criteria criteria = roleprivExample.createCriteria();
@@ -63,6 +70,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Cacheable(value = "roleprivsevict",key = "#root.methodName.toString()+'--'+#rid")
     public List<Integer> selectRolePrivsNamesByRid(int rid)
     {
         RoleprivExample roleprivExample = new RoleprivExample();
@@ -81,6 +89,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Cacheable(value = "roleprivsevict",key = "#root.methodName.toString()+'--'+#pid")
     public List<Role> selectRolesByPid(int pid) {
         RoleprivExample roleprivExample = new RoleprivExample();
         roleprivExample.createCriteria().andPrivilegeidEqualTo(pid);
@@ -100,6 +109,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Cacheable(value = "roleprivsevict",key = "#root.methodName.toString()+'--'+#rid+'--'+#pid")
     public boolean selectIsExistByRidAndPid(int rid, int pid) {
         RoleprivExample roleprivExample = new RoleprivExample();
         roleprivExample.createCriteria().andRoleidEqualTo(rid).andPrivilegeidEqualTo(pid);
@@ -108,17 +118,22 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "roleprivsevict",allEntries = true),
+            }
+    )
     public int insert(int rid, int pid) throws Exception{
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         int i = roleprivMapper.insertSelective(new Rolepriv(rid, pid));
-        RedisUtils.addConfigrationPermissions();
+        redisUtils.addConfigrationPermissions();
         return i;
     }
 
     @Override
     public int deleteByRidAndPid(int rid, int pid) {
 
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         RoleprivExample roleprivExample = new RoleprivExample();
         roleprivExample.createCriteria().andRoleidEqualTo(rid).andPrivilegeidEqualTo(pid);
         List<Rolepriv> roleprivs = roleprivMapper.selectByExample(roleprivExample);
@@ -127,7 +142,7 @@ public class RolePrivServiceImpl implements RolePrivService {
 
     @Override
     public int deleteByPid(int pid) {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         RoleprivExample roleprivExample = new RoleprivExample();
         RoleprivExample.Criteria criteria = roleprivExample.createCriteria();
         criteria.andPrivilegeidEqualTo(pid);
@@ -136,7 +151,7 @@ public class RolePrivServiceImpl implements RolePrivService {
 
     @Override
     public int deleteByRid(int rid) {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         RoleprivExample roleprivExample = new RoleprivExample();
         RoleprivExample.Criteria criteria = roleprivExample.createCriteria();
         criteria.andRoleidEqualTo(rid);
@@ -235,6 +250,16 @@ public class RolePrivServiceImpl implements RolePrivService {
         }return null;
 
 
+    }
+
+    @Override
+    public List<ReturningPrivFourLevel> selectAllErJiBiaoTiChildrenByGroupdesc(String privname) {
+        List<Metaoperation> metaoperations1 = metaOperationService.selectAllChildNavBarByHead(privname);
+        List<ReturningPrivFourLevel> returningPrivFourLevels = new ArrayList<>();
+        for (Metaoperation metaoperation1 : metaoperations1) {
+                returningPrivFourLevels.add(new ReturningPrivFourLevel(metaoperation1.getMoid(),metaoperation1.getMoname(),metaoperation1.getMolurl(),null));
+        }
+        return returningPrivFourLevels;
     }
 
 

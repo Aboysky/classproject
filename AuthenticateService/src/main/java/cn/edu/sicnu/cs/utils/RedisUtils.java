@@ -28,13 +28,11 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtils {
 
 
-
+    @Autowired
+    MetaOperationService metaOperationService;
 
     @Autowired
-    static MetaOperationService metaOperationService;
-
-    @Autowired
-    static RoleService roleService;
+    RoleService roleService;
 
 
     private static RedisTemplate getRedisTemplate(){
@@ -45,11 +43,11 @@ public class RedisUtils {
         return redisTemplate;
     }
 
-    public static void delete(String key){
+    public void delete(String key){
         getRedisTemplate().delete(key);
     }
 
-    public static void addConfigrationPermissions(){
+    public void addConfigrationPermissions(){
         Collection<ConfigAttribute> configAttributes=new ArrayList<>();
         List<Metaoperation> operations = metaOperationService.selectAll();
         for (Metaoperation operation:operations) {
@@ -63,4 +61,6 @@ public class RedisUtils {
         List<RoleInfo> roleInfos= roleService.selectAllRoleAndMetaoperations();
         getRedisTemplate().opsForValue().set("authentication:roleinfos:permissions", JSON.toJSONString(roleInfos),480,TimeUnit.MINUTES);
     }
+
+
 }
