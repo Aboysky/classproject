@@ -106,7 +106,7 @@ public class PriGroupRelationServiceImpl implements PriGroupRelationService {
     }
 
     @Override
-    @Cacheable(value = "prigroupprivs",key = "#priGroupId+#root.methodName")
+    @Cacheable(value = "privsBypgroupid",key = "#priGroupId+#root.methodName")
     public List<Metaoperation> selectPrivilegesByPrigroupId(int priGroupId) {
 //        PrigrouprelationExample prigrouprelationExample = new PrigrouprelationExample();
 //        PrigrouprelationExample.Criteria criteria = prigrouprelationExample.createCriteria();
@@ -128,6 +128,7 @@ public class PriGroupRelationServiceImpl implements PriGroupRelationService {
     }
 
     @Override
+    @Cacheable(value = "privgrouprelationkey",key = "#pid")
     public List<PrigrouprelationKey> selectPriGroupRelationKeysByPrivilegeId(int pid) {
         PrigrouprelationExample prigrouprelationExample = new PrigrouprelationExample();
         PrigrouprelationExample.Criteria criteria = prigrouprelationExample.createCriteria();
@@ -136,6 +137,7 @@ public class PriGroupRelationServiceImpl implements PriGroupRelationService {
     }
 
     @Override
+    @Cacheable(value = "privgroupBypid",key = "#pid")
     public List<Prigroup> selectPriGroupByPrivilegeId(int pid) {
         PrigrouprelationExample prigrouprelationExample = new PrigrouprelationExample();
         PrigrouprelationExample.Criteria criteria = prigrouprelationExample.createCriteria();
@@ -151,6 +153,7 @@ public class PriGroupRelationServiceImpl implements PriGroupRelationService {
     }
 
     @Override
+    @Cacheable(value = "privgroupIsExistBypidAndpgroupId",key = "#pid+'--'+#pgroupId")
     public boolean selectIsExistByPidAndPriGroupId(int pid, int pgroupId) {
         PrigrouprelationExample prigrouprelationExample = new PrigrouprelationExample();
         PrigrouprelationExample.Criteria criteria = prigrouprelationExample.createCriteria();

@@ -55,7 +55,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     RedisUtils redisUtils;
 
     @Override
-    @Cacheable(value = "operations",key = "#root.methodName")
+    @Cacheable(value = "operationlist",key = "#root.methodName")
     public List<Metaoperation> selectAll() {
         MetaoperationExample operationExample = new MetaoperationExample();
         MetaoperationExample.Criteria criteria = operationExample.createCriteria();
@@ -177,6 +177,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
+    @Cacheable(value = "navigationbar",key = "#role.rdesc+'--'+#root.methodName.toString()+#privGroup.pgid.toString()")
     public List<ReturningPrivFourLevel> selectPrivFourLeverByRoleAndPrivgroup(Role role, Prigroup privGroup) {
 
         List<ReturningPrivFourLevel> returningPrivFourLevels = rolePrivService.selectErJiBiaoTiChildrenByRole(role.getRid(), privGroup.getPrigroupdesc());
@@ -210,7 +211,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
-    @Cacheable(value = "operations",key = "#privgoupdesc+'--'+#root.methodName.toString()")
+    @Cacheable(value = "operationlist",key = "#privgoupdesc+'--'+#root.methodName.toString()")
     public List<Metaoperation> selectPrivsByPrivGroupDesc(String privgoupdesc) {
         MetaoperationExample metaoperationExample = new MetaoperationExample();
         metaoperationExample.createCriteria().andModescLike(privgoupdesc+"%");

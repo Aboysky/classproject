@@ -1,17 +1,12 @@
 package cn.edu.sicnu.cs.service.impl;
 
 import cn.edu.sicnu.cs.AuthenticationService;
-import cn.edu.sicnu.cs.dao.RoleMapper;
 import cn.edu.sicnu.cs.dao.RoleprivMapper;
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Rolepriv;
-import cn.edu.sicnu.cs.pojo.ReturningPriv;
-import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
-import cn.edu.sicnu.cs.pojo.UserPojo;
 import cn.edu.sicnu.cs.service.PrigroupService;
 import cn.edu.sicnu.cs.service.RolePrivService;
 import cn.edu.sicnu.cs.service.RoleService;
-import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +16,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @Classname PrivilegeServiceTest
@@ -48,7 +41,7 @@ class PrivilegeServiceImplTest {
 
     @Test
     void deleteByPrimaryKey() {
-        List<Metaoperation> metaoperations = prigroupService.selectInAPrivGoupprivsByRole(2, 5);
+        List<Metaoperation> metaoperations = prigroupService.selectinaprivgoupprivsbyrole(2, 5);
         metaoperations.forEach(System.out::println);
     }
 
@@ -98,6 +91,7 @@ class PrivilegeServiceImplTest {
 
     @Test
     void updateByPrimaryKey() {
+        System.out.println(prigroupService.selectPrivilegesByPrimaryKey(10006));
     }
 
     @Test

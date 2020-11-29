@@ -127,7 +127,7 @@ public class PrigroupServiceImpl implements PrigroupService {
 
     @Override
     @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()+'--'+#groupid.toString()+'--'+#roleid.toString()")
-    public List<Metaoperation> selectInAPrivGoupprivsByRole(Integer groupid, Integer roleid) {
+    public List<Metaoperation> selectinaprivgoupprivsbyrole(Integer groupid, Integer roleid) {
         List<Metaoperation> metaoperations = this.selectPrivilegesByPrimaryKey(groupid);
         List<Metaoperation> metaoperations1 = roleService.selectPrivilegesByRid(roleid);
         List<Metaoperation> metaoperations2 = new ArrayList<>();

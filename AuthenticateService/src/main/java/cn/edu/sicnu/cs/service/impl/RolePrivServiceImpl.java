@@ -48,7 +48,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     RedisUtils redisUtils;
 
     @Override
-    @Cacheable(value = "roleprivsevict",key = "#root.methodName.toString()+'--'+#rid")
+    @Cacheable(value = "roleprivsevict",key = "#rid")
     public List<Metaoperation> selectRolePrivsByRid(int rid) {
         RoleprivExample roleprivExample = new RoleprivExample();
         RoleprivExample.Criteria criteria = roleprivExample.createCriteria();
@@ -70,7 +70,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
-    @Cacheable(value = "roleprivsevict",key = "#root.methodName.toString()+'--'+#rid")
+    @Cacheable(value = "roleprivsIntevict",key = "#rid")
     public List<Integer> selectRolePrivsNamesByRid(int rid)
     {
         RoleprivExample roleprivExample = new RoleprivExample();
@@ -89,7 +89,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
-    @Cacheable(value = "roleprivsevict",key = "#root.methodName.toString()+'--'+#pid")
+    @Cacheable(value = "privrolesevict",key = "#pid")
     public List<Role> selectRolesByPid(int pid) {
         RoleprivExample roleprivExample = new RoleprivExample();
         roleprivExample.createCriteria().andPrivilegeidEqualTo(pid);
@@ -109,7 +109,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
-    @Cacheable(value = "roleprivsevict",key = "#root.methodName.toString()+'--'+#rid+'--'+#pid")
+    @Cacheable(value = "roleprivs",key = "#root.methodName.toString()+'--'+#rid+'--'+#pid")
     public boolean selectIsExistByRidAndPid(int rid, int pid) {
         RoleprivExample roleprivExample = new RoleprivExample();
         roleprivExample.createCriteria().andRoleidEqualTo(rid).andPrivilegeidEqualTo(pid);
@@ -161,6 +161,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     // List<Map>
 
     @Override
+    @Cacheable(value = "navigationBar",key = "#methodName+'--'+#rid")
     public List<NavigationBar> selectNavBarByRole(Integer rid) {
         List<Metaoperation> metaoperations = this.selectRolePrivsByRid(rid);
         List<Metaoperation> metaoperations1 = metaOperationService.selectAllHeadNavBar();
@@ -190,6 +191,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Cacheable(value = "navigationBar",key = "#methodName+'--'+#roleid+'--'+#privname")
     public List<NavigationBarChilren> selectNavBarChildrenByRole(Integer roleid,String privname) {
         List<Metaoperation> metaoperations = this.selectRolePrivsByRid(roleid);
         List<Metaoperation> metaoperations1 = metaOperationService.selectAllChildNavBarByHead(privname);
@@ -225,6 +227,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Cacheable(value = "navigationBar",key = "#methodName+'--'+#roleid+'--'+#privname")
     public List<ReturningPrivFourLevel> selectErJiBiaoTiChildrenByRole(Integer roleid, String privname) {
         List<Metaoperation> metaoperations = this.selectRolePrivsByRid(roleid);
         logger.debug("id为"+roleid+"角色拥有的所有权限为:"+metaoperations);
@@ -253,6 +256,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Cacheable(value = "navigationBar",key = "#methodName+'--'+#privname")
     public List<ReturningPrivFourLevel> selectAllErJiBiaoTiChildrenByGroupdesc(String privname) {
         List<Metaoperation> metaoperations1 = metaOperationService.selectAllChildNavBarByHead(privname);
         List<ReturningPrivFourLevel> returningPrivFourLevels = new ArrayList<>();

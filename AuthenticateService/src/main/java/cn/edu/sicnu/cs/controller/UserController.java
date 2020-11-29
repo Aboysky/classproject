@@ -17,13 +17,11 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -484,7 +482,7 @@ public class UserController {
         for (Role role :roles) {
             for (Prigroup prigroup : prigroups){
                 if (prigroup!=null&&role!=null){
-                    List<Metaoperation> metaoperations = prigroupService.selectInAPrivGoupprivsByRole(prigroup.getPgid(), role.getRid());
+                    List<Metaoperation> metaoperations = prigroupService.selectinaprivgoupprivsbyrole(prigroup.getPgid(), role.getRid());
                     returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPriv(prigroup,metaoperations));
                 }
             }

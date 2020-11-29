@@ -70,7 +70,7 @@ public interface PrigroupService {
      * 查询一个角色在某一个权限组拥有的权限集合
      * @return
      */
-    List<Metaoperation> selectInAPrivGoupprivsByRole(Integer groupid,Integer roleid);
+    List<Metaoperation> selectinaprivgoupprivsbyrole(Integer groupid, Integer roleid);
 
     /**
      * 查询角色id在权限组下面的子标题下拥有的权限

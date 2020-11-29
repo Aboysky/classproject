@@ -102,12 +102,13 @@ public class RoleController {
         }
         logger.debug("RoleController:addrole   rname : "+rname+"   rdesc : "+rdesc);
 
-        if (rname == null || rname.equals("")) {
+        if (rname == null || "".equals(rname)) {
             return ResUtil.getJsonStr(ResultCode.NECESSARY_PARAMETER_NOT_NULL_OR_NOTIING,"角色名不能为空");
         }
         if (rdesc == null) {
             rdesc = "";
         }
+        rname = "ROLE_"+rname.toUpperCase();
         Role role = new Role(rname,rdesc,new Date());
         Role role2 = roleService.selectRoleByRoleName(rname);
         if (role2!=null){

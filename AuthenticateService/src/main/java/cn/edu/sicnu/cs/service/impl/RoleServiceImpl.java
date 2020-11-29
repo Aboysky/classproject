@@ -76,7 +76,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @CachePut(cacheNames = "role",key = "#result.rid")
+    @CachePut(cacheNames = "role",key = "#result.rid",condition = "#result!=null")
     public Role selectRoleByRoleName(String roleName) {
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria criteria = roleExample.createCriteria();
@@ -95,7 +95,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(cacheNames = "roleprivs",key = "#rid+'selectPrivilegesByRid'")
+    @Cacheable(cacheNames = "roleprivsByrid",key = "#rid")
     public List<Metaoperation> selectPrivilegesByRid(int rid) {
         return rolePrivService.selectRolePrivsByRid(rid);
     }
