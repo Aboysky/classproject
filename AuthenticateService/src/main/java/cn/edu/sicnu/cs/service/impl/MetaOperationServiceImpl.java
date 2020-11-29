@@ -55,7 +55,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     RedisUtils redisUtils;
 
     @Override
-    @Cacheable(value = "operationlist",key = "#root.methodName")
+    @Cacheable(value = "operationlist",key = "#root.methodName",condition = "#result!=null")
     public List<Metaoperation> selectAll() {
         MetaoperationExample operationExample = new MetaoperationExample();
         MetaoperationExample.Criteria criteria = operationExample.createCriteria();
@@ -66,9 +66,16 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     @Override
     @Caching(
             evict = {
+                    @CacheEvict(value = "navigationbar",allEntries = true),
+                    @CacheEvict(value = "privsevict",allEntries = true),
+                    @CacheEvict(value = "privgroupIsExistBypidAndpgroupId",allEntries = true),
+                    @CacheEvict(value = "roleprivsevict",allEntries = true),
+                    @CacheEvict(value = "roleprivsIntevict",allEntries = true),
+                    @CacheEvict(value = "sUserUserpojo",allEntries = true),
+                    @CacheEvict(value = "operationlist",allEntries = true),
                     @CacheEvict(value = "operations",key = "#id"),
-                    @CacheEvict(value = "roleprivs",allEntries = true),
-                    @CacheEvict(value = "navigationbar",allEntries = true)
+                    @CacheEvict(value = "privgroupBypid",key = "#id"),
+                    @CacheEvict(value = "privrolesevict",key = "#id")
             }
     )
     public int deleteByPrimaryKey(Integer id) {
@@ -79,9 +86,16 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     @Override
     @Caching(
             evict = {
+                    @CacheEvict(value = "navigationbar",allEntries = true),
+                    @CacheEvict(value = "privsevict",allEntries = true),
+                    @CacheEvict(value = "privgroupIsExistBypidAndpgroupId",allEntries = true),
+                    @CacheEvict(value = "roleprivsevict",allEntries = true),
+                    @CacheEvict(value = "roleprivsIntevict",allEntries = true),
+                    @CacheEvict(value = "sUserUserpojo",allEntries = true),
+                    @CacheEvict(value = "operationlist",allEntries = true),
                     @CacheEvict(value = "operations",allEntries = true),
-                    @CacheEvict(value = "roleprivs",allEntries = true),
-                    @CacheEvict(value = "navigationbar",allEntries = true)
+                    @CacheEvict(value = "privgroupBypid",allEntries = true),
+                    @CacheEvict(value = "privrolesevict",allEntries = true)
             }
     )
     public int deleteByOperationName(String operationName) {
@@ -95,8 +109,10 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(value = "roleprivs",allEntries = true),
-                    @CacheEvict(value = "navigationbar",allEntries = true)
+                    @CacheEvict(value = "privsevict",allEntries = true),
+                    @CacheEvict(value = "operationlist",allEntries = true),
+                    @CacheEvict(value = "navigationbar",allEntries = true),
+                    @CacheEvict(value = "privgroupIsExistBypidAndpgroupId",allEntries = true)
             }
     )
     public int insert(Metaoperation record) {
@@ -105,13 +121,13 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
-    @Cacheable(value = "operations",key = "#id")
+    @Cacheable(value = "operations",key = "#id",condition = "#result!=null")
     public Metaoperation selectByPrimaryKey(Integer id) {
         return metaoperationMapper.selectByPrimaryKey(id);
     }
 
     @Override
-    @CachePut(value = "operations",key = "#result.moid")
+    @CachePut(value = "operations",key = "#result.moid",condition = "#result!=null")
     public Metaoperation selectByOperationName(String operationName)
     {
         MetaoperationExample operationExample = new MetaoperationExample();
@@ -122,7 +138,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
-    @Cacheable(value = "navigationbar",key = "#root.methodName")
+    @Cacheable(value = "navigationbar",key = "#root.methodName",condition = "#result!=null")
     public List<Metaoperation> selectAllHeadNavBar() {
         MetaoperationExample metaoperationExample = new MetaoperationExample();
         metaoperationExample.createCriteria().andModescLike("HEAD_%");
@@ -131,7 +147,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
-    @Cacheable(value = "navigationbar",key = "#headname+'--'+#root.methodName.toString()")
+    @Cacheable(value = "navigationbar",key = "#headname+'--'+#root.methodName.toString()",condition = "#result!=null")
     public List<Metaoperation> selectAllChildNavBarByHead(String headname) {
         MetaoperationExample metaoperationExample = new MetaoperationExample();
 //        headname = headname.toLowerCase();
@@ -147,7 +163,8 @@ public class MetaOperationServiceImpl implements MetaOperationService {
             evict = {
                     @CacheEvict(value = "operations",key = "#record.moid"),
                     @CacheEvict(value = "roleprivs",allEntries = true),
-                    @CacheEvict(value = "navigationbar",allEntries = true)
+                    @CacheEvict(value = "navigationbar",allEntries = true),
+                    @CacheEvict(value = "sUserUserpojo",allEntries = true)
             }
     )
     public int updateByPrimaryKey(Metaoperation record) {
@@ -162,9 +179,10 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     @Override
     @Caching(
             evict = {
-                    @CacheEvict(value = "operations",key = "#record.moid"),
+                    @CacheEvict(value = "operations",allEntries = true),
                     @CacheEvict(value = "roleprivs",allEntries = true),
-                    @CacheEvict(value = "navigationbar",allEntries = true)
+                    @CacheEvict(value = "navigationbar",allEntries = true),
+                    @CacheEvict(value = "sUserUserpojo",allEntries = true)
             }
     )
     public int updateByOperationName(String operationName, Metaoperation record)

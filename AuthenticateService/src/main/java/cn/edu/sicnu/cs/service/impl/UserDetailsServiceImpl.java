@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import springfox.documentation.annotations.Cacheable;
 
 /**
  * @Classname UserDetailsServiceImpl
@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
-//    @Cacheable()
+    @Cacheable(value = "UserDetails",key = "#username",condition = "#result!=null")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String flagKey = "loginFailFlag:"+username;
         String value = redisTemplate.opsForValue().get(flagKey);

@@ -40,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
     RedisUtils redisUtils;
 
     @Override
-    @Cacheable(cacheNames = "rolelist",key = "#root.methodName")
+    @Cacheable(cacheNames = "rolelist",key = "#root.methodName",condition = "#result!=null")
     public List<Role> selectAll() {
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria criteria = roleExample.createCriteria();
@@ -49,7 +49,18 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @CacheEvict(cacheNames = "role",key = "#id")
+    //@CacheEvict(cacheNames = "role",key = "#id")
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "roleprivs",allEntries = true),
+                    @CacheEvict(value = "privrolesevict",allEntries = true),
+                    @CacheEvict(value = "privsevict",allEntries = true),
+                    @CacheEvict(value = "role",key = "#id"),
+                    @CacheEvict(value = "roleprivsevict",key = "#id"),
+                    @CacheEvict(value = "roleprivsIntevict",key = "#id"),
+                    @CacheEvict(value = "roleprivs",allEntries = true),
+            }
+    )
     public int deleteByPrimaryKey(Integer id) {
         redisUtils.delete("configAttributes:permissions");
         if (id==null){
@@ -66,6 +77,12 @@ public class RoleServiceImpl implements RoleService {
      * @return
      */
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "roleprivs",allEntries = true),
+                    @CacheEvict(value = "rolelist",allEntries = true)
+            }
+    )
     public int insert(Role record) {
         redisUtils.delete("configAttributes:permissions");
         if (record==null){
@@ -89,13 +106,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(cacheNames = "role",key = "#id")
+    @Cacheable(cacheNames = "role",key = "#id",condition = "#result!=null")
     public Role selectByPrimaryKey(Integer id) {
         return roleMapper.selectByPrimaryKey(id);
     }
 
     @Override
-    @Cacheable(cacheNames = "roleprivsByrid",key = "#rid")
+    @Cacheable(cacheNames = "roleprivsByrid",key = "#rid",condition = "#result!=null")
     public List<Metaoperation> selectPrivilegesByRid(int rid) {
         return rolePrivService.selectRolePrivsByRid(rid);
     }
@@ -105,7 +122,9 @@ public class RoleServiceImpl implements RoleService {
     @Caching(
             evict = {
                     @CacheEvict(cacheNames = "role",key = "#rid"),
-                    @CacheEvict(cacheNames = "rolelist",allEntries = true)
+                    @CacheEvict(cacheNames = "rolelist",allEntries = true),
+                    @CacheEvict(cacheNames = "roleprivs",allEntries = true),
+                    @CacheEvict(cacheNames = "sUserUserpojo",allEntries = true)
             }
     )
     public int updateRoleByPrimaryKey(int rid, Role record) {
@@ -119,7 +138,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(value = "roleprivs",key = "#root.methodName")
+    @Cacheable(value = "roleprivs",key = "#root.methodName",condition = "#result!=null")
     public List<RoleInfo> selectAllRoleAndMetaoperations() {
         List<Role> roles = this.selectAll();
         List<RoleInfo> roleInfos = new ArrayList<>();
@@ -132,7 +151,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(value = "rolelist",key = "#root.methodName")
+    @Cacheable(value = "rolelist",key = "#root.methodName",condition = "#result!=null")
     public List<Role> selectAllRoles() {
         RoleExample roleExample = new RoleExample();
         roleExample.createCriteria().andRidIsNotNull();
@@ -140,6 +159,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Cacheable(value = "navigationbar",key = "#root.methodName+'--'+#rid")
     public List<NavigationBar> selectNavBarByRole(Integer rid) {
 //        List<NavigationBar> navigationBars = rolePrivService.selectNavBarByRole(Integer rid);
 

@@ -59,13 +59,13 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
 
         AuthUserDetails authUserDetails=(AuthUserDetails)authentication.getPrincipal();//从内存中获取当前认证用户信息
-        String Username=authentication.getName();
+        String userName =authentication.getName();
 
         //在redis中查询用户之前是否登入
-        String oldToken=redisTemplate.opsForValue().get("token_"+Username);
+        String oldToken=redisTemplate.opsForValue().get("token_"+userName );
         if(!StringUtils.isBlank(oldToken)){
             //清除旧Token
-            redisTemplate.delete("token_"+Username);
+            redisTemplate.delete("token_"+userName );
         }
 
         String roleInfosMapPermission=redisTemplate.opsForValue().get("authentication:roleinfos:permissions");
@@ -83,7 +83,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         int roleid = authUserDetails.getRoleInfo().getRid();
 
         //存入redis
-        redisTemplate.opsForValue().set("token_"+Username,accessToken,480,TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("token_"+userName ,accessToken,480,TimeUnit.MINUTES);
 
         HashMap<String,String> map=new HashMap<>();
         map.put("roleid", String.valueOf(roleid));
@@ -91,9 +91,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         Map<String,String> menu = new HashMap<>();
         if (roleid!=1){
             map.put("path","/insider");
-        }else map.put("path","/user");
-        map.put("uid",userService.selectUserByUsername(Username).getUid().toString());
-        map.put("urealname",userService.selectUserByUsername(Username).getUrealname());
+        }else {
+            map.put("path","/user");
+        }
+        map.put("uid",userService.selectUserByUsername(userName ).getUid().toString());
+        map.put("urealname",userService.selectUserByUsername(userName ).getUrealname());
 
         ResponseUtil.out(response, ResUtil.getJsonStr(ResultCode.OK,"登录成功",map));
     }

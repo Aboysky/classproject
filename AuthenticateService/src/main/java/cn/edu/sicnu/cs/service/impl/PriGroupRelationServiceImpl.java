@@ -106,7 +106,7 @@ public class PriGroupRelationServiceImpl implements PriGroupRelationService {
     }
 
     @Override
-    @Cacheable(value = "privsBypgroupid",key = "#priGroupId+#root.methodName")
+    @Cacheable(value = "privsBypgroupid",key = "#priGroupId+#root.methodName",condition = "#result!=null")
     public List<Metaoperation> selectPrivilegesByPrigroupId(int priGroupId) {
 //        PrigrouprelationExample prigrouprelationExample = new PrigrouprelationExample();
 //        PrigrouprelationExample.Criteria criteria = prigrouprelationExample.createCriteria();
@@ -128,7 +128,7 @@ public class PriGroupRelationServiceImpl implements PriGroupRelationService {
     }
 
     @Override
-    @Cacheable(value = "privgrouprelationkey",key = "#pid")
+    @Cacheable(value = "privgrouprelationkey",key = "#pid",condition = "#result!=null")
     public List<PrigrouprelationKey> selectPriGroupRelationKeysByPrivilegeId(int pid) {
         PrigrouprelationExample prigrouprelationExample = new PrigrouprelationExample();
         PrigrouprelationExample.Criteria criteria = prigrouprelationExample.createCriteria();
@@ -137,7 +137,7 @@ public class PriGroupRelationServiceImpl implements PriGroupRelationService {
     }
 
     @Override
-    @Cacheable(value = "privgroupBypid",key = "#pid")
+    @Cacheable(value = "privgroupBypid",key = "#pid",condition = "#result!=null")
     public List<Prigroup> selectPriGroupByPrivilegeId(int pid) {
         PrigrouprelationExample prigrouprelationExample = new PrigrouprelationExample();
         PrigrouprelationExample.Criteria criteria = prigrouprelationExample.createCriteria();
@@ -153,7 +153,7 @@ public class PriGroupRelationServiceImpl implements PriGroupRelationService {
     }
 
     @Override
-    @Cacheable(value = "privgroupIsExistBypidAndpgroupId",key = "#pid+'--'+#pgroupId")
+    @Cacheable(value = "privgroupIsExistBypidAndpgroupId",key = "#pid+'--'+#pgroupId",condition = "#result!=null")
     public boolean selectIsExistByPidAndPriGroupId(int pid, int pgroupId) {
         PrigrouprelationExample prigrouprelationExample = new PrigrouprelationExample();
         PrigrouprelationExample.Criteria criteria = prigrouprelationExample.createCriteria();

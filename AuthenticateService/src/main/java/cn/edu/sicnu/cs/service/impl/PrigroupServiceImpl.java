@@ -80,7 +80,7 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
-    @Cacheable(value = "prigroup",cacheNames = "prigroup",key = "#id")
+    @Cacheable(value = "prigroup",cacheNames = "prigroup",key = "#id",condition = "#result!=null")
     public Prigroup selectByPrimaryKey(Integer id) {
         return prigroupMapper.selectByPrimaryKey(id);
     }
@@ -105,7 +105,7 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
-    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#pgroupid.toString()+'--'+#root.methodName.toString()")
+    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#pgroupid.toString()+'--'+#root.methodName.toString()",condition = "#result!=null")
     public List<Metaoperation> selectPrivilegesByPrimaryKey(Integer pgroupid) {
         return priGroupRelationService.selectPrivilegesByPrigroupId(pgroupid);
     }
@@ -126,7 +126,7 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
-    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()+'--'+#groupid.toString()+'--'+#roleid.toString()")
+    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()+'--'+#groupid.toString()+'--'+#roleid.toString()",condition = "#result!=null")
     public List<Metaoperation> selectinaprivgoupprivsbyrole(Integer groupid, Integer roleid) {
         List<Metaoperation> metaoperations = this.selectPrivilegesByPrimaryKey(groupid);
         List<Metaoperation> metaoperations1 = roleService.selectPrivilegesByRid(roleid);
@@ -146,7 +146,7 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
-    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()+'--'+#groupid.toString()+'--'+#roleid.toString()+'--'+#zibiaoti.toString()")
+    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()+'--'+#groupid.toString()+'--'+#roleid.toString()+'--'+#zibiaoti.toString()",condition = "#result!=null")
     public List<Metaoperation> selectInAPrivGoupprivsByRoleAndFourlever(Integer groupid, Integer roleid, Integer zibiaoti) {
         Metaoperation metaoperation2 = metaOperationService.selectByPrimaryKey(zibiaoti);
 
@@ -173,7 +173,7 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
-    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()+'--'+#groupid.toString()+#zibiaoti.toString()")
+    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()+'--'+#groupid.toString()+#zibiaoti.toString()",condition = "#result!=null")
     public List<Metaoperation> selectALLAPrivGoupprivsBygroupidAndzibiaoti(Integer groupid, Integer zibiaoti) {
         Metaoperation metaoperation2 = metaOperationService.selectByPrimaryKey(zibiaoti);
 
@@ -194,7 +194,7 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
-    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()")
+    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()",condition = "#result!=null")
     public List<Prigroup> selectAll() {
         PrigroupExample prigroupExample = new PrigroupExample();
         prigroupExample.createCriteria().andPgidIsNotNull();
@@ -202,7 +202,7 @@ public class PrigroupServiceImpl implements PrigroupService {
     }
 
     @Override
-    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()+'--'+#privGroup.prigroupname")
+    @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()+'--'+#privGroup.prigroupname",condition = "#result!=null")
     public List<ReturningPrivFourLevel> selectAllFourLever(Prigroup privGroup) {
         List<ReturningPrivFourLevel> returningPrivFourLevels = new ArrayList<>();
         returningPrivFourLevels = rolePrivService.selectAllErJiBiaoTiChildrenByGroupdesc(privGroup.getPrigroupdesc());

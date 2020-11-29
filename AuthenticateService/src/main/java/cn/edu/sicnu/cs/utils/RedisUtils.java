@@ -48,18 +48,18 @@ public class RedisUtils {
     }
 
     public void addConfigrationPermissions(){
-        Collection<ConfigAttribute> configAttributes=new ArrayList<>();
-        List<Metaoperation> operations = metaOperationService.selectAll();
-        for (Metaoperation operation:operations) {
-            ConfigAttribute configAttribute=new SecurityConfig(operation.getMolurl()+" "+operation.getMomethod());
-            configAttributes.add(configAttribute);
-        }
-        //将权限存入redis
-        getRedisTemplate().opsForValue().set("configAttributes:permissions", JSON.toJSONString(operations),480, TimeUnit.MINUTES);
-
-        getRedisTemplate().delete("authentication:roleinfos:permissions");
-        List<RoleInfo> roleInfos= roleService.selectAllRoleAndMetaoperations();
-        getRedisTemplate().opsForValue().set("authentication:roleinfos:permissions", JSON.toJSONString(roleInfos),480,TimeUnit.MINUTES);
+//        Collection<ConfigAttribute> configAttributes=new ArrayList<>();
+//        List<Metaoperation> operations = metaOperationService.selectAll();
+//        for (Metaoperation operation:operations) {
+//            ConfigAttribute configAttribute=new SecurityConfig(operation.getMolurl()+" "+operation.getMomethod());
+//            configAttributes.add(configAttribute);
+//        }
+//        //将权限存入redis
+//        getRedisTemplate().opsForValue().set("configAttributes:permissions", JSON.toJSONString(operations),480, TimeUnit.MINUTES);
+//
+//        getRedisTemplate().delete("authentication:roleinfos:permissions");
+//        List<RoleInfo> roleInfos= roleService.selectAllRoleAndMetaoperations();
+//        getRedisTemplate().opsForValue().set("authentication:roleinfos:permissions", JSON.toJSONString(roleInfos),480,TimeUnit.MINUTES);
     }
 
 
