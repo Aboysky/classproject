@@ -40,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
     RedisUtils redisUtils;
 
     @Override
-    @Cacheable(cacheNames = "rolelist",key = "#root.methodName",condition = "#result!=null")
+    @Cacheable(cacheNames = "rolelist",key = "#root.methodName",unless = "#result==null")
     public List<Role> selectAll() {
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria criteria = roleExample.createCriteria();
@@ -93,7 +93,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @CachePut(cacheNames = "role",key = "#result.rid",condition = "#result!=null")
+//    @Cacheable(cacheNames = "role",key = "#result?.rid",unless = "#result==null")
+    @Caching(
+            cacheable = {
+                    @Cacheable(value = "navigationbar",key = "#roleName+'---'+#methodName",unless = "#result==null")
+            }
+    )
     public Role selectRoleByRoleName(String roleName) {
         RoleExample roleExample = new RoleExample();
         RoleExample.Criteria criteria = roleExample.createCriteria();
@@ -106,13 +111,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(cacheNames = "role",key = "#id",condition = "#result!=null")
+    @Cacheable(cacheNames = "role",key = "#id",unless = "#result==null")
     public Role selectByPrimaryKey(Integer id) {
         return roleMapper.selectByPrimaryKey(id);
     }
 
     @Override
-    @Cacheable(cacheNames = "roleprivsByrid",key = "#rid",condition = "#result!=null")
+    @Cacheable(cacheNames = "roleprivsByrid",key = "#rid",unless = "#result==null")
     public List<Metaoperation> selectPrivilegesByRid(int rid) {
         return rolePrivService.selectRolePrivsByRid(rid);
     }
@@ -138,7 +143,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(value = "roleprivs",key = "#root.methodName",condition = "#result!=null")
+    @Cacheable(value = "roleprivs",key = "#root.methodName",unless = "#result==null")
     public List<RoleInfo> selectAllRoleAndMetaoperations() {
         List<Role> roles = this.selectAll();
         List<RoleInfo> roleInfos = new ArrayList<>();
@@ -151,7 +156,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    @Cacheable(value = "rolelist",key = "#root.methodName",condition = "#result!=null")
+    @Cacheable(value = "rolelist",key = "#root.methodName",unless = "#result==null")
     public List<Role> selectAllRoles() {
         RoleExample roleExample = new RoleExample();
         roleExample.createCriteria().andRidIsNotNull();

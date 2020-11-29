@@ -421,7 +421,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "navigationbar",key = "#username",condition = "#result!=null")
+    @Cacheable(value = "navigationbar",key = "#username",unless = "#result==null")
     public List<NavigationBar> selectNavigationBarByUsername(String username) {
         User user = this.selectUserByUsername(username);
         if (user!=null){
@@ -431,14 +431,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "navigationbar",key = "#roleid+'--'+#privid",condition = "#result!=null")
+    @Cacheable(value = "navigationbar",key = "#roleid+'--'+#privid",unless = "#result==null")
     public List<NavigationBarChilren> selectNavigationBarChildrenByUsername(Integer roleid,Integer privid) {
         Metaoperation metaoperation = metaOperationService.selectByPrimaryKey(privid);
         return rolePrivService.selectNavBarChildrenByRole(roleid, metaoperation.getModesc());
     }
 
     @Override
-    @Cacheable(value = "sUserUserPage",key = "#root.methodName",condition = "#result!=null")
+    @Cacheable(value = "sUserUserPage",key = "#root.methodName",unless = "#result==null")
     public List<User> selectAllSysUser() {
         UserExample userExample = new UserExample();
         userExample.createCriteria().andUroleIdNotEqualTo(1).andUdeletedEqualTo("0");
@@ -446,7 +446,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "sUserUserPage",key = "#pageRequest.pageNum+'--'+#pageRequest.pageSize",condition = "#result!=null")
+    @Cacheable(value = "sUserUserPage",key = "#pageRequest.pageNum+'--'+#pageRequest.pageSize",unless = "#result==null")
     public PageResult findPage(PageRequest pageRequest) {
         return PageUtils.getPageResult(pageRequest, getPageInfo(pageRequest));
     }

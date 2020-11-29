@@ -1,22 +1,28 @@
 package cn.edu.sicnu.cs.pojo;
 
 import cn.edu.sicnu.cs.model.Metaoperation;
+import cn.edu.sicnu.cs.model.Role;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
+ * @author Huan
  * @Classname AuthUserDetails
  * @Description TODO
  * @Date 2020/11/19 22:40
  * @Created by Huan
  */
+@NoArgsConstructor
+@Data
 public class AuthUserDetails extends UserPojo implements UserDetails {
 
+
+    private static final long serialVersionUID = -8386426014287215209L;
 
     public AuthUserDetails(UserPojo userPojo){
         if (userPojo!=null){
@@ -60,5 +66,85 @@ public class AuthUserDetails extends UserPojo implements UserDetails {
     @Override
     public boolean isEnabled() {
         return "0".equals(this.getDeleted());
+    }
+
+    @Override
+    public Integer getId() {
+        return super.getId();
+    }
+
+    @Override
+    public String getUsername() {
+        return super.getUsername();
+    }
+
+    @Override
+    public String getPassword() {
+        return super.getPassword();
+    }
+
+    @Override
+    public Role getRoleInfo() {
+        return super.getRoleInfo();
+    }
+
+    @Override
+    public String getUlocked() {
+        return super.getUlocked();
+    }
+
+    @Override
+    public String getDeleted() {
+        return super.getDeleted();
+    }
+
+    @Override
+    public Date getUlasttime() {
+        return super.getUlasttime();
+    }
+
+    @Override
+    public List<Metaoperation> getOperations() {
+        return super.getOperations();
+    }
+
+    @Override
+    public void setId(Integer id) {
+        super.setId(id);
+    }
+
+    @Override
+    public void setUsername(String username) {
+        super.setUsername(username);
+    }
+
+    @Override
+    public void setPassword(String password) {
+        super.setPassword(password);
+    }
+
+    @Override
+    public void setRoleInfo(Role roleInfo) {
+        super.setRoleInfo(roleInfo);
+    }
+
+    @Override
+    public void setUlocked(String ulocked) {
+        super.setUlocked(ulocked);
+    }
+
+    @Override
+    public void setDeleted(String deleted) {
+        super.setDeleted(deleted);
+    }
+
+    @Override
+    public void setUlasttime(Date ulasttime) {
+        super.setUlasttime(ulasttime);
+    }
+
+    @Override
+    public void setOperations(List<Metaoperation> operations) {
+        super.setOperations(operations);
     }
 }

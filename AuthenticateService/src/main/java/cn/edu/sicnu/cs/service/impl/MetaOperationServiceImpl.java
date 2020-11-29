@@ -55,7 +55,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     RedisUtils redisUtils;
 
     @Override
-    @Cacheable(value = "operationlist",key = "#root.methodName",condition = "#result!=null")
+    @Cacheable(value = "operationlist",key = "#root.methodName",unless = "#result==null")
     public List<Metaoperation> selectAll() {
         MetaoperationExample operationExample = new MetaoperationExample();
         MetaoperationExample.Criteria criteria = operationExample.createCriteria();
@@ -121,13 +121,13 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
-    @Cacheable(value = "operations",key = "#id",condition = "#result!=null")
+    @Cacheable(value = "operations",key = "#id",unless = "#result==null")
     public Metaoperation selectByPrimaryKey(Integer id) {
         return metaoperationMapper.selectByPrimaryKey(id);
     }
 
     @Override
-    @CachePut(value = "operations",key = "#result.moid",condition = "#result!=null")
+    @CachePut(value = "operations",key = "#result.moid",unless = "#result==null")
     public Metaoperation selectByOperationName(String operationName)
     {
         MetaoperationExample operationExample = new MetaoperationExample();
@@ -138,7 +138,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
-    @Cacheable(value = "navigationbar",key = "#root.methodName",condition = "#result!=null")
+    @Cacheable(value = "navigationbar",key = "#root.methodName",unless = "#result==null")
     public List<Metaoperation> selectAllHeadNavBar() {
         MetaoperationExample metaoperationExample = new MetaoperationExample();
         metaoperationExample.createCriteria().andModescLike("HEAD_%");
@@ -147,7 +147,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     }
 
     @Override
-    @Cacheable(value = "navigationbar",key = "#headname+'--'+#root.methodName.toString()",condition = "#result!=null")
+    @Cacheable(value = "navigationbar",key = "#headname+'--'+#root.methodName.toString()",unless = "#result==null")
     public List<Metaoperation> selectAllChildNavBarByHead(String headname) {
         MetaoperationExample metaoperationExample = new MetaoperationExample();
 //        headname = headname.toLowerCase();

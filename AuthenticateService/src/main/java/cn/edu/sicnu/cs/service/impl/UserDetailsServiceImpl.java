@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
-    @Cacheable(value = "UserDetails",key = "#username",condition = "#result!=null")
+    @Cacheable(value = "UserDetails",key = "#username",unless = "#result==null")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String flagKey = "loginFailFlag:"+username;
         String value = redisTemplate.opsForValue().get(flagKey);
