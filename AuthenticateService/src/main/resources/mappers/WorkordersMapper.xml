@@ -90,7 +90,7 @@
     wcontent
   </sql>
 
-  <select id="findSelfWorkOrderSubmit" resultType="java.util.HashMap">
+  <select id="findSelfWorkOrderSubmit" resultType="java.util.Map">
     select wid,wcreattime,urealname,cname,wpriority,wname
     from workorders a,user,company
     where user.uid in(select fuser_id from userform where userform.fid = a.wuserform_id)
@@ -101,12 +101,12 @@
     ;
   </select>
   
-  <select id="findSelfWorkOrderCntByStatus" resultType="java.lang.Long">
+  <select id="findSelfWorkOrderCntByStatus" resultType="java.lang.Integer">
     select count(wid) from workorders where workorders.wstatus = #{status}
     and workorders.wid
     in (select tfromid from task where task.tassignedTo_id = #{uid})
   </select>
-  <select id="findSelfWorkOrderListByStatus" resultType="java.util.HashMap">
+  <select id="findSelfWorkOrderListByStatus" resultType="java.util.Map">
     select wuserform_id,wname,wpriority,username from workorders,user where wuserform_id = #{wid} and username = workorders.wprincipal_id  and wstatus = #{status}
 order by wpriority
 limit #{page},#{pagenum}
@@ -306,11 +306,11 @@ limit #{page},#{pagenum}
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-    <select id="selectByStatus" resultType="cn.edu.sicnu.cs.model.Workorders">
-      select * from workorders where wstatus = #{status}
+    <select id="selectByStatus" resultType="cn.edu.sicnu.cs.pojo.WorkOrderPojo">
+      select * from workorders limit #{page},#{pagenum} where wstatus = #{status}
     </select>
-  <select id="findAllWorkorders" resultType="cn.edu.sicnu.cs.model.Workorders">
-      select * from workorders
+  <select id="findAllWorkorders" resultType="cn.edu.sicnu.cs.pojo.WorkOrderPojo">
+      select * from workorders limit #{page},#{pagenum}
   </select>
   <update id="updateByExampleSelective" parameterType="map">
     update workorders
