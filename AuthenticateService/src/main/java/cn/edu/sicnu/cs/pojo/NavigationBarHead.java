@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,7 +16,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NavigationBarHead {
+public class NavigationBarHead implements Serializable {
+    private static final long serialVersionUID = -782704021022967305L;
     private Integer id;
     private String name;
     private String path;

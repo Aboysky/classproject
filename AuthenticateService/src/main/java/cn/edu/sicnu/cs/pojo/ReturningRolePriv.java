@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReturningRolePriv {
+public class ReturningRolePriv implements Serializable {
+    private static final long serialVersionUID = 7566798501089359991L;
     private Integer rid;
 
     private String rname;

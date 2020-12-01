@@ -7,10 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * @author Huan
  * @Classname ReturingPrivGroupWithPriv
  * @Description TODO
  * @Date 2020/11/24 11:21
@@ -19,7 +21,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReturningPrivGroupWithPriv {
+public class ReturningPrivGroupWithPriv implements Serializable {
+    private static final long serialVersionUID = -6934241902874535978L;
     private Integer id;
     //权限组名称
     private String authName;

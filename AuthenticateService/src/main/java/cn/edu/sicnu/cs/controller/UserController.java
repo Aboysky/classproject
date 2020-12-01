@@ -105,7 +105,9 @@ public class UserController {
                 int i = userService.updatePasswordByUid(uid, oldpassword, newpassword);
                 if (i>=1){
                     return ResUtil.getJsonStr(ResultCode.OK,"修改密码成功");
-                }else return ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "旧密码不正确");
+                }else {
+                    return ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "旧密码不正确");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 return ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "旧密码不正确");
@@ -144,7 +146,7 @@ public class UserController {
     }
 
     //  管理员更改其他用户信息   管理员密码
-    @Log("管理员对员工信息进行了修改")
+    @Log("管理员修改了员工信息")
     @PutMapping("${soft_version}/admin/{uid}")
     @ApiOperation(value = "update_user_info",tags = "user",notes = "改变用户信息")
     public String updateUserByAdmin(@PathVariable Integer uid, HttpServletRequest request) throws IOException {
@@ -211,12 +213,14 @@ public class UserController {
             }
             return ResUtil.getJsonStr(ResultCode.NECESSARY_PARAMETER_NOT_NULL_OR_NOTIING, "更新失败,传入参数错误");
 
-        }else return ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "管理员密码错误");
+        }else {
+            return ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "管理员密码错误");
+        }
 
 
     }
 
-    @Log("添加用户")
+    @Log("新增用户")
     @PostMapping("${soft_version}/user")
     @ApiOperation(value = "add_user",tags = "user",notes = "添加用户")
     public String addUser(HttpServletRequest request) throws IOException {
@@ -331,6 +335,7 @@ public class UserController {
         return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功",returningUser);
     }
 
+    @Log("查询所有用户")
     @GetMapping("${soft_version}/_users")
     @ApiOperation(value = "select_all_user",tags = "user",notes = "查询所有用户")
     public String selectAllsysUser() throws IOException {
@@ -346,7 +351,7 @@ public class UserController {
         return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功",returningUsers);
     }
 
-
+    @Log("查询用户的所有权限")
     @GetMapping("${soft_version}/user/{uid}/_privs")
     @ApiOperation(value = "select_user_privs",tags = {"user","privs"},notes = "查询用户的所有权限")
     public String selectUserPrivs(@PathVariable("uid") Integer uid) throws IOException {
@@ -362,6 +367,7 @@ public class UserController {
         return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功",metaoperations);
     }
 
+    @Log("改变用户角色")
     @PutMapping("${soft_version}/user/{uid}/role")
     @ApiOperation(value = "update_user_role",tags = "user",notes = "改变用户角色")
     public String updateUserRole(@PathVariable Integer uid, HttpServletRequest request) throws IOException {
@@ -396,6 +402,7 @@ public class UserController {
         }
     }
 
+    @Log("查询用户的一级导航栏")
     @GetMapping("${soft_version}/user/{uid}/_navbar")
     @ApiOperation(value = "select_user_privs",tags = {"user","privs"},notes = "查询用户的所有权限")
     public String selectUserBar(@PathVariable("uid") Integer uid) throws IOException {
@@ -411,6 +418,7 @@ public class UserController {
         return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功",navigationBars);
     }
 
+    @Log("查询用户的二级导航栏")
     @GetMapping("${soft_version}/user/{uid}/_navbarchildren")
     @ApiOperation(value = "select_user_privs",tags = {"user","privs"},notes = "查询用户的所有权限")
     public String selectUserBarChildren(@PathVariable("uid") Integer uid,HttpServletRequest request,@RequestParam("privid") String privid) throws IOException {
@@ -440,6 +448,7 @@ public class UserController {
         return ResUtil.getJsonStr(ResultCode.OK, "查询二级导航栏成功",navigationBarChilrens);
     }
 
+    @Log("分页查询用户")
     @GetMapping(value="/{soft_vesion}/_users/findpage")
     public Object findPage(@RequestParam("pageSize") Integer pageSize,@RequestParam("pageNum") Integer pageNum) {
 
@@ -468,6 +477,7 @@ public class UserController {
         return page;
     }
 
+    @Log("按权限组查询所有用户的权限")
     @GetMapping("/{soft_vesion}/_users/_privs")
     public String get_All_User_Privs_By_PrivGroup(){
 
@@ -513,6 +523,7 @@ public class UserController {
 //
 //        return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningPrivGroupWithPrivs);
 //    }
+    @Log("按权限组查询每个权限组拥有的所有权限")
     @GetMapping("/{soft_vesion}/_privgroups/_privs")
     public String get_All_Privgroup_Privs_By_PrivGroup(){
         List<ReturningPrivGroupWithPrivsFourLever> returningPrivGroupWithPrivs = new ArrayList<>();
@@ -525,7 +536,7 @@ public class UserController {
         }
         return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningPrivGroupWithPrivs);
     }
-
+    @Log("按角色查询每个角色的权限")
     @GetMapping("/{soft_vesion}/_roles/_groupprivs")
     public String get_all_Privs_Four_Lever_By_PrivGroup(){
 
@@ -566,6 +577,7 @@ public class UserController {
         return ResUtil.getJsonStrJackon(ResultCode.OK, "请求成功",returningRoleWithprivsgroups);
     }
 
+    @Log("查询用户在某个一级导航栏下的某个二级导航栏页面中的所有权限")
     @GetMapping("/{soft_vesion}/user/{userid}/{groupid}/{zibiaotiid}")
     public String select_user_group_zibiaoti(@PathVariable("userid") Integer userid,
                                              @PathVariable("groupid") Integer groupid,

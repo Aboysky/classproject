@@ -7,6 +7,7 @@ import cn.edu.sicnu.cs.service.RoleService;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -35,11 +36,9 @@ public class RedisUtils {
     RoleService roleService;
 
 
-    private static RedisTemplate getRedisTemplate(){
-        RedisTemplate redisTemplate;
-        redisTemplate = (RedisTemplate) SpringUtil.getBean("redisTemplate");
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+    private static StringRedisTemplate getRedisTemplate(){
+        StringRedisTemplate redisTemplate;
+        redisTemplate = (StringRedisTemplate) SpringUtil.getBean("stringRedisTemplate");
         return redisTemplate;
     }
 
@@ -48,18 +47,18 @@ public class RedisUtils {
     }
 
     public void addConfigrationPermissions(){
-//        Collection<ConfigAttribute> configAttributes=new ArrayList<>();
-//        List<Metaoperation> operations = metaOperationService.selectAll();
-//        for (Metaoperation operation:operations) {
-//            ConfigAttribute configAttribute=new SecurityConfig(operation.getMolurl()+" "+operation.getMomethod());
-//            configAttributes.add(configAttribute);
-//        }
-//        //将权限存入redis
-//        getRedisTemplate().opsForValue().set("configAttributes:permissions", JSON.toJSONString(operations),480, TimeUnit.MINUTES);
-//
-//        getRedisTemplate().delete("authentication:roleinfos:permissions");
-//        List<RoleInfo> roleInfos= roleService.selectAllRoleAndMetaoperations();
-//        getRedisTemplate().opsForValue().set("authentication:roleinfos:permissions", JSON.toJSONString(roleInfos),480,TimeUnit.MINUTES);
+        Collection<ConfigAttribute> configAttributes=new ArrayList<>();
+        List<Metaoperation> operations = metaOperationService.selectAll();
+        for (Metaoperation operation:operations) {
+            ConfigAttribute configAttribute=new SecurityConfig(operation.getMolurl()+" "+operation.getMomethod());
+            configAttributes.add(configAttribute);
+        }
+        //将权限存入redis
+        getRedisTemplate().opsForValue().set("configAttributes:permissions", JSON.toJSONString(operations),480, TimeUnit.MINUTES);
+
+        getRedisTemplate().delete("authentication:roleinfos:permissions");
+        List<RoleInfo> roleInfos= roleService.selectAllRoleAndMetaoperations();
+        getRedisTemplate().opsForValue().set("authentication:roleinfos:permissions", JSON.toJSONString(roleInfos),480,TimeUnit.MINUTES);
     }
 
 

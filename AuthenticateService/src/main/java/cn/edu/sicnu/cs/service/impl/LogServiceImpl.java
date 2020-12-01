@@ -67,8 +67,7 @@ public class LogServiceImpl implements LogService {
     @Override
     public Object queryAllByUser(LogQueryCriteria criteria, Pageable pageable) {
         Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)),pageable);
-        System.out.println("---->"+page);
-
+        page.iterator().forEachRemaining(System.out::println);
         return PageUtilLog.toPage(page.map(logSmallMapper::toDto));
     }
 

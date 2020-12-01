@@ -1,9 +1,10 @@
 package cn.edu.sicnu.cs.dao;
 
 import cn.edu.sicnu.cs.model.User;
-import cn.edu.sicnu.cs.model.UserExample;
+
 import java.util.List;
 
+import cn.edu.sicnu.cs.model.UserExample;
 import cn.edu.sicnu.cs.pojo.engineer;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Propagation;

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @Classname ReturningPriv
  * @Description TODO
@@ -14,7 +16,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReturningPriv {
+public class ReturningPriv implements Serializable {
+    private static final long serialVersionUID = -2177230972627419732L;
     private Integer id;
     private String authName;
     private String path;

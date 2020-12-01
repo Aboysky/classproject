@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @Classname NavigationBarChilren
  * @Description TODO
@@ -13,7 +15,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NavigationBarChilren {
+public class NavigationBarChilren implements Serializable {
+    private static final long serialVersionUID = -8377735627273030468L;
     private Integer id;
     private String name;
     private String addr;

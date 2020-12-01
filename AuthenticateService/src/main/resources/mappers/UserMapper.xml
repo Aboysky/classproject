@@ -384,4 +384,21 @@
   <update id="updateRoleByUsername">
       update user set urole_id = (select rid from role where rname = #{rolename}) where username = #{username}
   </update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </mapper>
+
+

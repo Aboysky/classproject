@@ -2,16 +2,18 @@ package cn.edu.sicnu.cs.pojo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
+ * @author Huan
  * @Classname PageResult
  * @Description TODO
  * @Date 2020/11/24 8:30
  * @Created by Huan
  */
 @Data
-public class PageResult {
+public class PageResult implements Serializable {
 //    private long total;//总记录数
 //    private List rows;//当前页记录
 //    private int page;//当前页

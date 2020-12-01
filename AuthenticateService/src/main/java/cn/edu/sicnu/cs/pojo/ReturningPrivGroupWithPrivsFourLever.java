@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReturningPrivGroupWithPrivsFourLever {
+public class ReturningPrivGroupWithPrivsFourLever implements Serializable {
+    private static final long serialVersionUID = 4750577246347125419L;
     private Integer id;
     //权限组名称
     private String authName;

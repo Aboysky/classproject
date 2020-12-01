@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +42,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     private TokenUtil tokenUtil;
 
     @Autowired
-    private StringRedisTemplate redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
     private RoleService roleService;
@@ -62,19 +63,19 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         String userName =authentication.getName();
 
         //在redis中查询用户之前是否登入
-        String oldToken=redisTemplate.opsForValue().get("token_"+userName );
+        String oldToken=stringRedisTemplate.opsForValue().get("token_"+userName );
         if(!StringUtils.isBlank(oldToken)){
             //清除旧Token
-            redisTemplate.delete("token_"+userName );
+            stringRedisTemplate.delete("token_"+userName );
         }
 
-        String roleInfosMapPermission=redisTemplate.opsForValue().get("authentication:roleinfos:permissions");
+        String roleInfosMapPermission=stringRedisTemplate.opsForValue().get("authentication:roleinfos:permissions");
 
 
         if(StringUtils.isBlank(roleInfosMapPermission)){
             //将角色与权限关系存入redis
             List<RoleInfo> roleInfos= roleService.selectAllRoleAndMetaoperations();
-            redisTemplate.opsForValue().set("authentication:roleinfos:permissions", JSON.toJSONString(roleInfos),480,TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set("authentication:roleinfos:permissions", JSON.toJSONString(roleInfos),480,TimeUnit.MINUTES);
         }
 
         //创建token
@@ -83,7 +84,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         int roleid = authUserDetails.getRoleInfo().getRid();
 
         //存入redis
-        redisTemplate.opsForValue().set("token_"+userName ,accessToken,480,TimeUnit.MINUTES);
+        stringRedisTemplate.opsForValue().set("token_"+userName ,accessToken,480,TimeUnit.MINUTES);
 
         HashMap<String,String> map=new HashMap<>();
         map.put("roleid", String.valueOf(roleid));
