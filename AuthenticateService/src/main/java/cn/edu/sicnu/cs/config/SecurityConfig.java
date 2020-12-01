@@ -110,7 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //添加自定义权限过滤器
                 .addFilterBefore(new WebSecurityCorsFilter(), ChannelProcessingFilter.class)
                 //添加自定义登陆过滤器
-                .addFilterAfter(myUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(myUsernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors()
                 .and()
                 //关闭csrf,所以请求可以访问

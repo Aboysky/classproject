@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,14 +30,15 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class MySecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
-    @Autowired
-    private MetaOperationService metaOperationService1;
+//    @Resource
+//    private MetaOperationService metaOperationServiceImpl;
     @Autowired
     private UserService userService;
     @Autowired
     private RoleService roleService;
-    @Autowired
-    private StringRedisTemplate redisTemplate;
+
+    @Resource
+    private StringRedisTemplate redisTemplate1;
 
     @Autowired
     private MetaOperationService metaOperationService;
@@ -51,7 +54,7 @@ public class MySecurityMetadataSource implements FilterInvocationSecurityMetadat
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
         Collection<ConfigAttribute> configAttributes=new ArrayList<>();
         //从reids中获取角色与权限数据
-        String redisConfigAttributesPermission=redisTemplate.opsForValue().get("configAttributes:permissions");
+        String redisConfigAttributesPermission= redisTemplate1.opsForValue().get("configAttributes:permissions");
         if(StringUtils.isBlank(redisConfigAttributesPermission)){
             List<Metaoperation> operations = metaOperationService.selectAll();
             for (Metaoperation operation:operations) {
@@ -59,7 +62,7 @@ public class MySecurityMetadataSource implements FilterInvocationSecurityMetadat
                 configAttributes.add(configAttribute);
             }
             //将权限存入redis
-            redisTemplate.opsForValue().set("configAttributes:permissions", JSON.toJSONString(operations),480, TimeUnit.MINUTES);
+            redisTemplate1.opsForValue().set("configAttributes:permissions", JSON.toJSONString(operations),480, TimeUnit.MINUTES);
         }else{
             JSONArray array= JSONObject.parseArray(redisConfigAttributesPermission);
             for (int i=0;i<array.size();i++) {

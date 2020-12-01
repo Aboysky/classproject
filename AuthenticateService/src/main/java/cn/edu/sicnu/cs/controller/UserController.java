@@ -1,11 +1,13 @@
 package cn.edu.sicnu.cs.controller;
 
+import cn.edu.sicnu.cs.anotations.Log;
 import cn.edu.sicnu.cs.constant.ResultCode;
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Prigroup;
 import cn.edu.sicnu.cs.model.Role;
 import cn.edu.sicnu.cs.model.User;
 import cn.edu.sicnu.cs.pojo.*;
+import cn.edu.sicnu.cs.service.MetaOperationService;
 import cn.edu.sicnu.cs.service.PrigroupService;
 import cn.edu.sicnu.cs.service.RoleService;
 import cn.edu.sicnu.cs.service.UserService;
@@ -16,18 +18,18 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StreamUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Classname User
@@ -51,6 +53,9 @@ public class UserController {
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    MetaOperationService metaOperationService;
+
 //
 //    @RequestMapping(method = PUT)
 //    @ApiOperation(value = "Update an existing pet",
@@ -70,7 +75,7 @@ public class UserController {
      * @throws IOException
      */
 
-
+    @Log("更新用户信息")
     @PutMapping("${soft_version}/user/{uid}")
     @ApiOperation(value = "update_user_info",tags = "user",notes = "改变用户信息")
     public String updateUser(@PathVariable Integer uid, HttpServletRequest request) throws IOException {
@@ -139,6 +144,7 @@ public class UserController {
     }
 
     //  管理员更改其他用户信息   管理员密码
+    @Log("管理员对员工信息进行了修改")
     @PutMapping("${soft_version}/admin/{uid}")
     @ApiOperation(value = "update_user_info",tags = "user",notes = "改变用户信息")
     public String updateUserByAdmin(@PathVariable Integer uid, HttpServletRequest request) throws IOException {
@@ -210,7 +216,7 @@ public class UserController {
 
     }
 
-
+    @Log("添加用户")
     @PostMapping("${soft_version}/user")
     @ApiOperation(value = "add_user",tags = "user",notes = "添加用户")
     public String addUser(HttpServletRequest request) throws IOException {
@@ -285,6 +291,7 @@ public class UserController {
         }
 
     }
+    @Log("删除用户")
     @DeleteMapping("${soft_version}/user/{uid}")
     @ApiOperation(value = "delete_user",tags = "user",notes = "删除用户")
     public String deleteUser(@PathVariable("uid") Integer uid) throws IOException {
@@ -308,7 +315,7 @@ public class UserController {
             return ResUtil.getJsonStr(ResultCode.OK, "删除用户成功");
         }
     }
-
+    @Log("查询用户")
     @GetMapping("${soft_version}/user/{uid}")
     @ApiOperation(value = "select_user",tags = "user",notes = "查询用户")
     public String selectUser(@PathVariable("uid") Integer uid) throws IOException {
@@ -478,7 +485,7 @@ public class UserController {
         for (Role role :roles) {
             for (Prigroup prigroup : prigroups){
                 if (prigroup!=null&&role!=null){
-                    List<Metaoperation> metaoperations = prigroupService.selectInAPrivGoupprivsByRole(prigroup.getPgid(), role.getRid());
+                    List<Metaoperation> metaoperations = prigroupService.selectinaprivgoupprivsbyrole(prigroup.getPgid(), role.getRid());
                     returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPriv(prigroup,metaoperations));
                 }
             }
@@ -493,20 +500,84 @@ public class UserController {
         return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningRoleWithprivsgroups);
     }
 
+//    @GetMapping("/{soft_vesion}/_privgroups/_privs")
+//    public String get_All_Privgroup_Privs_By_PrivGroup(){
+//        List<ReturningPrivGroupWithPriv> returningPrivGroupWithPrivs = new ArrayList<>();
+//        List<Prigroup> prigroups = prigroupService.selectAll();
+//        for (Prigroup prigroup : prigroups) {
+//            if (prigroup!=null){
+//                List<Metaoperation> metaoperations = prigroupService.selectPrivilegesByPrimaryKey(prigroup.getPgid());
+//                returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPriv(prigroup,metaoperations));
+//            }
+//        }
+//
+//        return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningPrivGroupWithPrivs);
+//    }
     @GetMapping("/{soft_vesion}/_privgroups/_privs")
     public String get_All_Privgroup_Privs_By_PrivGroup(){
-
-        List<ReturningPrivGroupWithPriv> returningPrivGroupWithPrivs = new ArrayList<>();
+        List<ReturningPrivGroupWithPrivsFourLever> returningPrivGroupWithPrivs = new ArrayList<>();
         List<Prigroup> prigroups = prigroupService.selectAll();
-
         for (Prigroup prigroup : prigroups) {
             if (prigroup!=null){
-                List<Metaoperation> metaoperations = prigroupService.selectPrivilegesByPrimaryKey(prigroup.getPgid());
-                returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPriv(prigroup,metaoperations));
+                List<ReturningPrivFourLevel> returningPrivFourLevels = prigroupService.selectAllFourLever(prigroup);
+                returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPrivsFourLever(prigroup.getPgid(),prigroup.getPrigroupname(),prigroup.getPrigroupdesc(),returningPrivFourLevels));
             }
         }
-
         return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningPrivGroupWithPrivs);
     }
 
+    @GetMapping("/{soft_vesion}/_roles/_groupprivs")
+    public String get_all_Privs_Four_Lever_By_PrivGroup(){
+
+        List<Role> roles = roleService.selectAllRoles();
+        for (Role role : roles) {
+            String name= role.getRname();
+            role.setRname(role.getRdesc());
+            role.setRdesc(name);
+        }
+//        List<ReturningPrivGroupWithPrivsFourLever> returningPrivGroupWithPrivs = new ArrayList<>();
+        List<ReturningRoleWithprivgroupFourLever> returningRoleWithprivsgroups = new ArrayList<>();
+        List<ReturningPrivFourLevel> privFourLevels = new ArrayList<>();
+        List<ReturningPriv> returningPrivs = new ArrayList<>();
+        List<Prigroup> prigroups = prigroupService.selectAll();
+
+        for (Role role :roles) {
+            List<ReturningPrivGroupWithPrivsFourLever> returningPrivGroupWithPrivs = new ArrayList<>();
+            for (Prigroup prigroup : prigroups){
+                if (prigroup!=null&&role!=null){
+                    List<ReturningPrivFourLevel> returningPrivFourLevels = metaOperationService.selectPrivFourLeverByRoleAndPrivgroup(role,prigroup);
+                    returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPrivsFourLever(prigroup,returningPrivFourLevels));
+                }
+            }
+            if (role!=null){
+                System.out.println("----------->"+returningPrivGroupWithPrivs);
+                System.out.println(">>--------"+returningRoleWithprivsgroups);
+                returningRoleWithprivsgroups.add(new ReturningRoleWithprivgroupFourLever(role,returningPrivGroupWithPrivs));
+                System.out.println(">>--------"+returningRoleWithprivsgroups);
+            }
+//            returningPrivGroupWithPrivs.clear();
+        }
+        System.out.println("------------->"+returningRoleWithprivsgroups);
+//
+//       return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningRoleWithprivsgroups);
+        if (returningRoleWithprivsgroups!=null||!returningRoleWithprivsgroups.isEmpty()){
+            returningRoleWithprivsgroups.remove(0);
+        }
+        return ResUtil.getJsonStrJackon(ResultCode.OK, "请求成功",returningRoleWithprivsgroups);
+    }
+
+    @GetMapping("/{soft_vesion}/user/{userid}/{groupid}/{zibiaotiid}")
+    public String select_user_group_zibiaoti(@PathVariable("userid") Integer userid,
+                                             @PathVariable("groupid") Integer groupid,
+                                             @PathVariable("zibiaotiid") Integer zibiaotiid) {
+
+        User user = userService.selectUserByUid(userid);
+
+        List<Metaoperation> metaoperations = prigroupService.selectInAPrivGoupprivsByRoleAndFourlever(groupid,user.getUroleId(), zibiaotiid);
+        Map<String,Boolean> map = new HashMap<>();
+        for (Metaoperation metaoperation : metaoperations) {
+            map.put(metaoperation.getModesc(), true);
+        }
+        return ResUtil.getJsonStr(ResultCode.OK,"查询成功",map);
+    }
 }

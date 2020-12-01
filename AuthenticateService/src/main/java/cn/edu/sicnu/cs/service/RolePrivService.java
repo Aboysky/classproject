@@ -5,6 +5,7 @@ import cn.edu.sicnu.cs.model.Role;
 import cn.edu.sicnu.cs.model.Rolepriv;
 import cn.edu.sicnu.cs.pojo.NavigationBar;
 import cn.edu.sicnu.cs.pojo.NavigationBarChilren;
+import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,4 +90,10 @@ public interface RolePrivService {
 
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
     List<NavigationBarChilren> selectNavBarChildrenByRole(Integer roleid,String privname);
+
+    @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
+    List<ReturningPrivFourLevel> selectErJiBiaoTiChildrenByRole(Integer roleid, String privname);
+
+    @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
+    List<ReturningPrivFourLevel> selectAllErJiBiaoTiChildrenByGroupdesc(String privname);
 }

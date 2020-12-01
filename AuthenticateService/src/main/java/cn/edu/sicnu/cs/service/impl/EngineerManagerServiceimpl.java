@@ -33,13 +33,6 @@ public class EngineerManagerServiceimpl implements EngineerManagerService {
         return engineers;
     }
 
-    @Override
-    public List<Workorders> selectWorkorders() {
-        List<Workorders> workorders1 = workordersMapper.selectByStatus("2");
-        List<Workorders> workorders2 = workordersMapper.selectByStatus("3");
-        workorders1.addAll(workorders2);
-        return workorders1;
-    }
 
     @Override
     public void updateRoleByEngManager(String username, String rolename) {

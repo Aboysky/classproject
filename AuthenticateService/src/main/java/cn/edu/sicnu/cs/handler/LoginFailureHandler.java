@@ -61,11 +61,6 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
             int restLoginTime = loginTimeLimit - loginFailTime;
             ResponseUtil.out(response, ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "用户名或密码错误"));
 
-
-
-
-
-
         } else if (e instanceof DisabledException) {
             ResponseUtil.out(response, ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "账户被禁用，请联系管理员"));
         } else {

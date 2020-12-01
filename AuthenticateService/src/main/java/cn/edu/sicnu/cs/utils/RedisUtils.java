@@ -28,13 +28,11 @@ import java.util.concurrent.TimeUnit;
 public class RedisUtils {
 
 
-
+    @Autowired
+    MetaOperationService metaOperationService;
 
     @Autowired
-    static MetaOperationService metaOperationService;
-
-    @Autowired
-    static RoleService roleService;
+    RoleService roleService;
 
 
     private static RedisTemplate getRedisTemplate(){
@@ -45,22 +43,24 @@ public class RedisUtils {
         return redisTemplate;
     }
 
-    public static void delete(String key){
+    public void delete(String key){
         getRedisTemplate().delete(key);
     }
 
-    public static void addConfigrationPermissions(){
-        Collection<ConfigAttribute> configAttributes=new ArrayList<>();
-        List<Metaoperation> operations = metaOperationService.selectAll();
-        for (Metaoperation operation:operations) {
-            ConfigAttribute configAttribute=new SecurityConfig(operation.getMolurl()+" "+operation.getMomethod());
-            configAttributes.add(configAttribute);
-        }
-        //将权限存入redis
-        getRedisTemplate().opsForValue().set("configAttributes:permissions", JSON.toJSONString(operations),480, TimeUnit.MINUTES);
-
-        getRedisTemplate().delete("authentication:roleinfos:permissions");
-        List<RoleInfo> roleInfos= roleService.selectAllRoleAndMetaoperations();
-        getRedisTemplate().opsForValue().set("authentication:roleinfos:permissions", JSON.toJSONString(roleInfos),480,TimeUnit.MINUTES);
+    public void addConfigrationPermissions(){
+//        Collection<ConfigAttribute> configAttributes=new ArrayList<>();
+//        List<Metaoperation> operations = metaOperationService.selectAll();
+//        for (Metaoperation operation:operations) {
+//            ConfigAttribute configAttribute=new SecurityConfig(operation.getMolurl()+" "+operation.getMomethod());
+//            configAttributes.add(configAttribute);
+//        }
+//        //将权限存入redis
+//        getRedisTemplate().opsForValue().set("configAttributes:permissions", JSON.toJSONString(operations),480, TimeUnit.MINUTES);
+//
+//        getRedisTemplate().delete("authentication:roleinfos:permissions");
+//        List<RoleInfo> roleInfos= roleService.selectAllRoleAndMetaoperations();
+//        getRedisTemplate().opsForValue().set("authentication:roleinfos:permissions", JSON.toJSONString(roleInfos),480,TimeUnit.MINUTES);
     }
+
+
 }

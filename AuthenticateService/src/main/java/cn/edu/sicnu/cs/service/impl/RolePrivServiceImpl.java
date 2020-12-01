@@ -7,6 +7,7 @@ import cn.edu.sicnu.cs.model.Rolepriv;
 import cn.edu.sicnu.cs.model.RoleprivExample;
 import cn.edu.sicnu.cs.pojo.NavigationBar;
 import cn.edu.sicnu.cs.pojo.NavigationBarChilren;
+import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
 import cn.edu.sicnu.cs.service.MetaOperationService;
 import cn.edu.sicnu.cs.service.RolePrivService;
 import cn.edu.sicnu.cs.service.RoleService;
@@ -14,6 +15,9 @@ import cn.edu.sicnu.cs.utils.RedisUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -40,12 +44,19 @@ public class RolePrivServiceImpl implements RolePrivService {
     @Autowired
     RoleService roleService;
 
+    @Autowired
+    RedisUtils redisUtils;
+
     @Override
+    @Cacheable(value = "roleprivsevict",key = "#rid",unless = "#result==null")
     public List<Metaoperation> selectRolePrivsByRid(int rid) {
         RoleprivExample roleprivExample = new RoleprivExample();
         RoleprivExample.Criteria criteria = roleprivExample.createCriteria();
         criteria.andRoleidEqualTo(rid);
         List<Rolepriv> roleprivs = roleprivMapper.selectByExample(roleprivExample);
+
+        logger.debug("角色id "+rid+"  roleprivs: "+roleprivs);
+
         List<Metaoperation> privileges = new ArrayList<>();
         for (Rolepriv rolepriv : roleprivs) {
             Metaoperation privilege = metaOperationService.selectByPrimaryKey(rolepriv.getPrivilegeid());
@@ -54,10 +65,12 @@ public class RolePrivServiceImpl implements RolePrivService {
             }
 
         }
+        logger.debug("角色id为: "+rid+"的角色拥有的权限集合为: privileges: "+privileges);
         return privileges;
     }
 
     @Override
+    @Cacheable(value = "roleprivsIntevict",key = "#rid",unless = "#result==null")
     public List<Integer> selectRolePrivsNamesByRid(int rid)
     {
         RoleprivExample roleprivExample = new RoleprivExample();
@@ -76,6 +89,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Cacheable(value = "privrolesevict",key = "#pid",unless = "#result==null")
     public List<Role> selectRolesByPid(int pid) {
         RoleprivExample roleprivExample = new RoleprivExample();
         roleprivExample.createCriteria().andPrivilegeidEqualTo(pid);
@@ -95,6 +109,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Cacheable(value = "roleprivs",key = "#root.methodName.toString()+'--'+#rid+'--'+#pid",unless = "#result==null")
     public boolean selectIsExistByRidAndPid(int rid, int pid) {
         RoleprivExample roleprivExample = new RoleprivExample();
         roleprivExample.createCriteria().andRoleidEqualTo(rid).andPrivilegeidEqualTo(pid);
@@ -103,17 +118,41 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "navigationbar",allEntries = true),
+                    @CacheEvict(value = "privsevict",allEntries = true),
+                    @CacheEvict(value = "privgroupIsExistBypidAndpgroupId",allEntries = true),
+                    @CacheEvict(value = "roleprivsevict",allEntries = true),
+                    @CacheEvict(value = "privrolesevict",allEntries = true),
+                    @CacheEvict(value = "roleprivsIntevict",allEntries = true),
+                    @CacheEvict(value = "sUserUserpojo",allEntries = true),
+                    @CacheEvict(value = "operationlist",allEntries = true)
+            }
+    )
     public int insert(int rid, int pid) throws Exception{
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         int i = roleprivMapper.insertSelective(new Rolepriv(rid, pid));
-        RedisUtils.addConfigrationPermissions();
+        redisUtils.addConfigrationPermissions();
         return i;
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "navigationbar",allEntries = true),
+                    @CacheEvict(value = "privsevict",allEntries = true),
+                    @CacheEvict(value = "privgroupIsExistBypidAndpgroupId",allEntries = true),
+                    @CacheEvict(value = "roleprivsevict",allEntries = true),
+                    @CacheEvict(value = "privrolesevict",allEntries = true),
+                    @CacheEvict(value = "roleprivsIntevict",allEntries = true),
+                    @CacheEvict(value = "sUserUserpojo",allEntries = true),
+                    @CacheEvict(value = "operationlist",allEntries = true),
+            }
+    )
     public int deleteByRidAndPid(int rid, int pid) {
 
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         RoleprivExample roleprivExample = new RoleprivExample();
         roleprivExample.createCriteria().andRoleidEqualTo(rid).andPrivilegeidEqualTo(pid);
         List<Rolepriv> roleprivs = roleprivMapper.selectByExample(roleprivExample);
@@ -121,8 +160,20 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "navigationbar",allEntries = true),
+                    @CacheEvict(value = "privsevict",allEntries = true),
+                    @CacheEvict(value = "privgroupIsExistBypidAndpgroupId",allEntries = true),
+                    @CacheEvict(value = "roleprivsevict",allEntries = true),
+                    @CacheEvict(value = "privrolesevict",allEntries = true),
+                    @CacheEvict(value = "roleprivsIntevict",allEntries = true),
+                    @CacheEvict(value = "sUserUserpojo",allEntries = true),
+                    @CacheEvict(value = "operationlist",allEntries = true),
+            }
+    )
     public int deleteByPid(int pid) {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         RoleprivExample roleprivExample = new RoleprivExample();
         RoleprivExample.Criteria criteria = roleprivExample.createCriteria();
         criteria.andPrivilegeidEqualTo(pid);
@@ -130,8 +181,20 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "navigationbar",allEntries = true),
+                    @CacheEvict(value = "privsevict",allEntries = true),
+                    @CacheEvict(value = "privgroupIsExistBypidAndpgroupId",allEntries = true),
+                    @CacheEvict(value = "roleprivsevict",allEntries = true),
+                    @CacheEvict(value = "privrolesevict",allEntries = true),
+                    @CacheEvict(value = "roleprivsIntevict",allEntries = true),
+                    @CacheEvict(value = "sUserUserpojo",allEntries = true),
+                    @CacheEvict(value = "operationlist",allEntries = true),
+            }
+    )
     public int deleteByRid(int rid) {
-        RedisUtils.delete("configAttributes:permissions");
+        redisUtils.delete("configAttributes:permissions");
         RoleprivExample roleprivExample = new RoleprivExample();
         RoleprivExample.Criteria criteria = roleprivExample.createCriteria();
         criteria.andRoleidEqualTo(rid);
@@ -141,6 +204,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     // List<Map>
 
     @Override
+    @Cacheable(value = "navigationbar",key = "#methodName+'--'+#rid",unless = "#result==null")
     public List<NavigationBar> selectNavBarByRole(Integer rid) {
         List<Metaoperation> metaoperations = this.selectRolePrivsByRid(rid);
         List<Metaoperation> metaoperations1 = metaOperationService.selectAllHeadNavBar();
@@ -153,9 +217,9 @@ public class RolePrivServiceImpl implements RolePrivService {
 //        }
         if (!metaoperations.isEmpty()){
             for (Metaoperation metaoperation : metaoperations) {
-//                for (NavigationBar navigationBar : navigationBarList) {
-//                    if (metaoperation.getMoid().equals(navigationBar.getId())){
-//                        navigationBar.setActive(true);
+//                for (NavigationBar navigationbar : navigationBarList) {
+//                    if (metaoperation.getMoid().equals(navigationbar.getId())){
+//                        navigationbar.setActive(true);
 //                    }
 //                }
                 for (Metaoperation metaoperation1 : metaoperations1) {
@@ -170,6 +234,7 @@ public class RolePrivServiceImpl implements RolePrivService {
     }
 
     @Override
+    @Cacheable(value = "navigationbar",key = "#methodName+'--'+#roleid+'--'+#privname",unless = "#result==null")
     public List<NavigationBarChilren> selectNavBarChildrenByRole(Integer roleid,String privname) {
         List<Metaoperation> metaoperations = this.selectRolePrivsByRid(roleid);
         List<Metaoperation> metaoperations1 = metaOperationService.selectAllChildNavBarByHead(privname);
@@ -181,8 +246,8 @@ public class RolePrivServiceImpl implements RolePrivService {
 //            }
 //        }
 
-        logger.debug("-------->metaoperations"+metaoperations);
-        logger.debug("----------->metaoperations1"+metaoperations1);
+//        logger.debug("-------->metaoperations"+metaoperations);
+//        logger.debug("----------->metaoperations1"+metaoperations1);
         if (!metaoperations.isEmpty()){
             for (Metaoperation metaoperation : metaoperations) {
                 if (!metaoperations1.isEmpty()){
@@ -195,13 +260,53 @@ public class RolePrivServiceImpl implements RolePrivService {
                 }else{
                     return null;
                 }
-                logger.debug("navigationBarChilrens"+navigationBarChilrens);
+//                logger.debug("navigationBarChilrens"+navigationBarChilrens);
 
             }
             return navigationBarChilrens;
         }
 
         return null;
+    }
+
+    @Override
+    @Cacheable(value = "navigationbar",key = "#methodName+'--'+#roleid+'--'+#privname",unless = "#result==null")
+    public List<ReturningPrivFourLevel> selectErJiBiaoTiChildrenByRole(Integer roleid, String privname) {
+        List<Metaoperation> metaoperations = this.selectRolePrivsByRid(roleid);
+        logger.debug("id为"+roleid+"角色拥有的所有权限为:"+metaoperations);
+        List<Metaoperation> metaoperations1 = metaOperationService.selectAllChildNavBarByHead(privname);
+        logger.debug("id为"+roleid+" 的角色在 "+privname+" 导航栏下拥有的权限为: "+ metaoperations1);
+        List<ReturningPrivFourLevel> returningPrivFourLevels = new ArrayList<>();
+
+        if (!metaoperations.isEmpty()){
+            for (Metaoperation metaoperation : metaoperations) {
+                if (!metaoperations1.isEmpty()){
+                    for (Metaoperation metaoperation1 : metaoperations1) {
+                        if (metaoperation1.getMoid().equals(metaoperation.getMoid())){
+                            returningPrivFourLevels.add(new ReturningPrivFourLevel(metaoperation.getMoid(),metaoperation.getMoname(),metaoperation.getMolurl(),null));
+                        }
+                    }
+                }else{
+                    return null;
+                }
+//                logger.debug("navigationBarChilrens"+navigationBarChilrens);
+
+            }
+            return returningPrivFourLevels;
+        }return null;
+
+
+    }
+
+    @Override
+    @Cacheable(value = "navigationbar",key = "#methodName+'--'+#privname",unless = "#result==null")
+    public List<ReturningPrivFourLevel> selectAllErJiBiaoTiChildrenByGroupdesc(String privname) {
+        List<Metaoperation> metaoperations1 = metaOperationService.selectAllChildNavBarByHead(privname);
+        List<ReturningPrivFourLevel> returningPrivFourLevels = new ArrayList<>();
+        for (Metaoperation metaoperation1 : metaoperations1) {
+                returningPrivFourLevels.add(new ReturningPrivFourLevel(metaoperation1.getMoid(),metaoperation1.getMoname(),metaoperation1.getMolurl(),null));
+        }
+        return returningPrivFourLevels;
     }
 
 

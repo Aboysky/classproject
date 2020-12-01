@@ -3,6 +3,7 @@ package cn.edu.sicnu.cs.service;
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Prigroup;
 import cn.edu.sicnu.cs.pojo.PrivGroup;
+import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +70,20 @@ public interface PrigroupService {
      * 查询一个角色在某一个权限组拥有的权限集合
      * @return
      */
-    List<Metaoperation> selectInAPrivGoupprivsByRole(Integer groupid,Integer roleid);
+    List<Metaoperation> selectinaprivgoupprivsbyrole(Integer groupid, Integer roleid);
+
+    /**
+     * 查询角色id在权限组下面的子标题下拥有的权限
+     * @param groupid 权限组id
+     * @param roleid 角色id
+     * @param zibiaoti 二级菜单id
+     * @return
+     */
+    List<Metaoperation> selectInAPrivGoupprivsByRoleAndFourlever(Integer groupid,Integer roleid,Integer zibiaoti);
+
+    List<Metaoperation> selectALLAPrivGoupprivsBygroupidAndzibiaoti(Integer groupid,Integer zibiaoti);
 
     List<Prigroup> selectAll();
+
+    List<ReturningPrivFourLevel> selectAllFourLever(Prigroup prigroup);
 }

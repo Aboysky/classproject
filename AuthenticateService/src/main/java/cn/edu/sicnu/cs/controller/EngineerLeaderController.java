@@ -60,12 +60,6 @@ public class EngineerLeaderController {
         return result;
     }
 
-    @GetMapping("/workorders")
-    @ApiOperation(value = "WorkOrder",notes = "查看工单")
-    @ResponseBody
-    public List<Workorders> WorkOrder(){
-        return engineerManagerService.selectWorkorders();
-    }
 
     @PostMapping("/addtask")
     @ApiOperation(value = "AddTask",notes = "添加任务")
