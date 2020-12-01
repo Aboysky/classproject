@@ -10,7 +10,5 @@ public interface EngineerManagerService {
 
     List<engineer> FindEngineer();
 
-    List<Workorders> selectWorkorders();
-
     void updateRoleByEngManager(String username,String rolename);
 }

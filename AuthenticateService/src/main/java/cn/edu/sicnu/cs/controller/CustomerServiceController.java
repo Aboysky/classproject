@@ -8,6 +8,7 @@ import cn.edu.sicnu.cs.service.impl.CustomersServiceServiceImpl;
 
 import cn.edu.sicnu.cs.service.UserService;
 import cn.edu.sicnu.cs.service.impl.WorkOrdersServiceImpl;
+import cn.edu.sicnu.cs.utils.ResUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class CustomerServiceController {
     @GetMapping("index/userform/cnt")
     @ResponseBody
     @ApiOperation(value = "TodayUserFormCnt",notes = "查询对应状态的任务数量")
-    public Map<String,Object> TodayUserFormCnt(long cid){
+    public String TodayUserFormCnt(long cid){
 
         Map<String,Object> map = new HashMap<>();
 
@@ -44,7 +45,9 @@ public class CustomerServiceController {
         map.put("untreated",customersServiceService.TodayUserFormCnt(cid,"0"));
         map.put("processing",customersServiceService.TodayUserFormCnt(cid,"1"));
         map.put("finished",customersServiceService.TodayUserFormCnt(cid,"2"));
-        return map;
+
+
+        return ResUtil.getJsonStr(1,"成功",map);
     }
 
     //

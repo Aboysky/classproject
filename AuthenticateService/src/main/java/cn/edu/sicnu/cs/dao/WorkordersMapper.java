@@ -5,12 +5,13 @@ import cn.edu.sicnu.cs.model.WorkordersExample;
 import java.util.List;
 import java.util.Map;
 
+import cn.edu.sicnu.cs.pojo.WorkOrderPojo;
 import org.apache.ibatis.annotations.Param;
 
 public interface WorkordersMapper {
-    List<Workorders> selectByStatus(String status);
+    List<WorkOrderPojo> selectByStatus(String status,Integer page,Integer pagenum);
 
-    List<Workorders> findAllWorkorders();
+    List<WorkOrderPojo> findAllWorkorders(Integer page,Integer pagenum);
 
     void checkUpdateStatusByWid(Long wid,String check);
 
@@ -49,7 +50,6 @@ public interface WorkordersMapper {
     int findSelfWorkOrderCntByStatus(long uid, String status);
 
     List<Map<String,Object>> findSelfWorkOrderListByStatus(long uid, long page, long pagenum, String status);
-
 
     List<Map<String,Object>> findSelfWorkOrderSubmit(long cid,long page, long pagenum, String status);
 

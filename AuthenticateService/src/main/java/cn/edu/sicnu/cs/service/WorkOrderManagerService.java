@@ -1,14 +1,15 @@
 package cn.edu.sicnu.cs.service;
 
 import cn.edu.sicnu.cs.model.Workorders;
+import cn.edu.sicnu.cs.pojo.WorkOrderPojo;
 
 import java.util.List;
 
 public interface WorkOrderManagerService {
 
-    List<Workorders> findAllWorkorders();
+    List<WorkOrderPojo> findAllWorkorders(Integer page,Integer pagenum);
 
-    List<Workorders> selectWorkordersByStatus(String status);
+    List<WorkOrderPojo> selectWorkordersByStatus(String status,Integer page,Integer pagenum);
 
     String checkorder(Long woid,String check);
 
