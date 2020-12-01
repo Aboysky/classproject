@@ -1,6 +1,7 @@
 package cn.edu.sicnu.cs.controller;
 
 
+import cn.edu.sicnu.cs.anotations.Log;
 import cn.edu.sicnu.cs.pojo.WorkOrderPojo;
 import cn.edu.sicnu.cs.service.UserService;
 import cn.edu.sicnu.cs.service.WorkOrderManagerService;
@@ -37,6 +38,7 @@ public class WorkorderManagerController {
     @GetMapping("/getorder")
     @ApiOperation(value = "WorkOrder",notes = "获取工单")
     @ResponseBody
+    @Log("工单管理员查询工单")
     public String GetOrder(String select,Integer page,Integer pagenum){
         List<WorkOrderPojo> workOrderPojos;
         if(select.equals("5")){
@@ -55,10 +57,19 @@ public class WorkorderManagerController {
             orderPojo.setWprincipal_id(userService.selectUserNameByUid(Integer.parseInt(orderPojo.getWprincipal_id())));
             if (orderPojo.getWstatus().equals("0")) {
                 op.put("isActive_0", "true");
+                orderPojo.setWstatus("未审核");
             } else if (orderPojo.getWstatus().equals("1")) {
                 op.put("isActive_1", "true");
+                orderPojo.setWstatus("未分配");
             } else if (orderPojo.getWstatus().equals("3") || orderPojo.getWstatus().equals("4")) {
                 op.put("isActive_2", "true");
+                if(orderPojo.getWstatus().equals("3")){
+                    orderPojo.setWstatus("已完成");
+                }else {
+                    orderPojo.setWstatus("未通过审核");
+                }
+            } else if(orderPojo.getWstatus().equals("2")){
+                    orderPojo.setWstatus("处理中");
             }
             orderPojo.setOperations(op);
         }
@@ -68,6 +79,7 @@ public class WorkorderManagerController {
     @PostMapping("/check")
     @ApiOperation(value = "CheckOrder",notes = "审核工单")
     @ResponseBody
+    @Log("工单管理员审核工单")
     public String CheckOrder(Long wid,int check){
         String checkd = Integer.toString(check);
         String result = workOrderManagerService.checkorder(wid,checkd);
@@ -77,6 +89,7 @@ public class WorkorderManagerController {
     @PostMapping("/allocate")
     @ApiOperation(value = "AllocateOrder",notes = "分配工单")
     @ResponseBody
+    @Log("工单管理员分配工单")
     public Long AllocateOrder(Long wid,String name){
         Long result = workOrderManagerService.allocateorder(wid,name);
         return result;
@@ -85,6 +98,7 @@ public class WorkorderManagerController {
     @PostMapping("/finish")
     @ApiOperation(value = "FinishOrder",notes = "完成工单")
     @ResponseBody
+    @Log("工单管理员完成工单")
     public Long FinishOrder(Long wid){
         Long result = workOrderManagerService.finishorder(wid);
         return result;
