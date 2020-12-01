@@ -1,5 +1,6 @@
 package cn.edu.sicnu.cs.controller;
 
+import cn.edu.sicnu.cs.anotations.Log;
 import cn.edu.sicnu.cs.constant.ResultCode;
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Prigroup;
@@ -74,7 +75,7 @@ public class UserController {
      * @throws IOException
      */
 
-
+    @Log("更新用户信息")
     @PutMapping("${soft_version}/user/{uid}")
     @ApiOperation(value = "update_user_info",tags = "user",notes = "改变用户信息")
     public String updateUser(@PathVariable Integer uid, HttpServletRequest request) throws IOException {
@@ -143,6 +144,7 @@ public class UserController {
     }
 
     //  管理员更改其他用户信息   管理员密码
+    @Log("管理员对员工信息进行了修改")
     @PutMapping("${soft_version}/admin/{uid}")
     @ApiOperation(value = "update_user_info",tags = "user",notes = "改变用户信息")
     public String updateUserByAdmin(@PathVariable Integer uid, HttpServletRequest request) throws IOException {
@@ -214,7 +216,7 @@ public class UserController {
 
     }
 
-
+    @Log("添加用户")
     @PostMapping("${soft_version}/user")
     @ApiOperation(value = "add_user",tags = "user",notes = "添加用户")
     public String addUser(HttpServletRequest request) throws IOException {
@@ -289,6 +291,7 @@ public class UserController {
         }
 
     }
+    @Log("删除用户")
     @DeleteMapping("${soft_version}/user/{uid}")
     @ApiOperation(value = "delete_user",tags = "user",notes = "删除用户")
     public String deleteUser(@PathVariable("uid") Integer uid) throws IOException {
@@ -312,7 +315,7 @@ public class UserController {
             return ResUtil.getJsonStr(ResultCode.OK, "删除用户成功");
         }
     }
-
+    @Log("查询用户")
     @GetMapping("${soft_version}/user/{uid}")
     @ApiOperation(value = "select_user",tags = "user",notes = "查询用户")
     public String selectUser(@PathVariable("uid") Integer uid) throws IOException {
