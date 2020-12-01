@@ -2,12 +2,12 @@ package cn.edu.sicnu.cs.controller;
 
 
 import cn.edu.sicnu.cs.model.User;
-import cn.edu.sicnu.cs.model.Userform;
 import cn.edu.sicnu.cs.model.Workorders;
 import cn.edu.sicnu.cs.service.impl.CustomersServiceServiceImpl;
 
 import cn.edu.sicnu.cs.service.UserService;
 import cn.edu.sicnu.cs.service.impl.WorkOrdersServiceImpl;
+import cn.edu.sicnu.cs.utils.ResUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @Api(tags = "CustomersService",value = "客服")
@@ -35,16 +32,18 @@ public class CustomerServiceController {
     @GetMapping("index/userform/cnt")
     @ResponseBody
     @ApiOperation(value = "TodayUserFormCnt",notes = "查询对应状态的任务数量")
-    public Map<String,Object> TodayUserFormCnt(long cid){
+    public String TodayUserFormCnt(long cid){
 
         Map<String,Object> map = new HashMap<>();
 
         User user = userService.selectUserByUid((int)cid);
+
+
         map.put("username",user.getUsername());
         map.put("untreated",customersServiceService.TodayUserFormCnt(cid,"0"));
         map.put("processing",customersServiceService.TodayUserFormCnt(cid,"1"));
         map.put("finished",customersServiceService.TodayUserFormCnt(cid,"2"));
-        return map;
+        return ResUtil.getJsonStr(1, "成功", map);
     }
 
     //
@@ -53,12 +52,15 @@ public class CustomerServiceController {
     @GetMapping("index/today/untreated/userform/list")
     @ResponseBody
     @ApiOperation(value = "FindTodayUntreatedUserFormListByCid",notes = "查询对应状态的表单列表")
-    public Map<String,Object> FindUserFormList(long cid,long page,long pagenum,String status) {
+    public String FindUserFormList(long cid,long page,long pagenum,String status) {
+
+
         Map<String, Object> map = new HashMap<>();
         map.put("total", customersServiceService.FindUserFormCnt(cid, status));
         map.put("list", customersServiceService.FindUserFormList(cid, page, pagenum, status));
 
-        return map;
+
+        return ResUtil.getJsonStr(1, "成功", map);
     }
 
 
@@ -67,8 +69,11 @@ public class CustomerServiceController {
     @GetMapping("form/userform")
     @ResponseBody
     @ApiOperation(value = "FindUserFormByFid",notes = "查看表单详情")
-    public Userform FindUserFormByFid(long fid){
-        return customersServiceService.FindUserFormByFid(fid);
+    public String FindUserFormByFid(long fid){
+
+        Map<String,Object> map = new HashMap<>();
+        map.put("details",customersServiceService.FindUserFormByFid(fid));
+        return ResUtil.getJsonStr(1, "成功", map);
     }
 
 
@@ -84,7 +89,7 @@ public class CustomerServiceController {
             Workorders workorders = getObject(map,Workorders.class);
             workOrdersService.InsertWorkOrder(workorders);
         }
-        return "";
+        return ResUtil.getJsonStr(1, "成功");
     }
     //将前端返回来的map里面的value封入实体类中
     public <T>T getObject(Map<String,Object> map, Class<T> c) throws Exception {
@@ -104,19 +109,23 @@ public class CustomerServiceController {
     @GetMapping("self/workorder/list")
     @ResponseBody
     @ApiOperation(value = "FindSelfWorkOrderSubmit",notes = "查看自己提交工单列表")
-    public List<Map<String,Object>> FindSelfWorkOrderSubmit(long cid,long page,long pagenum,String status) {
+    public String FindSelfWorkOrderSubmit(long cid,long page,long pagenum) {
 
 
-        List<Map<String,Object>> list =  workOrdersService.FindSelfWorkOrderSubmit(cid,page,pagenum,status);
-        return list;
+        List<Map<String,Object>> list =  workOrdersService.FindSelfWorkOrderSubmit(cid,page,pagenum);
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",list);
+        return ResUtil.getJsonStr(1, "成功",map);
     }
 
     @GetMapping("self/workorder")
     @ResponseBody
     @ApiOperation(value = "FindSelfWorkOrder",notes = "查看工单详情")
-    public Workorders FindSelfWorkOrder(long wid) {
+    public String FindSelfWorkOrder(long wid) {
         Workorders workorders =  workOrdersService.FindWorkOrder(wid);
-        return workorders;
+        Map<String,Object> map = new HashMap<>();
+        map.put("details",workorders);
+        return ResUtil.getJsonStr(1, "成功",map);
     }
 
 }

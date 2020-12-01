@@ -57,6 +57,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         //查询用户信息
         UserPojo authUserPoJo= userService.selectUserPojoByUsername(username);
 
+        logger.debug(username+"尝试登录"+authUserPoJo);
+
         if(null==authUserPoJo){
             throw new UsernameNotFoundException("当前用户不存在");
         }
