@@ -1,5 +1,6 @@
 package cn.edu.sicnu.cs.controller;
 
+import cn.edu.sicnu.cs.anotations.Log;
 import cn.edu.sicnu.cs.model.Faq;
 import cn.edu.sicnu.cs.service.impl.FaqServiceImpl;
 import io.swagger.annotations.Api;
@@ -21,6 +22,7 @@ public class FAQController {
     @GetMapping("browse/{type}")
     @ResponseBody
     @ApiOperation(value = "findFaqByType",notes = "根据分类查询Faq")
+    @Log("根据分类查询Faq")
     public List<Faq> findFaqByType(@PathVariable String type){
         List<Faq> list = faqService.FindFaqListByType(type);
         return list;
@@ -29,6 +31,7 @@ public class FAQController {
     @GetMapping("browse/{name}")
     @ResponseBody
     @ApiOperation(value = "FindFaqName",notes = "根据标题查询Faq")
+    @Log("根据标题查询Faq")
     public Faq FindFaqName(@PathVariable String name){
         Faq faq = faqService.FindFaqName(name);
         return faq;

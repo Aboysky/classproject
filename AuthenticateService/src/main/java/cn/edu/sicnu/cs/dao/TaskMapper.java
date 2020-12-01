@@ -36,7 +36,7 @@ public interface TaskMapper {
 
     int updateByPrimaryKey(Task record);
 
-    int findSelfTaskCntByStatus(long uid, String status);
+    long findSelfTaskCntByStatus(long uid, String status);
 
 
 

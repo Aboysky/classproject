@@ -51,7 +51,7 @@ public interface WorkordersMapper {
 
     List<Map<String,Object>> findSelfWorkOrderListByStatus(long uid, long page, long pagenum, String status);
 
-    List<Map<String,Object>> findSelfWorkOrderSubmit(long cid,long page, long pagenum, String status);
+    List<Map<String,Object>> findSelfWorkOrderSubmit(long cid,long page, long pagenum);
 
     Workorders findWorkOrder(long wid);
 
