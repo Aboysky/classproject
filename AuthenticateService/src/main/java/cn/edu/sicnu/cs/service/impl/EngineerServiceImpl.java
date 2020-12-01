@@ -24,21 +24,20 @@ public class EngineerServiceImpl implements EngineerService {
     WorkordersMapper workordersMapper;
 
     @Override
-    public int FindSelfTaskCntByStatus(long uid, String status) {
+    public long FindSelfTaskCntByStatus(long uid, String status) {
         long cnt = taskMapper.findSelfTaskCntByStatus(uid,status);
-        return (int)cnt;
+        return cnt;
     }
 
     @Override
-    public int FindSelfWorkOrderCntByStatus(long uid, String status) {
+    public long FindSelfWorkOrderCntByStatus(long uid, String status) {
         long cnt = workordersMapper.findSelfWorkOrderCntByStatus(uid,status);
-        return (int)cnt;
+        return cnt;
     }
 
     @Override
     public List<Map<String,Object>> FindSelfTaskListByStatus(long uid, long page, long pagenum, String status) {
-        page =((page-1) * pagenum) +1;
-        pagenum = page + pagenum - 1;
+        page =((page-1) * pagenum);
         List<Map<String,Object>> list = taskMapper.findSelfTaskListByStatus(uid,page,pagenum,status);
 
         return list;
@@ -48,8 +47,7 @@ public class EngineerServiceImpl implements EngineerService {
 
     @Override
     public List<Map<String,Object>> FindSelfWorkOrderListByStatus(long uid, long page, long pagenum,String status) {
-        page =((page-1) * pagenum) +1;
-        pagenum = page + pagenum - 1;
+        page =((page-1) * pagenum);
         List<Map<String,Object>> list = workordersMapper.findSelfWorkOrderListByStatus(uid,page,pagenum,status);
         return list;
     }

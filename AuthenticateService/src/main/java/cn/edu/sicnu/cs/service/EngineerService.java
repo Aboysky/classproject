@@ -8,9 +8,9 @@ import java.util.Map;
 
 public interface EngineerService {
 
-    int FindSelfTaskCntByStatus(long uid, String s);
+    long FindSelfTaskCntByStatus(long uid, String s);
 
-    int FindSelfWorkOrderCntByStatus(long uid, String s);
+    long FindSelfWorkOrderCntByStatus(long uid, String s);
 
     List<Map<String,Object>> FindSelfTaskListByStatus(long uid, long page, long pagenum, String status);
 

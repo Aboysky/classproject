@@ -1,10 +1,10 @@
 package cn.edu.sicnu.cs.service.impl;
 
 
-import cn.edu.sicnu.cs.service.FeedBackService;
 import cn.edu.sicnu.cs.dao.UserformMapper;
 import cn.edu.sicnu.cs.model.Userform;
 import cn.edu.sicnu.cs.model.UserformExample;
+import cn.edu.sicnu.cs.service.FeedBackService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,8 +20,10 @@ public class FeedBackServiceImpl implements FeedBackService {
     UserformMapper userformMapper;
 
     @Override
-    public List<Map<String,Object>> FindHotUserFormList(String page) {
-        List<Map<String,Object>> list = userformMapper.findHotUserFormList(page);
+    public List<Map<String,Object>> FindHotUserFormList(long page,long pagenum) {
+
+        page = ((page-1) * pagenum);
+        List<Map<String,Object>> list = userformMapper.findHotUserFormList(page,pagenum);
         return list;
     }
 
@@ -37,23 +39,23 @@ public class FeedBackServiceImpl implements FeedBackService {
     }
 
     @Override
-    public List<Userform> FindSelfUserFormList(String uid) {
-        List<Userform> list = userformMapper.findSelfUserFormList(uid);
+    public List<Map<String,Object>> FindSelfUserFormList(long page,long pagenum,long uid) {
+        List<Map<String,Object>> list = userformMapper.findSelfUserFormList(page,pagenum,uid);
 
         return list;
     }
 
     @Override
     public String SubmitUserForm(Userform userform) {
-        userformMapper.insert(userform);
-        return "";
+
+         userformMapper.insert(userform);
+         return "";
     }
 
 
     @Override
     public List<Map<String,Object>> FindUserFormList(long cid, long page, long pagenum, String status) {
-        page =((page-1) * pagenum) +1;
-        pagenum = page + pagenum - 1;
+        page =((page-1) * pagenum);
         List<Map<String,Object>> list = userformMapper.findUserFormList(cid,page,pagenum,status);
         return list;
     }
