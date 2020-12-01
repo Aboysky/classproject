@@ -7,11 +7,10 @@ import java.util.List;
 import javax.annotation.Generated;
 import org.springframework.stereotype.Component;
 
-
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2020-11-30T12:15:25+0800",
-    comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_261 (Oracle Corporation)"
+    date = "2020-12-01T15:24:05+0800",
+    comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_271 (Oracle Corporation)"
 )
 @Component
 public class LogSmallMapperImpl implements LogSmallMapper {
@@ -34,13 +33,6 @@ public class LogSmallMapperImpl implements LogSmallMapper {
         }
 
         LogSmallDto logSmallDto = new LogSmallDto();
-
-        logSmallDto.setAddress(entity.getAddress());
-        logSmallDto.setBrowser(entity.getBrowser());
-        logSmallDto.setCreateTime(entity.getCreateTime());
-        logSmallDto.setRequestIp(entity.getRequestIp());
-        logSmallDto.setTime(entity.getTime());
-        logSmallDto.setDescription(entity.getDescription());
 
         return logSmallDto;
     }

@@ -1,6 +1,7 @@
 package cn.edu.sicnu.cs.controller;
 
 
+import cn.edu.sicnu.cs.anotations.Log;
 import cn.edu.sicnu.cs.model.Task;
 import cn.edu.sicnu.cs.model.User;
 import cn.edu.sicnu.cs.model.Workorders;
@@ -36,6 +37,7 @@ public class EngineerCotroller {
 
     @GetMapping("task/cnt")
     @ApiOperation(value = "FindSelfTaskCnt",notes = "查询自己的任务数量")
+    @Log("查询自己的任务数量")
     public String FindSelfTaskCnt(long uid){
 
         Map<String,Object> map = new HashMap<>();
@@ -55,6 +57,7 @@ public class EngineerCotroller {
 
     @ApiOperation(value = "FindSelfTaskList",notes = "查询根据状态自己的任务列表")
     @GetMapping("task/list")
+    @Log("查询根据状态自己的任务列表")
     public String FindSelfTaskList(long uid,long page,long pagenum,String status){
         List<Map<String,Object>> list =  engineerService.FindSelfTaskListByStatus(uid,page,pagenum,status);
         Map<String,Object> map = new HashMap<>();
@@ -82,6 +85,7 @@ public class EngineerCotroller {
 
     @ApiOperation(value = "FindSelfWorkOrderList",notes = "根据状态查询自己关联的工单列表")
     @GetMapping("self/order/list")
+    @Log("根据状态查询自己关联的工单列表")
     public String FindSelfWorkOrderListByType(long uid,long page,long pagenum,String status){
         List<Map<String,Object>> list =  engineerService.FindSelfWorkOrderListByStatus(uid,page,pagenum,status);
 
@@ -93,6 +97,7 @@ public class EngineerCotroller {
 
     @ApiOperation(value = "FindWorkOrderByWid",notes = "查看工单详情")
     @GetMapping("order")
+    @Log("查看工单详情")
     public Workorders FindWorkOrderByWid(long wid){
         Workorders workorders =  engineerService.FindWorkOrderByWid(wid);
         return workorders ;
@@ -126,6 +131,7 @@ public class EngineerCotroller {
     @ApiOperation(value = "FinishTaskByTid",notes = "完成任务")
     @PostMapping("task/finish")
     @ResponseBody
+    @Log("完成任务")
     public Map<String,Object> FinishTaskByTid(long uid,@RequestBody Map<String, Object> map) throws Exception {
 
         Map<String,Object> result = new HashMap<>();

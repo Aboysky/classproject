@@ -1,11 +1,11 @@
 package cn.edu.sicnu.cs.controller;
 
+import cn.edu.sicnu.cs.anotations.Log;
 import cn.edu.sicnu.cs.model.Userform;
 import cn.edu.sicnu.cs.service.FeedBackService;
 
 
 import cn.edu.sicnu.cs.utils.ResUtil;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSON;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +35,7 @@ public class FeedBackController {
     @GetMapping("browse/hot/userform/list")
     @ApiOperation(value = "FindHotUserFormList",notes = "查看热门问题列表,page是第几页")
     @ResponseBody
+    @Log("查看热门问题列表,page是第几页")
     public String FindHotUserFormList(long page,long pagenum){
         List<Map<String,Object>> list = feedBackService.FindHotUserFormList(page,pagenum);
 
@@ -50,6 +51,7 @@ public class FeedBackController {
     @GetMapping("browse/hot/userform/{fid}")
     @ResponseBody
     @ApiOperation(value = "FindSelfUserFormByFid",notes = "问题详情")
+    @Log("问题详情")
     public Userform FindUserFormByFid(@PathVariable long fid){
         Userform userform = feedBackService.FindUserFormByFid(fid);
         return userform;
@@ -59,6 +61,7 @@ public class FeedBackController {
     @GetMapping("browse/self/userform/list")
     @ResponseBody
     @ApiOperation(value = "FindSelfUserFormList",notes = "自己已提交的问题列表")
+    @Log("自己已提交的问题列表")
     public String FindSelfUserFormList(long page,long pagenum,long uid){
         List<Map<String,Object>> list = feedBackService.FindSelfUserFormList(page,pagenum,uid);
         Map<String,Object> map = new HashMap<>();
@@ -70,6 +73,7 @@ public class FeedBackController {
     @GetMapping("browse/self/userform/{fid}")
     @ResponseBody
     @ApiOperation(value = "FindSelfUserFormByFid",notes = "自己已提交的问题详情")
+    @Log("自己已提交的问题详情")
     public Userform FindSelfUserFormByFid(@PathVariable long fid){
         Userform userform = feedBackService.FindUserFormByFid(fid);
         return userform;
@@ -80,6 +84,7 @@ public class FeedBackController {
     @PostMapping("sumbmit/userform")
     @ResponseBody
     @ApiOperation(value = "SumbmitUserForm",notes = "用户提交问题")
+    @Log("用户提交问题")
     public String SumbmitUserForm(HttpServletRequest request) throws Exception {
 
         String body = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);

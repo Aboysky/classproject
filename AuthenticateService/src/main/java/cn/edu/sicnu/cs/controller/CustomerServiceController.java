@@ -1,6 +1,7 @@
 package cn.edu.sicnu.cs.controller;
 
 
+import cn.edu.sicnu.cs.anotations.Log;
 import cn.edu.sicnu.cs.model.User;
 import cn.edu.sicnu.cs.model.Workorders;
 import cn.edu.sicnu.cs.service.impl.CustomersServiceServiceImpl;
@@ -32,6 +33,7 @@ public class CustomerServiceController {
     @GetMapping("index/userform/cnt")
     @ResponseBody
     @ApiOperation(value = "TodayUserFormCnt",notes = "查询对应状态的任务数量")
+    @Log("查询对应状态的任务数量")
     public String TodayUserFormCnt(long cid){
 
         Map<String,Object> map = new HashMap<>();
@@ -52,6 +54,7 @@ public class CustomerServiceController {
     @GetMapping("index/today/untreated/userform/list")
     @ResponseBody
     @ApiOperation(value = "FindTodayUntreatedUserFormListByCid",notes = "查询对应状态的表单列表")
+    @Log("查询对应状态的表单列表")
     public String FindUserFormList(long cid,long page,long pagenum,String status) {
 
 
@@ -69,6 +72,7 @@ public class CustomerServiceController {
     @GetMapping("form/userform")
     @ResponseBody
     @ApiOperation(value = "FindUserFormByFid",notes = "查看表单详情")
+    @Log("查看表单详情")
     public String FindUserFormByFid(long fid){
 
         Map<String,Object> map = new HashMap<>();
@@ -84,6 +88,7 @@ public class CustomerServiceController {
 
     @PostMapping("form/submit/workorder")
     @ApiOperation(value = "WorkOrderSubmit",notes = "提交工单")
+    @Log("提交工单")
     public String WorkOrderSubmit(@RequestBody Map<String, Object> map) throws Exception {
         if(map != null){
             Workorders workorders = getObject(map,Workorders.class);
@@ -109,6 +114,7 @@ public class CustomerServiceController {
     @GetMapping("self/workorder/list")
     @ResponseBody
     @ApiOperation(value = "FindSelfWorkOrderSubmit",notes = "查看自己提交工单列表")
+    @Log("查看自己提交工单列表")
     public String FindSelfWorkOrderSubmit(long cid,long page,long pagenum) {
 
 
@@ -121,6 +127,7 @@ public class CustomerServiceController {
     @GetMapping("self/workorder")
     @ResponseBody
     @ApiOperation(value = "FindSelfWorkOrder",notes = "查看工单详情")
+    @Log("查看工单详情")
     public String FindSelfWorkOrder(long wid) {
         Workorders workorders =  workOrdersService.FindWorkOrder(wid);
         Map<String,Object> map = new HashMap<>();
