@@ -1,12 +1,16 @@
 package cn.edu.sicnu.cs.controller;
 
 
+import cn.edu.sicnu.cs.anotations.Log;
 import cn.edu.sicnu.cs.model.Task;
+import cn.edu.sicnu.cs.model.User;
 import cn.edu.sicnu.cs.model.Workorders;
 import cn.edu.sicnu.cs.service.TaskService;
+import cn.edu.sicnu.cs.service.UserService;
 import cn.edu.sicnu.cs.service.impl.EngineerServiceImpl;
 import cn.edu.sicnu.cs.service.impl.TaskServiceImpl;
-
+import cn.edu.sicnu.cs.utils.ResUtil;
+import com.sun.jmx.snmp.tasks.TaskServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Controller
+@RestController
 @RequestMapping("/engineer/")
 @Api(tags = "engineer",value = "工程师")
 public class EngineerCotroller {
@@ -28,25 +32,37 @@ public class EngineerCotroller {
     @Autowired
     EngineerServiceImpl engineerService;
 
+    @Autowired
+    UserService userService;
+
     @GetMapping("task/cnt")
     @ApiOperation(value = "FindSelfTaskCnt",notes = "查询自己的任务数量")
-    public Map<String,Object> FindSelfTaskCnt(long uid){
+    @Log("查询自己的任务数量")
+    public String FindSelfTaskCnt(long uid){
 
         Map<String,Object> map = new HashMap<>();
-        map.put("untreated",engineerService.FindSelfTaskCntByStatus(uid,"0"));
-        map.put("processing",engineerService.FindSelfTaskCntByStatus(uid,"1"));
-        map.put("finished",engineerService.FindSelfTaskCntByStatus(uid,"2"));
-        map.put("wprocessing",engineerService.FindSelfWorkOrderCntByStatus(uid,"2"));
 
-        return map;
+        User user = userService.selectUserByUid((int)uid);
+        map.put("username",user.getUsername());
+
+        map.put("untreated",engineerService.FindSelfTaskCntByStatus(uid,"0")+engineerService.FindSelfTaskCntByStatus(uid,"1"));
+
+        map.put("finished",engineerService.FindSelfTaskCntByStatus(uid,"2"));
+        map.put("wprocessing",engineerService.FindSelfWorkOrderCntByStatus(uid,"1"));
+
+
+        return ResUtil.getJsonStr(1, "成功", map);
 
     }
 
-    @ApiOperation(value = "FindSelfTaskList",notes = "根据状态自己的查询任务列表")
+    @ApiOperation(value = "FindSelfTaskList",notes = "查询根据状态自己的任务列表")
     @GetMapping("task/list")
-    public List<Map<String,Object>> FindSelfTaskList(long uid,long page,long pagenum,String status){
+    @Log("查询根据状态自己的任务列表")
+    public String FindSelfTaskList(long uid,long page,long pagenum,String status){
         List<Map<String,Object>> list =  engineerService.FindSelfTaskListByStatus(uid,page,pagenum,status);
-        return list ;
+        Map<String,Object> map = new HashMap<>();
+        map.put("list",list);
+        return ResUtil.getJsonStr(1, "成功", map);
     }
 
 
@@ -69,13 +85,19 @@ public class EngineerCotroller {
 
     @ApiOperation(value = "FindSelfWorkOrderList",notes = "根据状态查询自己关联的工单列表")
     @GetMapping("self/order/list")
-    public List<Map<String,Object>> FindSelfWorkOrderListByType(long uid,long page,long pagenum,String status){
+    @Log("根据状态查询自己关联的工单列表")
+    public String FindSelfWorkOrderListByType(long uid,long page,long pagenum,String status){
         List<Map<String,Object>> list =  engineerService.FindSelfWorkOrderListByStatus(uid,page,pagenum,status);
-        return list ;
+
+        Map<String,Object> map = new HashMap<>();
+
+        map.put("list",list);
+        return ResUtil.getJsonStr(1, "成功",map);
     }
 
     @ApiOperation(value = "FindWorkOrderByWid",notes = "查看工单详情")
     @GetMapping("order")
+    @Log("查看工单详情")
     public Workorders FindWorkOrderByWid(long wid){
         Workorders workorders =  engineerService.FindWorkOrderByWid(wid);
         return workorders ;
@@ -109,6 +131,7 @@ public class EngineerCotroller {
     @ApiOperation(value = "FinishTaskByTid",notes = "完成任务")
     @PostMapping("task/finish")
     @ResponseBody
+    @Log("完成任务")
     public Map<String,Object> FinishTaskByTid(long uid,@RequestBody Map<String, Object> map) throws Exception {
 
         Map<String,Object> result = new HashMap<>();
