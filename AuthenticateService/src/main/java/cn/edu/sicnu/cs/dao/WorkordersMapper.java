@@ -56,4 +56,5 @@ public interface WorkordersMapper {
     Workorders findWorkOrder(long wid);
 
 
+    long findSelfWorkOrderSubmitCnt(long cid);
 }

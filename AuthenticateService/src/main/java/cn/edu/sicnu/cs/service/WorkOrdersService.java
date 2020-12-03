@@ -11,4 +11,6 @@ public interface WorkOrdersService {
     List<Map<String,Object>> FindSelfWorkOrderSubmit(long cid, long page, long pagenum);
 
     Workorders FindWorkOrder(long wid);
+
+    int FindSelfWorkOrderSubmitCnt(long cid);
 }

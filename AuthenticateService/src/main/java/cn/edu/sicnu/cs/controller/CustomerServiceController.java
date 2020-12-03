@@ -119,8 +119,10 @@ public class CustomerServiceController {
 
 
         List<Map<String,Object>> list =  workOrdersService.FindSelfWorkOrderSubmit(cid,page,pagenum);
+        int total = workOrdersService.FindSelfWorkOrderSubmitCnt(cid);
         Map<String,Object> map = new HashMap<>();
         map.put("list",list);
+        map.put("total",list.size());
         return ResUtil.getJsonStr(1, "成功",map);
     }
 

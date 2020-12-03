@@ -90,6 +90,7 @@
     wcontent
   </sql>
 
+
   <select id="findSelfWorkOrderSubmit" resultType="java.util.HashMap">
     select wid,wname,wddl,urealname,wstatus
     from workorders a,user
@@ -111,6 +112,12 @@ and user.uid = wprincipal_id
   </select>
   <select id="findWorkOrder" resultType="cn.edu.sicnu.cs.model.Workorders">
     select * from workorders where wid = #{wid};
+  </select>
+  <select id="findSelfWorkOrderSubmitCnt" resultType="java.lang.Long">
+    select count(wuser_id)
+    from workorders
+    where wuser_id = #{cid}
+    group by wuser_id
   </select>
 
   <select id="selectByExampleWithBLOBs" parameterType="cn.edu.sicnu.cs.model.WorkordersExample" resultMap="ResultMapWithBLOBs">

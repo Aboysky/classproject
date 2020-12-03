@@ -34,4 +34,9 @@ public class WorkOrdersServiceImpl implements WorkOrdersService {
         Workorders workorders = workordersMapper.findWorkOrder(wid);
         return workorders;
     }
+
+    @Override
+    public int FindSelfWorkOrderSubmitCnt(long cid) {
+        return workordersMapper.findSelfWorkOrderSubmitCnt(cid);
+    }
 }
