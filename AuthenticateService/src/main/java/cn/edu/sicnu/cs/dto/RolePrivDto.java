@@ -1,4 +1,4 @@
-package cn.edu.sicnu.cs.pojo;
+package cn.edu.sicnu.cs.dto;
 
 import cn.edu.sicnu.cs.model.Metaoperation;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReturningRolePriv implements Serializable {
+public class RolePrivDto implements Serializable {
     private static final long serialVersionUID = 7566798501089359991L;
     private Integer rid;
 

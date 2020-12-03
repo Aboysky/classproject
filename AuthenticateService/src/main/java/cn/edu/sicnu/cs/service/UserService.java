@@ -1,12 +1,11 @@
 package cn.edu.sicnu.cs.service;
 
 import cn.edu.sicnu.cs.model.User;
-import cn.edu.sicnu.cs.pojo.NavigationBar;
-import cn.edu.sicnu.cs.pojo.NavigationBarChilren;
+import cn.edu.sicnu.cs.vo.NavigationBarVo;
+import cn.edu.sicnu.cs.vo.NavigationBarChilrenVo;
 import cn.edu.sicnu.cs.pojo.PageResult;
 import cn.edu.sicnu.cs.pojo.UserPojo;
 import cn.edu.sicnu.cs.utils.PageRequest;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,10 +114,10 @@ public interface UserService{
     int updateDeletedByUserName(String username) throws SQLIntegrityConstraintViolationException;
 
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    List<NavigationBar> selectNavigationBarByUsername(String username);
+    List<NavigationBarVo> selectNavigationBarByUsername(String username);
 
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    List<NavigationBarChilren> selectNavigationBarChildrenByUsername(Integer roleid,Integer privid);
+    List<NavigationBarChilrenVo> selectNavigationBarChildrenByUsername(Integer roleid, Integer privid);
 
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     List<User> selectAllSysUser();

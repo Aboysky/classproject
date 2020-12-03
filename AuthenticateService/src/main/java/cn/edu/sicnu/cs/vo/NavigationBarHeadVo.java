@@ -1,4 +1,4 @@
-package cn.edu.sicnu.cs.pojo;
+package cn.edu.sicnu.cs.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,14 +16,14 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NavigationBarHead implements Serializable {
+public class NavigationBarHeadVo implements Serializable {
     private static final long serialVersionUID = -782704021022967305L;
     private Integer id;
     private String name;
     private String path;
-    private List<NavigationBar> childs;
+    private List<NavigationBarVo> childs;
 
-    public NavigationBarHead(String name, String path) {
+    public NavigationBarHeadVo(String name, String path) {
         this.name = name;
         this.path = path;
     }

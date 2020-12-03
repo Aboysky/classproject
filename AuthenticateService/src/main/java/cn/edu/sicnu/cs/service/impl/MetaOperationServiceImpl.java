@@ -5,10 +5,8 @@ import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.MetaoperationExample;
 import cn.edu.sicnu.cs.model.Prigroup;
 import cn.edu.sicnu.cs.model.Role;
-import cn.edu.sicnu.cs.pojo.NavigationBarChilren;
-import cn.edu.sicnu.cs.pojo.PrivGroup;
-import cn.edu.sicnu.cs.pojo.ReturningPriv;
-import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
+import cn.edu.sicnu.cs.dto.PrivDto;
+import cn.edu.sicnu.cs.dto.PrivGradationalDto;
 import cn.edu.sicnu.cs.service.MetaOperationService;
 import cn.edu.sicnu.cs.service.PrigroupService;
 import cn.edu.sicnu.cs.service.RolePrivService;
@@ -22,7 +20,6 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -151,7 +148,7 @@ public class MetaOperationServiceImpl implements MetaOperationService {
     public List<Metaoperation> selectAllChildNavBarByHead(String headname) {
         MetaoperationExample metaoperationExample = new MetaoperationExample();
 //        headname = headname.toLowerCase();
-        metaoperationExample.createCriteria().andModescLike(headname+"_%");
+        metaoperationExample.createCriteria().andModescLike("_"+headname+"_%");
         metaoperationExample.setOrderByClause("'moid' ASC");
         List<Metaoperation> metaoperations = metaoperationMapper.selectByExample(metaoperationExample);
         logger.debug(headname+" 导航栏下二级标题有 "+metaoperations);
@@ -196,35 +193,35 @@ public class MetaOperationServiceImpl implements MetaOperationService {
 
     @Override
     @Cacheable(value = "navigationbar",key = "#role.rdesc+'--'+#root.methodName.toString()+#privGroup.pgid.toString()")
-    public List<ReturningPrivFourLevel> selectPrivFourLeverByRoleAndPrivgroup(Role role, Prigroup privGroup) {
+    public List<PrivGradationalDto> selectPrivFourLeverByRoleAndPrivgroup(Role role, Prigroup privGroup) {
 
-        List<ReturningPrivFourLevel> returningPrivFourLevels = rolePrivService.selectErJiBiaoTiChildrenByRole(role.getRid(), privGroup.getPrigroupdesc());
+        List<PrivGradationalDto> privGradationalDtos = rolePrivService.selectErJiBiaoTiChildrenByRole(role.getRid(), privGroup.getPrigroupdesc());
 
-        logger.debug("角色为:"+role.getRname()+"  大导航为:"+privGroup.getPrigroupname()+"  二级导航栏为: "+returningPrivFourLevels);
+        logger.debug("角色为:"+role.getRname()+"  大导航为:"+privGroup.getPrigroupname()+"  二级导航栏为: "+ privGradationalDtos);
 
-        if (returningPrivFourLevels!=null&&!returningPrivFourLevels.isEmpty()){
+        if (privGradationalDtos !=null&&!privGradationalDtos.isEmpty()){
 
-            for (ReturningPrivFourLevel returningPrivFourLevel : returningPrivFourLevels) {
-                List<Metaoperation> metaoperations = prigroupService.selectInAPrivGoupprivsByRoleAndFourlever(privGroup.getPgid(), role.getRid(), returningPrivFourLevel.getId());
-                System.out.println("groupid: "+privGroup.getPgid()+" roleid: "+role.getRid()+" 子标题id:  "+returningPrivFourLevel.getId()+metaoperations);
-                List<ReturningPriv> returningPrivs = new ArrayList<>();
+            for (PrivGradationalDto privGradationalDto : privGradationalDtos) {
+                List<Metaoperation> metaoperations = prigroupService.selectInAPrivGoupprivsByRoleAndFourlever(privGroup.getPgid(), role.getRid(), privGradationalDto.getId());
+                System.out.println("groupid: "+privGroup.getPgid()+" roleid: "+role.getRid()+" 子标题id:  "+ privGradationalDto.getId()+metaoperations);
+                List<PrivDto> privDtos = new ArrayList<>();
                 if (metaoperations!=null&&!metaoperations.isEmpty()){
                     for (Metaoperation metaoperation : metaoperations) {
-                        returningPrivs.add(new ReturningPriv(metaoperation.getMoid(),metaoperation.getMoname(),metaoperation.getMolurl()));
+                        privDtos.add(new PrivDto(metaoperation.getMoid(),metaoperation.getMoname(),metaoperation.getMolurl()));
                     }
-                    returningPrivFourLevel.setChildren(returningPrivs);
+                    privGradationalDto.setChildren(privDtos);
                 }
 
             }
         }
 
-        logger.debug("角色为:"+role.getRname()+"权限组为:"+privGroup.getPrigroupname()+"下的所有子权限为:"+returningPrivFourLevels);
+        logger.debug("角色为:"+role.getRname()+"权限组为:"+privGroup.getPrigroupname()+"下的所有子权限为:"+ privGradationalDtos);
 
-        return returningPrivFourLevels;
+        return privGradationalDtos;
     }
 
     @Override
-    public List<ReturningPriv> selectPrivsByPrivFourLever(MetaOperationService metaOperationService) {
+    public List<PrivDto> selectPrivsByPrivFourLever(MetaOperationService metaOperationService) {
         return null;
     }
 
@@ -234,6 +231,18 @@ public class MetaOperationServiceImpl implements MetaOperationService {
         MetaoperationExample metaoperationExample = new MetaoperationExample();
         metaoperationExample.createCriteria().andModescLike(privgoupdesc+"%");
         metaoperationExample.or().andModescLike("_"+privgoupdesc+"%");
+        metaoperationExample.or().andModescLike("__"+privgoupdesc+"%");
         return metaoperationMapper.selectByExample(metaoperationExample);
+    }
+
+    @Override
+    public Metaoperation selectPrivByPrivGroupDesc(String privgoupdesc) {
+        MetaoperationExample metaoperationExample = new MetaoperationExample();
+        metaoperationExample.createCriteria().andModescEqualTo(privgoupdesc);
+        List<Metaoperation> metaoperations = metaoperationMapper.selectByExample(metaoperationExample);
+        if (!metaoperations.isEmpty()){
+            return metaoperations.get(0);
+        }
+        return null;
     }
 }

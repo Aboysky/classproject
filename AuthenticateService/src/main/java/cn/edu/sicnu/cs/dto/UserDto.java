@@ -1,4 +1,4 @@
-package cn.edu.sicnu.cs.pojo;
+package cn.edu.sicnu.cs.dto;
 
 import cn.edu.sicnu.cs.model.User;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReturningUser implements Serializable {
+public class UserDto implements Serializable {
     private static final long serialVersionUID = -6157793221485871880L;
     private Integer uid;
 
@@ -51,7 +51,7 @@ public class ReturningUser implements Serializable {
 
     private String role_name;
 
-    public ReturningUser(User user, String roledesc) {
+    public UserDto(User user, String roledesc) {
         this.uid = user.getUid();
         this.ucompanyId = user.getUcompanyId();
         this.username = user.getUsername();

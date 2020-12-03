@@ -2,8 +2,7 @@ package cn.edu.sicnu.cs.service;
 
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Prigroup;
-import cn.edu.sicnu.cs.pojo.PrivGroup;
-import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
+import cn.edu.sicnu.cs.dto.PrivGradationalDto;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,5 +84,5 @@ public interface PrigroupService {
 
     List<Prigroup> selectAll();
 
-    List<ReturningPrivFourLevel> selectAllFourLever(Prigroup prigroup);
+    List<PrivGradationalDto> selectAllFourLever(Prigroup prigroup);
 }

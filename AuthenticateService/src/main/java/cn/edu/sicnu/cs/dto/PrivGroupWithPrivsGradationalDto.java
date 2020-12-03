@@ -1,13 +1,11 @@
-package cn.edu.sicnu.cs.pojo;
+package cn.edu.sicnu.cs.dto;
 
-import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Prigroup;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,15 +17,15 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReturningPrivGroupWithPrivsFourLever implements Serializable {
+public class PrivGroupWithPrivsGradationalDto implements Serializable {
     private static final long serialVersionUID = 4750577246347125419L;
     private Integer id;
     //权限组名称
     private String authName;
     private String path = null;
-    private List<ReturningPrivFourLevel> children;
+    private List<PrivGradationalDto> children;
 
-    public ReturningPrivGroupWithPrivsFourLever(Prigroup prigroup, List<ReturningPrivFourLevel> privs) {
+    public PrivGroupWithPrivsGradationalDto(Prigroup prigroup, List<PrivGradationalDto> privs) {
         this.id = prigroup.getPgid();
         this.authName = prigroup.getPrigroupname();
         this.path = prigroup.getPrigroupdesc();

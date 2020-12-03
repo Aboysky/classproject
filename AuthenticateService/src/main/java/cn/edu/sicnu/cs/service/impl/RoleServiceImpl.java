@@ -4,7 +4,7 @@ import cn.edu.sicnu.cs.dao.RoleMapper;
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Role;
 import cn.edu.sicnu.cs.model.RoleExample;
-import cn.edu.sicnu.cs.pojo.NavigationBar;
+import cn.edu.sicnu.cs.vo.NavigationBarVo;
 import cn.edu.sicnu.cs.pojo.RoleInfo;
 import cn.edu.sicnu.cs.service.RolePrivService;
 import cn.edu.sicnu.cs.service.RoleService;
@@ -165,7 +165,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     @Cacheable(value = "navigationbar",key = "#root.methodName+'--'+#rid")
-    public List<NavigationBar> selectNavBarByRole(Integer rid) {
+    public List<NavigationBarVo> selectNavBarByRole(Integer rid) {
 //        List<NavigationBar> navigationBars = rolePrivService.selectNavBarByRole(Integer rid);
 
         return null;

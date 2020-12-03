@@ -1,8 +1,7 @@
-package cn.edu.sicnu.cs.pojo;
+package cn.edu.sicnu.cs.dto;
 
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Prigroup;
-import cn.edu.sicnu.cs.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,26 +20,26 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReturningPrivGroupWithPriv implements Serializable {
+public class PrivGroupWithPrivDto implements Serializable {
     private static final long serialVersionUID = -6934241902874535978L;
     private Integer id;
     //权限组名称
     private String authName;
     private String path = null;
-    private List<ReturningPriv> children = new ArrayList<>();
+    private List<PrivDto> children = new ArrayList<>();
 
-    public ReturningPrivGroupWithPriv(Prigroup prigroup, List<Metaoperation> privs) {
+    public PrivGroupWithPrivDto(Prigroup prigroup, List<Metaoperation> privs) {
         this.id = prigroup.getPgid();
         this.authName = prigroup.getPrigroupname();
         this.path = null;
         for (Metaoperation priv : privs) {
             if (priv != null) {
-                children.add(new ReturningPriv(priv));
+                children.add(new PrivDto(priv));
             }
         }
     }
 
-    public ReturningPrivGroupWithPriv(ReturningPrivGroupWithPriv privs) {
+    public PrivGroupWithPrivDto(PrivGroupWithPrivDto privs) {
         this.id = privs.getId();
         this.authName = privs.authName;
         this.children = privs.getChildren();

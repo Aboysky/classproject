@@ -1,4 +1,4 @@
-package cn.edu.sicnu.cs.pojo;
+package cn.edu.sicnu.cs.dto;
 
 import cn.edu.sicnu.cs.model.Role;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReturningRoleWithprivgroupFourLever implements Serializable {
+public class RoleWithPrivgroupGradationalDto implements Serializable {
     private static final long serialVersionUID = -2416449720189466115L;
     private Integer id;
 
@@ -26,9 +25,9 @@ public class ReturningRoleWithprivgroupFourLever implements Serializable {
 
     private String roleDesc;
 
-    private List<ReturningPrivGroupWithPrivsFourLever> children;
+    private List<PrivGroupWithPrivsGradationalDto> children;
 
-    public ReturningRoleWithprivgroupFourLever(Role role, List<ReturningPrivGroupWithPrivsFourLever> privsgroups){
+    public RoleWithPrivgroupGradationalDto(Role role, List<PrivGroupWithPrivsGradationalDto> privsgroups){
         this.id = role.getRid();
         this.roleName = role.getRname();
         this.roleDesc = role.getRdesc();

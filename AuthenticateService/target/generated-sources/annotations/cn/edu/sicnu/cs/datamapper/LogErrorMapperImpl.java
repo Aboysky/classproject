@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2020-12-01T11:36:06+0800",
+    date = "2020-12-01T16:57:59+0800",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_261 (Oracle Corporation)"
 )
 @Component
@@ -23,16 +23,6 @@ public class LogErrorMapperImpl implements LogErrorMapper {
 
         Log log = new Log();
 
-        log.setId( dto.getId() );
-        log.setUsername( dto.getUsername() );
-        log.setDescription( dto.getDescription() );
-        log.setMethod( dto.getMethod() );
-        log.setParams( dto.getParams() );
-        log.setRequestIp( dto.getRequestIp() );
-        log.setAddress( dto.getAddress() );
-        log.setBrowser( dto.getBrowser() );
-        log.setCreateTime( dto.getCreateTime() );
-
         return log;
     }
 
@@ -43,16 +33,6 @@ public class LogErrorMapperImpl implements LogErrorMapper {
         }
 
         LogErrorDto logErrorDto = new LogErrorDto();
-
-        logErrorDto.setId( entity.getId() );
-        logErrorDto.setUsername( entity.getUsername() );
-        logErrorDto.setDescription( entity.getDescription() );
-        logErrorDto.setMethod( entity.getMethod() );
-        logErrorDto.setParams( entity.getParams() );
-        logErrorDto.setBrowser( entity.getBrowser() );
-        logErrorDto.setRequestIp( entity.getRequestIp() );
-        logErrorDto.setAddress( entity.getAddress() );
-        logErrorDto.setCreateTime( entity.getCreateTime() );
 
         return logErrorDto;
     }

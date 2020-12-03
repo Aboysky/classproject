@@ -1,6 +1,5 @@
-package cn.edu.sicnu.cs.pojo;
+package cn.edu.sicnu.cs.dto;
 
-import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,7 +18,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReturningRoleWithprivsgroup implements Serializable {
+public class RoleWithprivsgroupDto implements Serializable {
     private static final long serialVersionUID = -2600949807066118157L;
     private Integer id;
 
@@ -28,15 +26,15 @@ public class ReturningRoleWithprivsgroup implements Serializable {
 
     private String roleDesc;
 
-    private List<ReturningPrivGroupWithPriv> children = new ArrayList<>();
+    private List<PrivGroupWithPrivDto> children = new ArrayList<>();
 
-    public ReturningRoleWithprivsgroup(Role role, List<ReturningPrivGroupWithPriv> privsgroups){
+    public RoleWithprivsgroupDto(Role role, List<PrivGroupWithPrivDto> privsgroups){
         this.id = role.getRid();
         this.roleName = role.getRname();
         this.roleDesc = role.getRdesc();
-        for (ReturningPrivGroupWithPriv priv : privsgroups) {
+        for (PrivGroupWithPrivDto priv : privsgroups) {
             if (priv!=null){
-                children.add(new ReturningPrivGroupWithPriv(priv));
+                children.add(new PrivGroupWithPrivDto(priv));
             }
         }
     }
