@@ -17,11 +17,28 @@ import java.util.Map;
 @Service
 public class EngineerServiceImpl implements EngineerService {
 
+
     @Resource
     TaskMapper taskMapper;
 
     @Resource
     WorkordersMapper workordersMapper;
+
+    public long FindSelfTaskListByStatusCnt(long uid,String status){
+        long total = taskMapper.findSelfTaskListByStatusCnt(uid,status);
+
+        return total;
+    }
+
+    @Override
+    public List<Map<String, Object>> FindAllSelfTaskList(long uid, long page, long pagenum) {
+        return taskMapper.findAllSelfTaskList(uid,page,pagenum);
+    }
+
+    @Override
+    public long FindAllSelfTaskListCnt(long uid) {
+        return taskMapper.findAllSelfTaskListCnt(uid);
+    }
 
     @Override
     public long FindSelfTaskCntByStatus(long uid, String status) {
@@ -54,11 +71,11 @@ public class EngineerServiceImpl implements EngineerService {
 
     //
 
-//    @Override
-//    public List<Task> FindWorkOrderListByStatus(String status) {
-//        List<Task> list = taskMapper.findWorkOrderListByStatus(status);
-//        return list;
-//    }
+    @Override
+    public List<Task> FindWorkOrderListByStatus(String status) {
+        List<Task> list = taskMapper.findWorkOrderListByStatus(status);
+        return list;
+    }
 
 
 
@@ -70,4 +87,12 @@ public class EngineerServiceImpl implements EngineerService {
         Workorders workorders = workOrdersServiceImpl.FindWorkOrder(wid);
         return workorders;
     }
+
+//    @Override
+//    public long FindSelfWorkOrderListByTypeCnt(long uid, String status) {
+//        long total = workOrdersServiceImpl.FindSelfWorkOrderListByTypeCnt(uid,status);
+//        return total;
+//    }
+
+
 }

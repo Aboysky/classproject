@@ -23,4 +23,12 @@ public interface FeedBackService {
     int TodayUserFormCnt(long cid,String type);
 
     long FindUserFormCnt(long cid, String status);
+
+    long FindHotUserFormListCnt();
+
+    long StatisticsYouthCnt(long uid);
+
+    long StatisticsWeekCnt(long uid);
+
+    long StatisticsTotalCnt(long uid);
 }

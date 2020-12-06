@@ -45,4 +45,10 @@ public interface TaskMapper {
 
     List<Task> findWorkOrderListByStatus(String status);
 
+    long findSelfTaskListByStatusCnt(long uid, String status);
+
+
+    List<Map<String, Object>> findAllSelfTaskList(long uid, long page, long pagenum);
+
+    long findAllSelfTaskListCnt(long uid);
 }

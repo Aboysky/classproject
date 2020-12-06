@@ -43,8 +43,11 @@ public class FeedBackController {
             String  decs = ((String)map.get("fcontent")).substring(0,1);
             map.put("decs",decs);
         }
+
+        long total = feedBackService.FindHotUserFormListCnt();
         Map<String,Object> map = new HashMap<>();
         map.put("list",list);
+        map.put("total",total);
         return ResUtil.getJsonStr(1, "成功",map);
     }
 

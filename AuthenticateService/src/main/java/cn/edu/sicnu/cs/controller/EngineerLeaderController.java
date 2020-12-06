@@ -40,7 +40,7 @@ public class EngineerLeaderController {
     @ApiOperation(value = "GetIndex",notes = "页面数据")
     @ResponseBody
     public List<UserInTeam> getindex(String fzname){
-        List<UserInTeam> userteams = userTeamService.findTeamByName(fzname);
+         List<UserInTeam> userteams = userTeamService.findTeamByName(fzname);
         return userteams;
     }
 

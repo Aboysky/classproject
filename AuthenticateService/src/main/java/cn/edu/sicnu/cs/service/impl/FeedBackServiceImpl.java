@@ -49,7 +49,7 @@ public class FeedBackServiceImpl implements FeedBackService {
     public String SubmitUserForm(Userform userform) {
 
          userformMapper.insert(userform);
-         return "";
+         return "success";
     }
 
 
@@ -75,6 +75,32 @@ public class FeedBackServiceImpl implements FeedBackService {
     @Override
     public long FindUserFormCnt(long cid, String status) {
         return userformMapper.findUserFormCnt(cid,status);
+    }
+
+    @Override
+    public long FindHotUserFormListCnt() {
+        return userformMapper.findHotUserFormListCnt();
+    }
+
+    @Override
+    public long StatisticsYouthCnt(long uid) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        String time = sdf.format(new Date());
+        time = time + "%";
+        return userformMapper.statisticsTimeCnt(uid,time);
+    }
+
+    @Override
+    public long StatisticsWeekCnt(long uid) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+        String time = sdf.format(new Date());
+        time = time + "%";
+        return userformMapper.statisticsTimeCnt(uid,time);
+    }
+
+    @Override
+    public long StatisticsTotalCnt(long uid) {
+        return 0;
     }
 
 }

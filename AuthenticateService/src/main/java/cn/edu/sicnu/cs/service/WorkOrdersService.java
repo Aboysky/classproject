@@ -12,5 +12,7 @@ public interface WorkOrdersService {
 
     Workorders FindWorkOrder(long wid);
 
-    int FindSelfWorkOrderSubmitCnt(long cid);
+    long FindSelfWorkOrderSubmitCnt(long cid);
+
+    long FindSelfWorkOrderListByTypeCnt(long uid, String status);
 }

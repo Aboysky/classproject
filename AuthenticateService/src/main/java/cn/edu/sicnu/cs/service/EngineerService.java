@@ -16,7 +16,16 @@ public interface EngineerService {
 
     List<Map<String,Object>> FindSelfWorkOrderListByStatus(long uid,long page,long pagenum,String status);
 
-//    List<Task> FindWorkOrderListByStatus(String status);
+    List<Task> FindWorkOrderListByStatus(String status);
 
     Workorders FindWorkOrderByWid(long wid);
+
+
+//    long FindSelfWorkOrderListByTypeCnt(long uid, String status);
+//
+    long FindSelfTaskListByStatusCnt(long uid, String status);
+
+    List<Map<String, Object>> FindAllSelfTaskList(long uid, long page, long pagenum);
+
+    long FindAllSelfTaskListCnt(long uid);
 }

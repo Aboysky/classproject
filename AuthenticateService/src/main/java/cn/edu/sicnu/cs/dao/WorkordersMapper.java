@@ -57,4 +57,8 @@ public interface WorkordersMapper {
 
 
     long findSelfWorkOrderSubmitCnt(long cid);
+
+    long findSelfTaskListByStatus(long uid, String status);
+
+    long findSelfWorkOrderListByTypeCnt(long uid, String status);
 }

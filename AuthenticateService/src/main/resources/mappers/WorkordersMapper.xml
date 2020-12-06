@@ -98,6 +98,7 @@
     and a.wuser_id = #{cid}
     limit #{page},#{pagenum};
   </select>
+
   <select id="findSelfWorkOrderCntByStatus" resultType="java.lang.Long">
     select count(wid) from workorders where workorders.wstatus = #{status}
     and workorders.wuserform_id

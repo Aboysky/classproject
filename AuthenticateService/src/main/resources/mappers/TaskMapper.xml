@@ -95,12 +95,31 @@
   </sql>
 
   <select id="findSelfTaskListByStatus" resultType="java.util.HashMap">
-select tid,tcreateDate,urealname,tfromid,tpririty,tname from task,user where tassignedTo_id = #{uid} and tstatus = #{status} and tuserBy_id = uid group by tid,tcreateDate,tfromid,tpririty,tname order by task.tpririty limit #{page},#{pagenum};  </select>
+select tid,tcreateDate,urealname,tfromid,tpririty,tname,tstatus,tdeadline
+from task,user
+where tassignedTo_id = #{uid}
+  and tstatus = #{status}
+  and tuserBy_id = uid
+group by tid,tcreateDate,tfromid,tpririty,tname
+order by task.tpririty limit #{page},#{pagenum};  </select>
 
+  <select id="findAllSelfTaskList" resultType="java.util.HashMap">
+    select tid,tcreateDate,urealname,tfromid,tpririty,tname,tstatus,tdeadline
+    from task,user
+    where tassignedTo_id = #{uid}
+      and tuserBy_id = uid
+    group by tid,tcreateDate,tfromid,tpririty,tname
+    order by task.tpririty limit #{page},#{pagenum};
+  </select>
+  <select id="findAllSelfTaskListCnt" resultType="java.lang.Long">
+    select count(tid) from task where tassignedTo_id = #{uid};
+  </select>
   <select id="findSelfTaskCntByStatus" resultType="java.lang.Long">
     select count(tid) from task where tassignedTo_id = #{uid} and tstatus = #{status};
   </select>
-
+  <select id="findSelfTaskListByStatusCnt" resultType="java.lang.Long">
+    select count(tid) from task where tassignedTo_id = #{uid} and tstatus = #{status};
+  </select>
 
   <select id="selectByExampleWithBLOBs" parameterType="cn.edu.sicnu.cs.model.TaskExample" resultMap="ResultMapWithBLOBs">
     select
