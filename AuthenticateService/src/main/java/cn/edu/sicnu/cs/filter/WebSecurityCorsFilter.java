@@ -18,7 +18,8 @@ public class WebSecurityCorsFilter implements Filter {
         res.setHeader("Access-Control-Allow-Origin", "*");
         res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
         res.setHeader("Access-Control-Max-Age", "36000");
-        res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, x-requested-with, Cache-Control");
+//        res.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, x-requested-with, Cache-Control");
+        res.setHeader("Access-Control-Allow-Headers", "*");
         chain.doFilter(request, res);
     }
     @Override

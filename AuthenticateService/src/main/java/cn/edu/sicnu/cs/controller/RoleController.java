@@ -2,10 +2,11 @@ package cn.edu.sicnu.cs.controller;
 
 import cn.edu.sicnu.cs.constant.ResultCode;
 import cn.edu.sicnu.cs.model.Metaoperation;
+import cn.edu.sicnu.cs.model.Prigroup;
 import cn.edu.sicnu.cs.model.Role;
-import cn.edu.sicnu.cs.pojo.ReturningRolePriv;
-import cn.edu.sicnu.cs.pojo.ReturningRoleWithprivsgroup;
+import cn.edu.sicnu.cs.dto.RolePrivDto;
 import cn.edu.sicnu.cs.service.MetaOperationService;
+import cn.edu.sicnu.cs.service.PrigroupService;
 import cn.edu.sicnu.cs.service.RolePrivService;
 import cn.edu.sicnu.cs.service.RoleService;
 import cn.edu.sicnu.cs.utils.JsonUtils;
@@ -26,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,6 +50,9 @@ public class RoleController {
 
     @Autowired
     MetaOperationService metaOperationService;
+
+    @Autowired
+    PrigroupService prigroupService;
 
 //    @PostMapping("${soft_version}/role/{roleid}")
 //    @ApiOperation(tags = "role",notes = "添加一个角色",code = 200, value = "add Role")
@@ -222,8 +225,8 @@ public class RoleController {
         Role role = roleService.selectByPrimaryKey(roleid);
         if (role!=null){
             List<Metaoperation> metaoperations = roleService.selectPrivilegesByRid(roleid);
-            ReturningRolePriv returningRolePriv = new ReturningRolePriv(role.getRid(),role.getRname(),role.getRdesc(),role.getRcreatetime(),metaoperations);
-            return JsonUtils.serialize(ResUtil.getJson(ResultCode.OK, "查询角色成功", returningRolePriv));
+            RolePrivDto rolePrivDto = new RolePrivDto(role.getRid(),role.getRname(),role.getRdesc(),role.getRcreatetime(),metaoperations);
+            return JsonUtils.serialize(ResUtil.getJson(ResultCode.OK, "查询角色成功", rolePrivDto));
         }
         return JsonUtils.serialize(ResUtil.getJson(ResultCode.RESOURCE_NOT_EXIST,"没有id为"+roleid+"的角色"));
     };
@@ -257,8 +260,12 @@ public class RoleController {
                 if (insert>=1){
                     return ResUtil.getJsonStr(ResultCode.OK,"为角色添加权限成功" );
                 }
-                else ResUtil.getJsonStr(ResultCode.BAD_REQUEST,"请求错误");
-            }else return ResUtil.getJsonStr(ResultCode.RESOURCE_NOT_EXIST,"添加的权限不存在");
+                else {
+                    ResUtil.getJsonStr(ResultCode.BAD_REQUEST,"请求错误");
+                }
+            }else {
+                return ResUtil.getJsonStr(ResultCode.RESOURCE_NOT_EXIST,"添加的权限不存在");
+            }
 
         }
         return ResUtil.getJsonStr(ResultCode.NECESSARY_PARAMETER_NOT_NULL_OR_NOTIING,"必要参数不正确");
@@ -289,7 +296,7 @@ public class RoleController {
     @PostMapping("/${soft_version}/role/{roleid}/batchupdate")
     @ApiOperation(tags = "role",notes = "批量修改角色信息",value = "batch_update_role")
     public String batchUpdateRole(HttpServletRequest request,
-                             @PathVariable("roleid") int roleid) throws IOException {
+                             @PathVariable("roleid") int roleid) throws Exception {
         //从json中获取username和password
         String body = StreamUtils.copyToString(request.getInputStream(), StandardCharsets.UTF_8);
         String rids = null;
@@ -310,7 +317,6 @@ public class RoleController {
         rolePrivService.deleteByRid(roleid);
         for (String s : split) {
             if (Integer.parseInt(s)<10000){
-
                 try{
                     Metaoperation metaoperation1 = metaOperationService.selectByPrimaryKey(Integer.parseInt(s));
                     System.out.println(metaoperation1);;
@@ -322,7 +328,10 @@ public class RoleController {
                 }catch (Exception e){
                     return ResUtil.getJsonStr(ResultCode.BAD_REQUEST,"权限修改失败");
                 }
-
+            }else{
+                Prigroup prigroup = prigroupService.selectByPrimaryKey(Integer.valueOf(s));
+                Metaoperation metaoperation = metaOperationService.selectPrivByPrivGroupDesc(prigroup.getPrigroupdesc());
+                rolePrivService.insert(roleid, metaoperation.getMoid());
             }
         }
         return ResUtil.getJsonStr(ResultCode.OK,"权限修改成功");

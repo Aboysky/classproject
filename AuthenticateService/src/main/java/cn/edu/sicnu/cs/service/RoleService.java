@@ -2,9 +2,8 @@ package cn.edu.sicnu.cs.service;
 
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Role;
-import cn.edu.sicnu.cs.pojo.NavigationBar;
+import cn.edu.sicnu.cs.vo.NavigationBarVo;
 import cn.edu.sicnu.cs.pojo.RoleInfo;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -88,5 +87,5 @@ public interface RoleService {
     List<Role> selectAllRoles();
 
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    List<NavigationBar> selectNavBarByRole(Integer id);
+    List<NavigationBarVo> selectNavBarByRole(Integer id);
 }

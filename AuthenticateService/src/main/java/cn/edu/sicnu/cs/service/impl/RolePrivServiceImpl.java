@@ -5,9 +5,9 @@ import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Role;
 import cn.edu.sicnu.cs.model.Rolepriv;
 import cn.edu.sicnu.cs.model.RoleprivExample;
-import cn.edu.sicnu.cs.pojo.NavigationBar;
-import cn.edu.sicnu.cs.pojo.NavigationBarChilren;
-import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
+import cn.edu.sicnu.cs.vo.NavigationBarVo;
+import cn.edu.sicnu.cs.vo.NavigationBarChilrenVo;
+import cn.edu.sicnu.cs.dto.PrivGradationalDto;
 import cn.edu.sicnu.cs.service.MetaOperationService;
 import cn.edu.sicnu.cs.service.RolePrivService;
 import cn.edu.sicnu.cs.service.RoleService;
@@ -205,12 +205,12 @@ public class RolePrivServiceImpl implements RolePrivService {
 
     @Override
     @Cacheable(value = "navigationbar",key = "#methodName+'--'+#rid",unless = "#result==null")
-    public List<NavigationBar> selectNavBarByRole(Integer rid) {
+    public List<NavigationBarVo> selectNavBarByRole(Integer rid) {
         List<Metaoperation> metaoperations = this.selectRolePrivsByRid(rid);
         List<Metaoperation> metaoperations1 = metaOperationService.selectAllHeadNavBar();
-        List<NavigationBar> navigationBarList = new ArrayList<>();
+        List<NavigationBarVo> navigationBarVoList = new ArrayList<>();
 
-        logger.debug("-----------"+metaoperations+"\n----------"+metaoperations1+"\n----------"+navigationBarList);
+        logger.debug("-----------"+metaoperations+"\n----------"+metaoperations1+"\n----------"+ navigationBarVoList);
         int id =0;
 //        for (Metaoperation metaoperation : metaoperations1) {
 //            navigationBarList.add(new NavigationBar(++id,metaoperation.getMoname(),metaoperation.getMolurl(),false,id!=1&&id%2==1));
@@ -224,21 +224,21 @@ public class RolePrivServiceImpl implements RolePrivService {
 //                }
                 for (Metaoperation metaoperation1 : metaoperations1) {
                     if (metaoperation1.getMoid().equals(metaoperation.getMoid())){
-                        navigationBarList.add(new NavigationBar(++id,metaoperation1.getMoname(),metaoperation1.getMolurl(), id == 1, id != 1));
+                        navigationBarVoList.add(new NavigationBarVo(++id,metaoperation1.getMoname(),metaoperation1.getMolurl(), id == 1, id != 1));
                     }
                 }
             }
-            return navigationBarList;
+            return navigationBarVoList;
         }
     return null;
     }
 
     @Override
     @Cacheable(value = "navigationbar",key = "#methodName+'--'+#roleid+'--'+#privname",unless = "#result==null")
-    public List<NavigationBarChilren> selectNavBarChildrenByRole(Integer roleid,String privname) {
+    public List<NavigationBarChilrenVo> selectNavBarChildrenByRole(Integer roleid, String privname) {
         List<Metaoperation> metaoperations = this.selectRolePrivsByRid(roleid);
         List<Metaoperation> metaoperations1 = metaOperationService.selectAllChildNavBarByHead(privname);
-        List<NavigationBarChilren> navigationBarChilrens = new ArrayList<>();
+        List<NavigationBarChilrenVo> navigationBarChilrenVos = new ArrayList<>();
         int id = 0;
 //        if (!metaoperations1.isEmpty()){
 //            for (Metaoperation metaoperation : metaoperations1) {
@@ -253,7 +253,7 @@ public class RolePrivServiceImpl implements RolePrivService {
                 if (!metaoperations1.isEmpty()){
                     for (Metaoperation metaoperation1 : metaoperations1) {
                         if (metaoperation1.getMoid().equals(metaoperation.getMoid())){
-                            navigationBarChilrens.add(new NavigationBarChilren(++id,metaoperation1.getMoname(),metaoperation1.getMolurl(),id!=1));
+                            navigationBarChilrenVos.add(new NavigationBarChilrenVo(++id,metaoperation1.getMoname(),metaoperation1.getMolurl(),id!=1));
 
                         }
                     }
@@ -263,7 +263,7 @@ public class RolePrivServiceImpl implements RolePrivService {
 //                logger.debug("navigationBarChilrens"+navigationBarChilrens);
 
             }
-            return navigationBarChilrens;
+            return navigationBarChilrenVos;
         }
 
         return null;
@@ -271,19 +271,19 @@ public class RolePrivServiceImpl implements RolePrivService {
 
     @Override
     @Cacheable(value = "navigationbar",key = "#methodName+'--'+#roleid+'--'+#privname",unless = "#result==null")
-    public List<ReturningPrivFourLevel> selectErJiBiaoTiChildrenByRole(Integer roleid, String privname) {
+    public List<PrivGradationalDto> selectErJiBiaoTiChildrenByRole(Integer roleid, String privname) {
         List<Metaoperation> metaoperations = this.selectRolePrivsByRid(roleid);
         logger.debug("id为"+roleid+"角色拥有的所有权限为:"+metaoperations);
         List<Metaoperation> metaoperations1 = metaOperationService.selectAllChildNavBarByHead(privname);
         logger.debug("id为"+roleid+" 的角色在 "+privname+" 导航栏下拥有的权限为: "+ metaoperations1);
-        List<ReturningPrivFourLevel> returningPrivFourLevels = new ArrayList<>();
+        List<PrivGradationalDto> privGradationalDtos = new ArrayList<>();
 
         if (!metaoperations.isEmpty()){
             for (Metaoperation metaoperation : metaoperations) {
                 if (!metaoperations1.isEmpty()){
                     for (Metaoperation metaoperation1 : metaoperations1) {
                         if (metaoperation1.getMoid().equals(metaoperation.getMoid())){
-                            returningPrivFourLevels.add(new ReturningPrivFourLevel(metaoperation.getMoid(),metaoperation.getMoname(),metaoperation.getMolurl(),null));
+                            privGradationalDtos.add(new PrivGradationalDto(metaoperation.getMoid(),metaoperation.getMoname(),metaoperation.getMolurl(),null));
                         }
                     }
                 }else{
@@ -292,7 +292,7 @@ public class RolePrivServiceImpl implements RolePrivService {
 //                logger.debug("navigationBarChilrens"+navigationBarChilrens);
 
             }
-            return returningPrivFourLevels;
+            return privGradationalDtos;
         }return null;
 
 
@@ -300,13 +300,13 @@ public class RolePrivServiceImpl implements RolePrivService {
 
     @Override
     @Cacheable(value = "navigationbar",key = "#methodName+'--'+#privname",unless = "#result==null")
-    public List<ReturningPrivFourLevel> selectAllErJiBiaoTiChildrenByGroupdesc(String privname) {
+    public List<PrivGradationalDto> selectAllErJiBiaoTiChildrenByGroupdesc(String privname) {
         List<Metaoperation> metaoperations1 = metaOperationService.selectAllChildNavBarByHead(privname);
-        List<ReturningPrivFourLevel> returningPrivFourLevels = new ArrayList<>();
+        List<PrivGradationalDto> privGradationalDtos = new ArrayList<>();
         for (Metaoperation metaoperation1 : metaoperations1) {
-                returningPrivFourLevels.add(new ReturningPrivFourLevel(metaoperation1.getMoid(),metaoperation1.getMoname(),metaoperation1.getMolurl(),null));
+                privGradationalDtos.add(new PrivGradationalDto(metaoperation1.getMoid(),metaoperation1.getMoname(),metaoperation1.getMolurl(),null));
         }
-        return returningPrivFourLevels;
+        return privGradationalDtos;
     }
 
 

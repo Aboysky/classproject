@@ -40,7 +40,7 @@ public class ResUtil {
      * @return "{"code":${code},"msg":${msg}}"
      */
     public static String getJsonStr(int code, String msg) {
-        return getJson(code, msg).toJSONString();
+        return getJson(code, msg);
     }
 
     /**
@@ -68,12 +68,11 @@ public class ResUtil {
      * @return "{"code":${code},"data":${data},"msg":${msg}}"
      */
     public static String getJsonStr(int code, String msg, Object data) {
-        JSONObject json = new JSONObject();
-        json.put(GlobalCons.CODE, code);
-        json.put(GlobalCons.DATA, data);
-        json.put(GlobalCons.MSG, msg);
-        return JSON.toJSONStringWithDateFormat(json, DateUtil.DATETIME_FORMAT_SECOND,
-                SerializerFeature.WriteDateUseDateFormat, SerializerFeature.WriteMapNullValue);
+        Map<String,Object>  map = new HashMap<>();
+        map.put(GlobalCons.CODE, code);
+        map.put(GlobalCons.DATA, data);
+        map.put(GlobalCons.MSG, msg);
+        return JsonUtils.serialize(map);
     }
     public static String getJsonStrJackon(int code, String msg, Object data) {
         Map<String,Object>  map = new HashMap<>();
@@ -108,11 +107,11 @@ public class ResUtil {
      * @param msg
      * @return {"code":${code},"msg":${msg}}
      */
-    public static JSONObject getJson(int code, String msg) {
-        JSONObject json = new JSONObject();
-        json.put(GlobalCons.CODE, code);
-        json.put(GlobalCons.MSG, msg);
-        return json;
+    public static String getJson(int code, String msg) {
+        Map<String,Object>  map = new HashMap<>();
+        map.put(GlobalCons.CODE,code);
+        map.put(GlobalCons.MSG, msg);
+        return JsonUtils.serialize(map);
     }
 
     /**

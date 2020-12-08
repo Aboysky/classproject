@@ -5,8 +5,8 @@ import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Role;
 import cn.edu.sicnu.cs.model.User;
 import cn.edu.sicnu.cs.model.UserExample;
-import cn.edu.sicnu.cs.pojo.NavigationBar;
-import cn.edu.sicnu.cs.pojo.NavigationBarChilren;
+import cn.edu.sicnu.cs.vo.NavigationBarVo;
+import cn.edu.sicnu.cs.vo.NavigationBarChilrenVo;
 import cn.edu.sicnu.cs.pojo.PageResult;
 import cn.edu.sicnu.cs.pojo.UserPojo;
 import cn.edu.sicnu.cs.service.MetaOperationService;
@@ -25,8 +25,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -422,7 +420,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable(value = "navigationbar",key = "#username",unless = "#result==null")
-    public List<NavigationBar> selectNavigationBarByUsername(String username) {
+    public List<NavigationBarVo> selectNavigationBarByUsername(String username) {
         User user = this.selectUserByUsername(username);
         if (user!=null){
             return rolePrivService.selectNavBarByRole(user.getUroleId());
@@ -432,7 +430,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Cacheable(value = "navigationbar",key = "#roleid+'--'+#privid",unless = "#result==null")
-    public List<NavigationBarChilren> selectNavigationBarChildrenByUsername(Integer roleid,Integer privid) {
+    public List<NavigationBarChilrenVo> selectNavigationBarChildrenByUsername(Integer roleid, Integer privid) {
         Metaoperation metaoperation = metaOperationService.selectByPrimaryKey(privid);
         return rolePrivService.selectNavBarChildrenByRole(roleid, metaoperation.getModesc());
     }

@@ -1,8 +1,10 @@
 package cn.edu.sicnu.cs.controller;
 
 import cn.edu.sicnu.cs.anotations.Log;
+import cn.edu.sicnu.cs.constant.ResultCode;
 import cn.edu.sicnu.cs.query.LogQueryCriteria;
 import cn.edu.sicnu.cs.service.LogService;
+import cn.edu.sicnu.cs.utils.ResUtil;
 import cn.edu.sicnu.cs.utils.SecurityUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -40,24 +42,33 @@ public class LogController {
         }
     }
 
+//    @GetMapping
+//    @ApiOperation("日志查询")
+//    public ResponseEntity<Object> getLogs(LogQueryCriteria criteria, Pageable pageable){
+//        criteria.setLogType("INFO");
+//        return new ResponseEntity<>(logService.queryAll(criteria,pageable), HttpStatus.OK);
+//    }
+
     @GetMapping
     @ApiOperation("日志查询")
-    public ResponseEntity<Object> getLogs(LogQueryCriteria criteria, Pageable pageable){
+    public String getLogs(LogQueryCriteria criteria, Pageable pageable){
         criteria.setLogType("INFO");
-        return new ResponseEntity<>(logService.queryAll(criteria,pageable), HttpStatus.OK);
+        return ResUtil.getJsonStr(ResultCode.OK,"查询成功",logService.queryAll(criteria,pageable));
     }
 
     @GetMapping(value = "/user")
     @ApiOperation("用户日志查询")
-    public ResponseEntity<Object> getUserLogs(LogQueryCriteria criteria, Pageable pageable){
+    public String getUserLogs(LogQueryCriteria criteria, Pageable pageable){
         criteria.setLogType("INFO");
 
         logger.debug("LogQueryCriteria :"+criteria+" pageable :" + pageable);
 
         criteria.setBlurry(SecurityUtils.getCurrentUsername());
-
-        return new ResponseEntity<>(logService.queryAllByUser(criteria, pageable), HttpStatus.OK);
+        Object o = logService.queryAllByUser(criteria, pageable);
+//        return new ResponseEntity<>(logService.queryAllByUser(criteria, pageable), HttpStatus.OK);
+        return ResUtil.getJsonStr(ResultCode.OK,"查询成功",o);
     }
+
 
     @GetMapping(value = "/error")
     @ApiOperation("错误日志查询")

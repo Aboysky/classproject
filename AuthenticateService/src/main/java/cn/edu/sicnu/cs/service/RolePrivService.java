@@ -2,10 +2,9 @@ package cn.edu.sicnu.cs.service;
 
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Role;
-import cn.edu.sicnu.cs.model.Rolepriv;
-import cn.edu.sicnu.cs.pojo.NavigationBar;
-import cn.edu.sicnu.cs.pojo.NavigationBarChilren;
-import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
+import cn.edu.sicnu.cs.vo.NavigationBarVo;
+import cn.edu.sicnu.cs.vo.NavigationBarChilrenVo;
+import cn.edu.sicnu.cs.dto.PrivGradationalDto;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,14 +85,14 @@ public interface RolePrivService {
     int deleteByRid(int rid);
 
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
-    List<NavigationBar> selectNavBarByRole(Integer rid);
+    List<NavigationBarVo> selectNavBarByRole(Integer rid);
 
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
-    List<NavigationBarChilren> selectNavBarChildrenByRole(Integer roleid,String privname);
+    List<NavigationBarChilrenVo> selectNavBarChildrenByRole(Integer roleid, String privname);
 
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
-    List<ReturningPrivFourLevel> selectErJiBiaoTiChildrenByRole(Integer roleid, String privname);
+    List<PrivGradationalDto> selectErJiBiaoTiChildrenByRole(Integer roleid, String privname);
 
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
-    List<ReturningPrivFourLevel> selectAllErJiBiaoTiChildrenByGroupdesc(String privname);
+    List<PrivGradationalDto> selectAllErJiBiaoTiChildrenByGroupdesc(String privname);
 }

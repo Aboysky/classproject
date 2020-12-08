@@ -3,10 +3,8 @@ package cn.edu.sicnu.cs.service;
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Prigroup;
 import cn.edu.sicnu.cs.model.Role;
-import cn.edu.sicnu.cs.pojo.NavigationBarChilren;
-import cn.edu.sicnu.cs.pojo.PrivGroup;
-import cn.edu.sicnu.cs.pojo.ReturningPriv;
-import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
+import cn.edu.sicnu.cs.dto.PrivDto;
+import cn.edu.sicnu.cs.dto.PrivGradationalDto;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,7 +94,7 @@ public interface MetaOperationService {
      * @return 二级导航栏
      */
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    List<ReturningPrivFourLevel> selectPrivFourLeverByRoleAndPrivgroup(Role role, Prigroup privGroup);
+    List<PrivGradationalDto> selectPrivFourLeverByRoleAndPrivgroup(Role role, Prigroup privGroup);
 
     /**
      * 查询二级导航栏下面所有对应权限
@@ -104,7 +102,7 @@ public interface MetaOperationService {
      * @return
      */
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
-    List<ReturningPriv>  selectPrivsByPrivFourLever(MetaOperationService metaOperationService);
+    List<PrivDto>  selectPrivsByPrivFourLever(MetaOperationService metaOperationService);
 
     /**
      * 查询权限组权限通过权限组描述
@@ -113,4 +111,6 @@ public interface MetaOperationService {
      */
     @Transactional(propagation = Propagation.SUPPORTS,readOnly = true)
     List<Metaoperation> selectPrivsByPrivGroupDesc(String privgoupdesc);
+
+    Metaoperation selectPrivByPrivGroupDesc(String privgoupdesc);
 }

@@ -52,7 +52,6 @@ public class PrivController {
         return JsonUtils.serialize(ResUtil.getJson(ResultCode.OK,"成功拿到所有权限信息", metaoperations));
     }
 
-
     public String getAllPrivsByGroup(){
         List<Metaoperation> metaoperations = metaOperationService.selectAll();
         return JsonUtils.serialize(ResUtil.getJson(ResultCode.OK,"成功拿到所有权限信息", metaoperations));

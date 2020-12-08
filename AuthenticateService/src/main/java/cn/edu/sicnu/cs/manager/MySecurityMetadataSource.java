@@ -37,8 +37,8 @@ public class MySecurityMetadataSource implements FilterInvocationSecurityMetadat
     @Autowired
     private RoleService roleService;
 
-    @Resource
-    private StringRedisTemplate redisTemplate1;
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
     private MetaOperationService metaOperationService;
@@ -54,7 +54,7 @@ public class MySecurityMetadataSource implements FilterInvocationSecurityMetadat
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
         Collection<ConfigAttribute> configAttributes=new ArrayList<>();
         //从reids中获取角色与权限数据
-        String redisConfigAttributesPermission= redisTemplate1.opsForValue().get("configAttributes:permissions");
+        String redisConfigAttributesPermission= stringRedisTemplate.opsForValue().get("configAttributes:permissions");
         if(StringUtils.isBlank(redisConfigAttributesPermission)){
             List<Metaoperation> operations = metaOperationService.selectAll();
             for (Metaoperation operation:operations) {
@@ -62,7 +62,7 @@ public class MySecurityMetadataSource implements FilterInvocationSecurityMetadat
                 configAttributes.add(configAttribute);
             }
             //将权限存入redis
-            redisTemplate1.opsForValue().set("configAttributes:permissions", JSON.toJSONString(operations),480, TimeUnit.MINUTES);
+            stringRedisTemplate.opsForValue().set("configAttributes:permissions", JSON.toJSONString(operations),480, TimeUnit.MINUTES);
         }else{
             JSONArray array= JSONObject.parseArray(redisConfigAttributesPermission);
             for (int i=0;i<array.size();i++) {

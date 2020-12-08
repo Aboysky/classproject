@@ -92,19 +92,11 @@
   </sql>
 
 
-  <select id="statisticsTimeCnt" resultType="java.lang.Long">
-    select count(fid) from userform where fassignedTo_id = 123 and ffinishedDate like '2020-12%'
-  </select>
   <select id="findHotUserFormList" resultType="java.util.HashMap">
     select fid,username,ftitle,ftype,fcreatetime,fviews,fcontent from user,userform
     where user.uid = userform.fuser_id
     order by userform.fviews desc
     limit #{page},#{pagenum};
-  </select>
-  <select id="findHotUserFormListCnt" resultType="java.lang.Long">
-    select count(fid)
-    from userform
-    order by fid;
   </select>
   <select id="findSelfUserFormList" resultType="java.util.HashMap">
     select fversion_id,fid,fassignedTo_id,ftitle,ftype,fstatus,fusertype,fmobile,femail

@@ -1,6 +1,7 @@
 package cn.edu.sicnu.cs.controller;
 
 
+import cn.edu.sicnu.cs.anotations.Log;
 import cn.edu.sicnu.cs.dao.TaskMapper;
 import cn.edu.sicnu.cs.model.Workorders;
 import cn.edu.sicnu.cs.pojo.UserInTeam;
@@ -39,6 +40,7 @@ public class EngineerLeaderController {
     @GetMapping("/index")
     @ApiOperation(value = "GetIndex",notes = "页面数据")
     @ResponseBody
+    @Log("获取工程师负责人页面数据")
     public List<UserInTeam> getindex(String fzname){
          List<UserInTeam> userteams = userTeamService.findTeamByName(fzname);
         return userteams;
@@ -47,6 +49,7 @@ public class EngineerLeaderController {
     @PostMapping("/index/add")
     @ApiOperation(value = "AddUserToTeam",notes = "添加成员")
     @ResponseBody
+    @Log("添加团队成员")
     public int AddUserToTeam(String fzname,String username,int days,float hours){
         int result = userTeamService.insertUserTeam(fzname, username, days, hours);
         return result;
@@ -55,6 +58,7 @@ public class EngineerLeaderController {
     @PostMapping("/index/delete")
     @ApiOperation(value = "DeleteUserFromTeam",notes = "删除成员")
     @ResponseBody
+    @Log("删除团队成员")
     public int DeleteUserFromTeam(String fzname,String username){
         int result = userTeamService.deleteUserTeam(fzname,username);
         return result;
@@ -64,6 +68,7 @@ public class EngineerLeaderController {
     @PostMapping("/addtask")
     @ApiOperation(value = "AddTask",notes = "添加任务")
     @ResponseBody
+    @Log("添加任务")
     public void AddTask(@RequestBody Map<String,Object> tasks) throws Exception {
 //        for (int i = 0; i < tasks.size(); i++) {
 //            if (tasks != null) {

@@ -1,14 +1,11 @@
 package cn.edu.sicnu.cs.service.impl;
 
 import cn.edu.sicnu.cs.dao.PrigroupMapper;
-import cn.edu.sicnu.cs.dao.PrigrouprelationMapper;
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Prigroup;
 import cn.edu.sicnu.cs.model.PrigroupExample;
-import cn.edu.sicnu.cs.model.PrigrouprelationExample;
-import cn.edu.sicnu.cs.pojo.PrivGroup;
-import cn.edu.sicnu.cs.pojo.ReturningPriv;
-import cn.edu.sicnu.cs.pojo.ReturningPrivFourLevel;
+import cn.edu.sicnu.cs.dto.PrivDto;
+import cn.edu.sicnu.cs.dto.PrivGradationalDto;
 import cn.edu.sicnu.cs.service.*;
 import io.jsonwebtoken.lang.Strings;
 import org.slf4j.Logger;
@@ -23,7 +20,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @Classname PrigroupServiceImpl
@@ -150,7 +146,6 @@ public class PrigroupServiceImpl implements PrigroupService {
     public List<Metaoperation> selectInAPrivGoupprivsByRoleAndFourlever(Integer groupid, Integer roleid, Integer zibiaoti) {
         Metaoperation metaoperation2 = metaOperationService.selectByPrimaryKey(zibiaoti);
 
-
         List<Metaoperation> metaoperations = this.selectPrivilegesByPrimaryKey(groupid);
 
         logger.debug(" metaoperations: "+metaoperations);
@@ -203,27 +198,27 @@ public class PrigroupServiceImpl implements PrigroupService {
 
     @Override
     @Cacheable(value = "privsevict",cacheNames = "privsevict",key = "#root.methodName.toString()+'--'+#privGroup.prigroupname",unless = "#result==null")
-    public List<ReturningPrivFourLevel> selectAllFourLever(Prigroup privGroup) {
-        List<ReturningPrivFourLevel> returningPrivFourLevels = new ArrayList<>();
-        returningPrivFourLevels = rolePrivService.selectAllErJiBiaoTiChildrenByGroupdesc(privGroup.getPrigroupdesc());
+    public List<PrivGradationalDto> selectAllFourLever(Prigroup privGroup) {
+        List<PrivGradationalDto> privGradationalDtos = new ArrayList<>();
+        privGradationalDtos = rolePrivService.selectAllErJiBiaoTiChildrenByGroupdesc(privGroup.getPrigroupdesc());
 
-        logger.debug("大导航为:"+privGroup.getPrigroupname()+"  所有二级导航栏为: "+returningPrivFourLevels);
+        logger.debug("大导航为:"+privGroup.getPrigroupname()+"  所有二级导航栏为: "+ privGradationalDtos);
 
-        if (returningPrivFourLevels!=null&&!returningPrivFourLevels.isEmpty()){
+        if (privGradationalDtos !=null&&!privGradationalDtos.isEmpty()){
 
-            for (ReturningPrivFourLevel returningPrivFourLevel : returningPrivFourLevels) {
-                List<Metaoperation> metaoperations = prigroupService.selectALLAPrivGoupprivsBygroupidAndzibiaoti(privGroup.getPgid(), returningPrivFourLevel.getId());
-                System.out.println("groupid: "+privGroup.getPgid()+" 子标题id:  "+returningPrivFourLevel.getId()+metaoperations);
-                List<ReturningPriv> returningPrivs = new ArrayList<>();
+            for (PrivGradationalDto privGradationalDto : privGradationalDtos) {
+                List<Metaoperation> metaoperations = prigroupService.selectALLAPrivGoupprivsBygroupidAndzibiaoti(privGroup.getPgid(), privGradationalDto.getId());
+                System.out.println("groupid: "+privGroup.getPgid()+" 子标题id:  "+ privGradationalDto.getId()+metaoperations);
+                List<PrivDto> privDtos = new ArrayList<>();
                 if (metaoperations!=null&&!metaoperations.isEmpty()){
                     for (Metaoperation metaoperation : metaoperations) {
-                        returningPrivs.add(new ReturningPriv(metaoperation.getMoid(),metaoperation.getMoname(),metaoperation.getMolurl()));
+                        privDtos.add(new PrivDto(metaoperation.getMoid(),metaoperation.getMoname(),metaoperation.getMolurl()));
                     }
-                    returningPrivFourLevel.setChildren(returningPrivs);
+                    privGradationalDto.setChildren(privDtos);
                 }
 
             }
-            return returningPrivFourLevels;
+            return privGradationalDtos;
         }
         return null;
     }

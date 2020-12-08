@@ -45,8 +45,4 @@ public interface UserformMapper {
     List<Userform> todayUserFormCnt(long cid, String type, String today);
 
     long findUserFormCnt(long cid, String status);
-
-    long findHotUserFormListCnt();
-
-    long statisticsTimeCnt(long uid, String time);
 }

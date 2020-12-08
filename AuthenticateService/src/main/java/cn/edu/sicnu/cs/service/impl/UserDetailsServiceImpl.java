@@ -1,5 +1,6 @@
 package cn.edu.sicnu.cs.service.impl;
 
+import cn.edu.sicnu.cs.anotations.Log;
 import cn.edu.sicnu.cs.pojo.AuthUserDetails;
 import cn.edu.sicnu.cs.pojo.UserPojo;
 import cn.edu.sicnu.cs.service.UserService;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
+
 /**
  * @Classname UserDetailsServiceImpl
  * @Description TODO
@@ -33,17 +36,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private Integer loginAfterTime;
 
     @Autowired
-    private StringRedisTemplate redisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
 
     @Autowired
     private UserService userService;
 
     @Override
+    @Log("用户登录")
     @Transactional(readOnly = true,propagation = Propagation.SUPPORTS)
     @Cacheable(value = "UserDetails",key = "#username",unless = "#result==null")
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         String flagKey = "loginFailFlag:"+username;
-        String value = redisTemplate.opsForValue().get(flagKey);
+        String value = stringRedisTemplate.opsForValue().get(flagKey);
         if(StringUtils.isNotBlank(value)){
             //超过限制次数
             throw new UsernameNotFoundException("登录错误次数超过限制，请"+loginAfterTime+"分钟后再试");

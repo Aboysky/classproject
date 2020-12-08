@@ -2,6 +2,9 @@ package cn.edu.sicnu.cs.controller;
 
 import cn.edu.sicnu.cs.anotations.Log;
 import cn.edu.sicnu.cs.constant.ResultCode;
+import cn.edu.sicnu.cs.dto.*;
+import cn.edu.sicnu.cs.vo.NavigationBarVo;
+import cn.edu.sicnu.cs.vo.NavigationBarChilrenVo;
 import cn.edu.sicnu.cs.model.Metaoperation;
 import cn.edu.sicnu.cs.model.Prigroup;
 import cn.edu.sicnu.cs.model.Role;
@@ -105,7 +108,9 @@ public class UserController {
                 int i = userService.updatePasswordByUid(uid, oldpassword, newpassword);
                 if (i>=1){
                     return ResUtil.getJsonStr(ResultCode.OK,"修改密码成功");
-                }else return ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "旧密码不正确");
+                }else {
+                    return ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "旧密码不正确");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 return ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "旧密码不正确");
@@ -144,7 +149,7 @@ public class UserController {
     }
 
     //  管理员更改其他用户信息   管理员密码
-    @Log("管理员对员工信息进行了修改")
+    @Log("管理员修改了员工信息")
     @PutMapping("${soft_version}/admin/{uid}")
     @ApiOperation(value = "update_user_info",tags = "user",notes = "改变用户信息")
     public String updateUserByAdmin(@PathVariable Integer uid, HttpServletRequest request) throws IOException {
@@ -211,12 +216,14 @@ public class UserController {
             }
             return ResUtil.getJsonStr(ResultCode.NECESSARY_PARAMETER_NOT_NULL_OR_NOTIING, "更新失败,传入参数错误");
 
-        }else return ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "管理员密码错误");
+        }else {
+            return ResUtil.getJsonStr(ResultCode.BAD_REQUEST, "管理员密码错误");
+        }
 
 
     }
 
-    @Log("添加用户")
+    @Log("新增用户")
     @PostMapping("${soft_version}/user")
     @ApiOperation(value = "add_user",tags = "user",notes = "添加用户")
     public String addUser(HttpServletRequest request) throws IOException {
@@ -327,26 +334,27 @@ public class UserController {
             return ResUtil.getJsonStr(ResultCode.RESOURCE_NOT_EXIST, "没有id为 "+uid+" 的用户");
         }
         user.setPassword(null);
-        ReturningUser returningUser = new ReturningUser(user,roleService.selectByPrimaryKey(user.getUroleId()).getRdesc());
-        return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功",returningUser);
+        UserDto userDto = new UserDto(user,roleService.selectByPrimaryKey(user.getUroleId()).getRdesc());
+        return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功", userDto);
     }
 
+    @Log("查询所有用户")
     @GetMapping("${soft_version}/_users")
     @ApiOperation(value = "select_all_user",tags = "user",notes = "查询所有用户")
     public String selectAllsysUser() throws IOException {
         List<User> users = userService.selectAllSysUser();
-        List<ReturningUser> returningUsers = new ArrayList<>();
+        List<UserDto> userDtos = new ArrayList<>();
         if (users.isEmpty()){
             return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功",null);
         }
         for (User user : users) {
             user.setPassword(null);
-            returningUsers.add(new ReturningUser(user,roleService.selectByPrimaryKey(user.getUroleId()).getRdesc()));
+            userDtos.add(new UserDto(user,roleService.selectByPrimaryKey(user.getUroleId()).getRdesc()));
         }
-        return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功",returningUsers);
+        return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功", userDtos);
     }
 
-
+    @Log("查询用户的所有权限")
     @GetMapping("${soft_version}/user/{uid}/_privs")
     @ApiOperation(value = "select_user_privs",tags = {"user","privs"},notes = "查询用户的所有权限")
     public String selectUserPrivs(@PathVariable("uid") Integer uid) throws IOException {
@@ -362,6 +370,7 @@ public class UserController {
         return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功",metaoperations);
     }
 
+    @Log("改变用户角色")
     @PutMapping("${soft_version}/user/{uid}/role")
     @ApiOperation(value = "update_user_role",tags = "user",notes = "改变用户角色")
     public String updateUserRole(@PathVariable Integer uid, HttpServletRequest request) throws IOException {
@@ -396,6 +405,7 @@ public class UserController {
         }
     }
 
+    @Log("查询用户的一级导航栏")
     @GetMapping("${soft_version}/user/{uid}/_navbar")
     @ApiOperation(value = "select_user_privs",tags = {"user","privs"},notes = "查询用户的所有权限")
     public String selectUserBar(@PathVariable("uid") Integer uid) throws IOException {
@@ -406,11 +416,12 @@ public class UserController {
         if (user==null){
             return ResUtil.getJsonStr(ResultCode.RESOURCE_NOT_EXIST, "没有id为 "+uid+" 的用户");
         }
-        List<NavigationBar> navigationBars = userService.selectNavigationBarByUsername(user.getUsername());
-        System.out.println(navigationBars);
-        return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功",navigationBars);
+        List<NavigationBarVo> navigationBarVos = userService.selectNavigationBarByUsername(user.getUsername());
+        System.out.println(navigationBarVos);
+        return ResUtil.getJsonStr(ResultCode.OK, "查询用户成功", navigationBarVos);
     }
 
+    @Log("查询用户的二级导航栏")
     @GetMapping("${soft_version}/user/{uid}/_navbarchildren")
     @ApiOperation(value = "select_user_privs",tags = {"user","privs"},notes = "查询用户的所有权限")
     public String selectUserBarChildren(@PathVariable("uid") Integer uid,HttpServletRequest request,@RequestParam("privid") String privid) throws IOException {
@@ -435,11 +446,12 @@ public class UserController {
         if (user==null){
             return ResUtil.getJsonStr(ResultCode.RESOURCE_NOT_EXIST, "没有id为 "+uid+" 的用户");
         }
-        List<NavigationBarChilren> navigationBarChilrens = userService.selectNavigationBarChildrenByUsername(user.getUroleId(),Integer.valueOf(privid));
+        List<NavigationBarChilrenVo> navigationBarChilrenVos = userService.selectNavigationBarChildrenByUsername(user.getUroleId(),Integer.valueOf(privid));
 
-        return ResUtil.getJsonStr(ResultCode.OK, "查询二级导航栏成功",navigationBarChilrens);
+        return ResUtil.getJsonStr(ResultCode.OK, "查询二级导航栏成功", navigationBarChilrenVos);
     }
 
+    @Log("分页查询用户")
     @GetMapping(value="/{soft_vesion}/_users/findpage")
     public Object findPage(@RequestParam("pageSize") Integer pageSize,@RequestParam("pageNum") Integer pageNum) {
 
@@ -447,19 +459,19 @@ public class UserController {
         pageRequest.setPageNum(pageNum);
         pageRequest.setPageSize(pageSize);
         PageResult page = userService.findPage(pageRequest);
-        List<ReturningUser> returningUsers = new ArrayList<>();
+        List<UserDto> userDtos = new ArrayList<>();
         if(page!=null){
 
             for (Object o : page.getContent()) {
                 if (o!=null){
                     o = (User) o;
                     ((User) o).setPassword(null);
-                    returningUsers.add(new ReturningUser((User)o,roleService.selectByPrimaryKey(((User) o).getUroleId()).getRdesc()));
+                    userDtos.add(new UserDto((User)o,roleService.selectByPrimaryKey(((User) o).getUroleId()).getRdesc()));
                 }
             }
         }
         if (page != null){
-            page.setContent(returningUsers);
+            page.setContent(userDtos);
             page.setCode(200);
             return page;
         }
@@ -468,6 +480,7 @@ public class UserController {
         return page;
     }
 
+    @Log("按权限组查询所有用户的权限")
     @GetMapping("/{soft_vesion}/_users/_privs")
     public String get_All_User_Privs_By_PrivGroup(){
 
@@ -477,27 +490,27 @@ public class UserController {
             role.setRname(role.getRdesc());
             role.setRdesc(name);
         }
-        List<ReturningPrivGroupWithPriv> returningPrivGroupWithPrivs = new ArrayList<>();
-        List<ReturningRoleWithprivsgroup> returningRoleWithprivsgroups = new ArrayList<>();
-        List<ReturningPriv> returningPrivs = new ArrayList<>();
+        List<PrivGroupWithPrivDto> privGroupWithPrivDtos = new ArrayList<>();
+        List<RoleWithprivsgroupDto> roleWithprivsgroupDtos = new ArrayList<>();
+        List<PrivDto> privDtos = new ArrayList<>();
         List<Prigroup> prigroups = prigroupService.selectAll();
 
         for (Role role :roles) {
             for (Prigroup prigroup : prigroups){
                 if (prigroup!=null&&role!=null){
                     List<Metaoperation> metaoperations = prigroupService.selectinaprivgoupprivsbyrole(prigroup.getPgid(), role.getRid());
-                    returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPriv(prigroup,metaoperations));
+                    privGroupWithPrivDtos.add(new PrivGroupWithPrivDto(prigroup,metaoperations));
                 }
             }
             if (role!=null){
-                System.out.println("----------->"+returningPrivGroupWithPrivs);
-                returningRoleWithprivsgroups.add(new ReturningRoleWithprivsgroup(role,returningPrivGroupWithPrivs));
+                System.out.println("----------->"+ privGroupWithPrivDtos);
+                roleWithprivsgroupDtos.add(new RoleWithprivsgroupDto(role, privGroupWithPrivDtos));
 
             }
-            returningPrivGroupWithPrivs.clear();
+            privGroupWithPrivDtos.clear();
         }
-        System.out.println("------------->"+returningRoleWithprivsgroups);
-        return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningRoleWithprivsgroups);
+        System.out.println("------------->"+ roleWithprivsgroupDtos);
+        return ResUtil.getJsonStr(ResultCode.OK, "请求成功", roleWithprivsgroupDtos);
     }
 
 //    @GetMapping("/{soft_vesion}/_privgroups/_privs")
@@ -513,19 +526,20 @@ public class UserController {
 //
 //        return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningPrivGroupWithPrivs);
 //    }
+    @Log("按权限组查询每个权限组拥有的所有权限")
     @GetMapping("/{soft_vesion}/_privgroups/_privs")
     public String get_All_Privgroup_Privs_By_PrivGroup(){
-        List<ReturningPrivGroupWithPrivsFourLever> returningPrivGroupWithPrivs = new ArrayList<>();
+        List<PrivGroupWithPrivsGradationalDto> returningPrivGroupWithPrivs = new ArrayList<>();
         List<Prigroup> prigroups = prigroupService.selectAll();
         for (Prigroup prigroup : prigroups) {
             if (prigroup!=null){
-                List<ReturningPrivFourLevel> returningPrivFourLevels = prigroupService.selectAllFourLever(prigroup);
-                returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPrivsFourLever(prigroup.getPgid(),prigroup.getPrigroupname(),prigroup.getPrigroupdesc(),returningPrivFourLevels));
+                List<PrivGradationalDto> privGradationalDtos = prigroupService.selectAllFourLever(prigroup);
+                returningPrivGroupWithPrivs.add(new PrivGroupWithPrivsGradationalDto(prigroup.getPgid(),prigroup.getPrigroupname(),prigroup.getPrigroupdesc(), privGradationalDtos));
             }
         }
         return ResUtil.getJsonStr(ResultCode.OK, "请求成功",returningPrivGroupWithPrivs);
     }
-
+    @Log("按角色查询每个角色的权限")
     @GetMapping("/{soft_vesion}/_roles/_groupprivs")
     public String get_all_Privs_Four_Lever_By_PrivGroup(){
 
@@ -536,23 +550,23 @@ public class UserController {
             role.setRdesc(name);
         }
 //        List<ReturningPrivGroupWithPrivsFourLever> returningPrivGroupWithPrivs = new ArrayList<>();
-        List<ReturningRoleWithprivgroupFourLever> returningRoleWithprivsgroups = new ArrayList<>();
-        List<ReturningPrivFourLevel> privFourLevels = new ArrayList<>();
-        List<ReturningPriv> returningPrivs = new ArrayList<>();
+        List<RoleWithPrivgroupGradationalDto> returningRoleWithprivsgroups = new ArrayList<>();
+        List<PrivGradationalDto> privFourLevels = new ArrayList<>();
+        List<PrivDto> privDtos = new ArrayList<>();
         List<Prigroup> prigroups = prigroupService.selectAll();
 
         for (Role role :roles) {
-            List<ReturningPrivGroupWithPrivsFourLever> returningPrivGroupWithPrivs = new ArrayList<>();
+            List<PrivGroupWithPrivsGradationalDto> returningPrivGroupWithPrivs = new ArrayList<>();
             for (Prigroup prigroup : prigroups){
                 if (prigroup!=null&&role!=null){
-                    List<ReturningPrivFourLevel> returningPrivFourLevels = metaOperationService.selectPrivFourLeverByRoleAndPrivgroup(role,prigroup);
-                    returningPrivGroupWithPrivs.add(new ReturningPrivGroupWithPrivsFourLever(prigroup,returningPrivFourLevels));
+                    List<PrivGradationalDto> privGradationalDtos = metaOperationService.selectPrivFourLeverByRoleAndPrivgroup(role,prigroup);
+                    returningPrivGroupWithPrivs.add(new PrivGroupWithPrivsGradationalDto(prigroup, privGradationalDtos));
                 }
             }
             if (role!=null){
                 System.out.println("----------->"+returningPrivGroupWithPrivs);
                 System.out.println(">>--------"+returningRoleWithprivsgroups);
-                returningRoleWithprivsgroups.add(new ReturningRoleWithprivgroupFourLever(role,returningPrivGroupWithPrivs));
+                returningRoleWithprivsgroups.add(new RoleWithPrivgroupGradationalDto(role,returningPrivGroupWithPrivs));
                 System.out.println(">>--------"+returningRoleWithprivsgroups);
             }
 //            returningPrivGroupWithPrivs.clear();
@@ -566,6 +580,7 @@ public class UserController {
         return ResUtil.getJsonStrJackon(ResultCode.OK, "请求成功",returningRoleWithprivsgroups);
     }
 
+    @Log("查询用户在某个一级导航栏下的某个二级导航栏页面中的所有权限")
     @GetMapping("/{soft_vesion}/user/{userid}/{groupid}/{zibiaotiid}")
     public String select_user_group_zibiaoti(@PathVariable("userid") Integer userid,
                                              @PathVariable("groupid") Integer groupid,
